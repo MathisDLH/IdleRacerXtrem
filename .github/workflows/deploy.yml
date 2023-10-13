@@ -13,9 +13,9 @@ jobs:
       - name: Deploy on DEV
         uses: appleboy/ssh-action@master
         with:
-          host: ${{secrets.host}}
-          username: ${{secrets.username}}
-          password: ${{secrets.password}}
+          host: ${{secrets.HOST}}
+          username: ${{secrets.USER}}
+          password: ${{secrets.PASSWORD}}
           script: |
             echo "OK"
           
