@@ -13,4 +13,6 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.KEY }}
-        script: whoami
+        script: |
+          pwd
+          git clone git@github.com:MrCrakerz/IdleRacerXtrem.git
