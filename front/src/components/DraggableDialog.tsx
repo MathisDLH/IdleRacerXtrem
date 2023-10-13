@@ -1,6 +1,5 @@
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Paper, { PaperProps } from '@mui/material/Paper';
 import Draggable from 'react-draggable';
@@ -41,8 +40,6 @@ export default function DraggableDialog(props:any) {
                         {title}
                     </DialogTitle>
                     <DialogContent>
-
-
                         {content}
                     </DialogContent>
                 </div>

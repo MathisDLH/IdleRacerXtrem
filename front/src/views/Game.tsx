@@ -13,13 +13,11 @@ const Game = () => {
 
     const bonus :number = 1;
     const [money, setMoney] = useState(0);
-
     const [shopOpen, setShopOpen] = useState(false);
 
     const toggleShop = () :void => {
         setShopOpen(!shopOpen);
     }
-
 
     const click = () => {
         setMoney(money + bonus);
