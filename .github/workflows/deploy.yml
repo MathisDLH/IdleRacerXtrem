@@ -12,5 +12,5 @@ jobs:
     steps:
       - name: Deploy on DEV
         run: |
-          ssh {{ secrets.USER }}: {{ secrets.PASSWORD }}@{{ secrets.HOST }}
+          ssh {{ secrets.USER }} : {{ secrets.PASSWORD }} @ {{ secrets.HOST }}
           pwd
