@@ -3,11 +3,11 @@ on: [push]
 jobs:
 
   build:
-    name: Build
+    name: Deploy
     runs-on: ubuntu-latest
     environment: develop
     steps:
-    - name: executing remote ssh commands using password
+    - name: Deploy on DEV
       uses: appleboy/ssh-action@v1.0.0
       with:
         host: ${{ secrets.HOST }}
@@ -16,6 +16,7 @@ jobs:
         script: |
           git clone git@github.com:MrCrakerz/IdleRacerXtrem.git
           cd IdleRacerXtrem/front
+          git switch develop
           npm install
           npm run build
           rm -rf /var/www/html/*
