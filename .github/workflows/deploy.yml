@@ -8,13 +8,16 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: Dev
     steps:
       - name: Deploy on DEV
         uses: appleboy/ssh-action@master
         with:
           host: ${{secrets.HOST}}
-          username: ${{secrets.username}}
-          password: ${{secrets.password}}
+          username: ${{secrets.USER}}
+          password: ${{secrets.PASSWORD}}
           script: |
+            pwd
+            echo "${{secrets.HOST}}"
             echo "OK"
           
