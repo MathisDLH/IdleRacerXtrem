@@ -10,7 +10,7 @@ jobs:
     environment: develop
     steps:
     - name: deploy dev
-      uses: appleboy/ssh-action@latest
+      uses: appleboy/ssh-action
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
