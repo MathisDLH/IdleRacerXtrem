@@ -1,20 +1,27 @@
-import React from 'react';
+import React, {useState} from 'react';
+import first from "../assets/images/game/cars/6.png";
+
 import '../assets/styles/Game.scss';
 const Game = () => {
 
+    const bonus :number = 1;
+    const [money, setMoney] = useState(0);
+
     const click = () => {
-        console.log("click");
+        setMoney(money + bonus);
+        console.log(money);
     }
 
     return(
         <section id="game" onClick={click}>
             <div id="up">
-                <div id="sun">
-
-                </div>
+                <div id="sun"></div>
             </div>
             <div id="down">
 
+                <div id="road-line"></div>
+                <div id="car-shadow"></div>
+                <img id="car" src={first} alt=""/>
             </div>
         </section>
     )
