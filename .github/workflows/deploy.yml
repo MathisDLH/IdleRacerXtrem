@@ -17,6 +17,6 @@ jobs:
           username: ${{secrets.USER}}
           password: ${{secrets.PASSWORD}}
           script: |
-            echo "${{secrets.HOST}}
+            echo "${{secrets.HOST}}"
             echo "OK"
           
