@@ -5,7 +5,7 @@ services:
     ports:
       - "7001:6379"
   db:
-    image: "mysql:latest"
+    image: "mysql:5.7.43"
     restart: always
     environment:
       MYSQL_DATABASE: 'db'
