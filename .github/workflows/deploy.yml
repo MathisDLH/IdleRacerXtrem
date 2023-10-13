@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: develop
     steps:
-    - name: executing remote ssh commands using password
+    - name: deploy dev
       uses: appleboy/ssh-action@v1.0.0
       with:
         host: ${{ secrets.HOST }}
