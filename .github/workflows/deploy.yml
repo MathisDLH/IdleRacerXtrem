@@ -12,7 +12,7 @@ jobs:
       - name: Deploy on DEV
         uses: appleboy/ssh-action@master
         with:
-          host: ${{secrets.HOST}}
+          host: ${{secrets.host}}
           username: ${{secrets.username}}
           password: ${{secrets.password}}
           script: |
