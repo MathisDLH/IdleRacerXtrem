@@ -19,7 +19,8 @@ function PaperComponent(props: PaperProps) {
 export default function DraggableDialog(props:any) {
     const {open, setOpen, title, content} = props;
 
-    const handleClose = (event, reason :any) => {
+    const handleClose = (event:any, reason :any) => {
+        console.log(event)
         if (reason && reason == "backdropClick")
             return;
         setOpen(false);
