@@ -1,19 +1,48 @@
 #game {
+    --size: 50vw;
+    --speed: 1000ms;
+
     height: 100vh;
+
+    overflow: hidden;
+
+    header {
+        z-index: 10;
+        position: absolute;
+        height: 10vh;
+        width: 100%;
+
+        display: flex;
+        align-items: center;
+
+        //background-color: rgba(0, 0, 0, 0.32);
+
+        span {
+            padding: 2vh;
+            font-family: 'Pixelify Sans', sans-serif;
+            color: #ffbd17;
+            font-size: 2rem;
+        }
+
+        #shop {
+            float: right;
+        }
+    }
 
     #up{
         height: 100%;
-        background-color: skyblue;
+        background-color: #86a4ea;
         display: flex;
         align-items: center;
         justify-content: center;
 
         #sun {
-            --size : 60%;
+            margin-top: 10vw;
             height: var(--size);
             width: var(--size);
-            background-color: #ffd817;
+            background-color: #ffbd17;
             border-radius: 50%;
+            box-shadow: 0 0 5vw 5vw #fdd349;
         }
     }
 
@@ -23,5 +52,56 @@
         height: 40%;
         width: 100%;
         background-color: gray;
+
+        display: flex;
+        align-items: start;
+        justify-content: center;
+
+        --car-top : 2vh;
+        --car-width : 27rem;
+        img#car {
+            -webkit-transform: scaleX(-1);
+            position: absolute;
+            animation: shake linear 250ms infinite;
+            width: var(--car-width);
+            &:hover {
+                cursor: pointer;
+                scale: 1.005;
+                animation: shake linear 150ms infinite;
+            }
+        }
+
+        #car-shadow{
+            position: absolute;
+            top: 15vh;
+            height: 10%;
+            width: calc(var(--car-width)*0.9 );
+            border-radius: 20%;
+
+            opacity: 0.5;
+            background-color: black;
+            box-shadow: 0 0 1vw 1vw black;
+        }
+
+        #road-line{
+            position: absolute;
+            top: 5vh;
+            height: 5%;
+            width: 10%;
+            background-color: white;
+            animation: road linear var(--speed) infinite;
+        }
+
+    }
+
+    @keyframes shake {
+        0% { top: 2vh}
+        50% { top: 2.5vh}
+        100% { top: 2vh}
+    }
+
+    @keyframes road {
+        0% { transform: translateX(1000%)}
+        100% { transform: translateX(-1000%)}
     }
 }
