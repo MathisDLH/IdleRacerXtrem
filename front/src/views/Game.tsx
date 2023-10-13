@@ -1,17 +1,25 @@
-import { motion } from 'framer-motion';
-import { useState } from 'react';
-import first from "../assets/images/game/cars/6.png";
+import {motion} from 'framer-motion';
+import {useState} from 'react';
 import IconButton from '@mui/material/IconButton';
+
+import first from "../assets/images/game/cars/6.png";
+import shop from "../assets/images/game/icons/shop.png";
 import '../assets/styles/Game.scss';
+
+import DraggableDialog from "../components/DraggableDialog.tsx";
 
 const Game = () => {
 
     const bonus :number = 1;
     const [money, setMoney] = useState(0);
+    const [shopOpen, setShopOpen] = useState(false);
+
+    const toggleShop = () :void => {
+        setShopOpen(!shopOpen);
+    }
 
     const click = () => {
         setMoney(money + bonus);
-        console.log(money);
     }
 
     return(
@@ -20,16 +28,23 @@ const Game = () => {
         animate={{ opacity: 1, scale: 1, rotate: 0 }}
         exit={{ opacity: 0, scale: 0, rotate: 45 }}
         >
-  <section id="game" onClick={click}>
+        <section id="game">
             <header>
-                <span>IDLE RACER XTREM</span>
-                <IconButton id="shop" aria-label="delete" size="large">
-                </IconButton>
+                <span className="part">{money}$</span>
+                <div>
+                    <IconButton className="icon" aria-label="delete" size="large" onClick={toggleShop}>
+                        <img src={shop} alt=""/>
+                    </IconButton>
+                </div>
             </header>
-            <div id="up">
+            <div>
+                <DraggableDialog open={shopOpen} setOpen={setShopOpen} title={"Shop"} content={"TODO"}>
+                </DraggableDialog>
+            </div>
+            <div id="up" onClick={click}>
                 <div id="sun"></div>
             </div>
-            <div id="down">
+            <div id="down" onClick={click}>
 
                 <div id="road-line"></div>
                 <div id="car-shadow"></div>
