@@ -1,18 +1,16 @@
-name: Deploy on DEV
-
-on:
-  push:
-    branches: ["develop"]
-    
+name: remote ssh command
+on: [push]
 jobs:
-  deploy:
+
+  build:
+    name: Build
     runs-on: ubuntu-latest
     environment: develop
     steps:
-    - name: deploy dev
-      uses: garygrossgarten/github-action-ssh@release
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@v1.0.0
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
-        command: whoami
+        script: whoami
