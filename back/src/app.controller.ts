@@ -10,20 +10,4 @@ export class AppController {
     private usersService: UsersService,
   ) {}
 
-  @Post('auth/register')
-  async register(@Body() body) {
-    return this.usersService.create(body);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Post('auth/login')
-  async login(@Request() req) {
-    return this.authService.login(req.user);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Post('auth/logout')
-  async logout(@Request() req) {
-    // Implement your logout logic here, for example invalidate the JWT token
-  }
 }
