@@ -14,5 +14,10 @@ jobs:
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.KEY }}
         script: |
-          pwd
           git clone git@github.com:MrCrakerz/IdleRacerXtrem.git
+          cd IdleRacerXtrem/front
+          npm install
+          npm run build
+          rm -rf /var/www/html/*
+          cp -r dist/* /var/www/html/
+          rm -rf /root/IdleRacerXtrem
