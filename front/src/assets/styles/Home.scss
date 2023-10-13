@@ -1,0 +1,71 @@
+.menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-image: url("../assets/images/background.jpg");
+  background-size: cover;
+  background-position: center;
+  z-index: -1;
+}
+
+.image-above-title{
+  max-width: 300px;
+  animation: breathe 1500ms infinite alternate; /* Ajoute une animation de respiration */
+}
+
+.menu-content {
+  text-align: center;
+  color: #fff;
+}
+
+/* Animation de "respiration" pour le titre */
+.game-title {
+  font-family: 'StartTitleFont', sans-serif;
+  max-width: 500px;
+  font-size: 48px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 4px #000; /* Ombre légère */
+  letter-spacing: 5px; /* Espace entre les lettres */
+  color: #FFD700; /* Couleur de texte vive */
+  animation: breathe 2000ms infinite alternate; /* Ajoute une animation de respiration */
+}
+
+/* Styles pour le bouton START (sans animation) */
+.start-button {
+  background-color: #FFD700;
+  color: #000;
+  font-size: 24px;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: transform 0.2s ease, background-color 0.2s ease; /* Transition pour l'agrandissement et la couleur de fond */
+  animation: breathe 500ms infinite alternate; /* Ajoute une animation de respiration au survol du menu */
+
+}
+
+.start-button:hover {
+  background-color: #FFA500;
+  transform: scale(1.6); /* Agrandissement au survol */
+  animation: breatheHover 200ms infinite alternate; /* Ajoute une animation de respiration au survol du menu */
+}
+
+@keyframes breatheHover {
+  0% {
+    transform: scale(1.6);
+  }
+  100% {
+    transform: scale(1.65); /* Agrandissement à 1.05 fois la taille d'origine */
+  }
+}
+
+@keyframes breathe {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.05); /* Agrandissement à 1.05 fois la taille d'origine */
+  }
+}
