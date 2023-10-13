@@ -1,7 +1,21 @@
 import React from 'react';
-
+import '../assets/styles/Game.scss';
 const Game = () => {
-  return <h1>Game</h1>;
+
+    const click = () => {
+        console.log("click");
+    }
+
+    return(
+        <section id="game" onClick={click}>
+            <div id="up">
+
+            </div>
+            <div id="down">
+
+            </div>
+        </section>
+    )
 }
 
 export default Game;
