@@ -1,0 +1,8 @@
+.dialog {
+    pointer-events: none;
+
+   .drag{
+      cursor: move;
+      pointer-events: auto;
+   }
+}
