@@ -11,13 +11,6 @@ jobs:
     environment: Dev
     steps:
       - name: Deploy on DEV
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{secrets.HOST}}
-          username: ${{secrets.USER}}
-          password: ${{secrets.PASSWORD}}
-          script: |
-            pwd
-            echo "${{secrets.HOST}}"
-            echo "OK"
-          
+        run: |
+          ssh {{ secrets.USER }}: {{ secrets.PASSWORD }}@{{ secrets.HOST }}
+          pwd
