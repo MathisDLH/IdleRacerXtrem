@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import '../assets/styles/Home.scss'; // Importez votre fichier CSS ici
 import backgroundImage from '../assets/images/idle_racer_bg.png'; // Chemin vers l'image
@@ -9,7 +8,7 @@ import {motion} from 'framer-motion';
 const Home = () => {
   return (
     <motion.div className="menu" style={{ backgroundImage: `url(${backgroundImage})` }}
-    
+
     initial={{ opacity: 0, scale: 0, rotate: 45 }}
     animate={{ opacity: 1, scale: 1, rotate: 0 }}
     exit={{ opacity: 0, scale: 0, rotate: 45 }}

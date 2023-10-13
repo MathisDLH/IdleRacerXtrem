@@ -1,5 +1,5 @@
-import {motion} from 'framer-motion';
-import React, {useState} from 'react';
+import { motion } from 'framer-motion';
+import { useState } from 'react';
 import first from "../assets/images/game/cars/6.png";
 import IconButton from '@mui/material/IconButton';
 import '../assets/styles/Game.scss';
