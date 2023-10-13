@@ -1,9 +1,10 @@
-name: remote ssh command
-on: [push]
+name: Deploy on DEV
+on:
+  push:
+    branches: ["develop"]
 jobs:
-
-  build:
-    name: Deploy
+  deploy:
+    name: Deploy on DEV
     runs-on: ubuntu-latest
     environment: develop
     steps:
