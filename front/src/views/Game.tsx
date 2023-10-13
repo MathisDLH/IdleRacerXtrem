@@ -9,7 +9,9 @@ const Game = () => {
     return(
         <section id="game" onClick={click}>
             <div id="up">
+                <div id="sun">
 
+                </div>
             </div>
             <div id="down">
 
