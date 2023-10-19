@@ -1,8 +1,4 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
-import Game from './views/Game';
-import Home from './views/Home';
-import Race from './views/Race';
+import { BrowserRouter as Router } from 'react-router-dom';
 import './assets/styles/App.scss';
 import AnimatedRoutes from './components/AnimatedRoutes';
 

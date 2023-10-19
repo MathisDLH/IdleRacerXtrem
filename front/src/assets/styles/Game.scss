@@ -14,18 +14,32 @@
 
         display: flex;
         align-items: center;
+        justify-content: end;
 
-        //background-color: rgba(0, 0, 0, 0.32);
+        >div{
+            margin-right: 2vw;
+        }
+        .icon {
+            background-color: rgba(255, 255, 255, 0.8);
+            z-index: 100;
+            &:hover{
+                background-color: white;
+            }
 
-        span {
+            img {
+                height: 3vh;
+            }
+        }
+
+        .part {
             padding: 2vh;
             font-family: 'Pixelify Sans', sans-serif;
             color: #ffbd17;
             font-size: 2rem;
         }
 
-        #shop {
-            float: right;
+        #right {
+
         }
     }
 
@@ -52,6 +66,8 @@
         height: 40%;
         width: 100%;
         background-color: gray;
+
+        overflow: hidden;
 
         display: flex;
         align-items: start;
