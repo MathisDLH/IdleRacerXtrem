@@ -1,8 +1,24 @@
-html,body{
+html,body {
     height: 100vh;
     margin: 0;
     padding: 0;
     font-family: 'Roboto', sans-serif;
+
+    // Colors
+    --yellow: rgb(255, 233, 63);
+    --red: rgb(255, 35, 51);
+
+    --grey1: rgb(150, 150, 150);
+    --grey2: rgb(140, 140, 140);
+
+    img{
+        user-drag: none;
+        -webkit-user-drag: none;
+        user-select: none;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+    }
 }
 
 #root {
@@ -12,3 +28,6 @@ html,body{
 .spacer {
     flex-grow: 1;
 }
+
+
+
