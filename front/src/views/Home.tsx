@@ -5,12 +5,9 @@ import flags from '../assets/images/race_flag.png';
 import carIcon from '../assets/images/auth/car_icon.png';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/Auth';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import LoginForm from './LoginForm';
 import { Modal } from '@mui/material';
-import jwtDecode from 'jwt-decode';
-import { getUser } from '../services/auth.service';
-
 
 const Home = () => {
 
