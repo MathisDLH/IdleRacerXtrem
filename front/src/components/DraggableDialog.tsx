@@ -16,8 +16,16 @@ function PaperComponent(props: PaperProps) {
     );
 }
 
-export default function DraggableDialog(props:any) {
-    const {open, setOpen, title, content} = props;
+type DraggableProps = {
+    children?: React.ReactNode,
+    open: boolean,
+    setOpen: any,
+    title: string,
+    icon:any,
+    Content: any
+}
+export default function DraggableDialog({open,setOpen,title,icon,Content}:DraggableProps) {
+
 
     const handleClose = (event:any, reason :any) => {
         console.log(event)
@@ -27,24 +35,23 @@ export default function DraggableDialog(props:any) {
     };
 
     return (
-        <div>
-            <Dialog
-                open={open}
-                onClose={handleClose}
-                PaperComponent={PaperComponent}
-                aria-labelledby="draggable-dialog-title"
-                hideBackdrop={true}
-                className={"dialog"}
-            >
-                <div className="drag">
-                    <DialogTitle id="draggable-dialog-title">
-                        {title}
-                    </DialogTitle>
-                    <DialogContent>
-                        {content}
-                    </DialogContent>
-                </div>
-            </Dialog>
-        </div>
+        <Dialog
+            open={open}
+            onClose={handleClose}
+            PaperComponent={PaperComponent}
+            aria-labelledby="draggable-dialog-title"
+            hideBackdrop={true}
+            className={"dialog"}
+        >
+            <div className="drag">
+                <DialogTitle id="draggable-dialog-title">
+                    <img src={icon} alt=""/>
+                    <span>{title}</span>
+                </DialogTitle>
+                <DialogContent id={"draggable-dialog-content"}>
+                    {Content}
+                </DialogContent>
+            </div>
+        </Dialog>
     );
 }

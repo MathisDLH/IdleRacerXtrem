@@ -1,0 +1,11 @@
+.upgrades {
+    height: 20vh;
+    width: 100%;
+
+    overflow: scroll;
+
+    ul > li {
+        list-style: unset;
+    }
+
+}

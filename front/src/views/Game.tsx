@@ -1,5 +1,5 @@
 import {motion} from 'framer-motion';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import IconButton from '@mui/material/IconButton';
 
 import first from "../assets/images/game/cars/6.png";
@@ -7,10 +7,11 @@ import shop from "../assets/images/game/icons/shop.png";
 import '../assets/styles/Game.scss';
 
 import DraggableDialog from "../components/DraggableDialog.tsx";
+import UpgradesList from "../components/UpgradesList.tsx";
 
 const Game = () => {
 
-    const bonus :number = 1;
+    const [bonus] = useState(1);
     const [money, setMoney] = useState(0);
     const [shopOpen, setShopOpen] = useState(false);
 
@@ -21,6 +22,13 @@ const Game = () => {
     const click = () => {
         setMoney(money + bonus);
     }
+
+    useEffect(() => {
+        const id = setInterval(() => setMoney((oldMoney) => oldMoney + bonus), 500);
+        return () => {
+            clearInterval(id);
+        };
+    }, []);
 
     return(
         <motion.div
@@ -37,10 +45,10 @@ const Game = () => {
                     </IconButton>
                 </div>
             </header>
-            <div>
-                <DraggableDialog open={shopOpen} setOpen={setShopOpen} title={"Shop"} content={"TODO"}>
-                </DraggableDialog>
-            </div>
+
+            <DraggableDialog open={shopOpen} title={"Upgrades"} icon={shop} setOpen={setShopOpen} Content={<UpgradesList/>}>
+            </DraggableDialog>
+
             <div id="up" onClick={click}>
                 <div id="sun"></div>
             </div>
