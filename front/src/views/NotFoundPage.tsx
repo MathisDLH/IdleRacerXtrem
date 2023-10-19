@@ -1,8 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
 import '../assets/styles/Home.scss'; // Importez votre fichier CSS ici
-import flags from '../assets/images/race_flag.png';
-import backgroundImage from '../assets/images/page_not_found.jpg' 
+import backgroundImage from '../assets/images/page_not_found.jpg'
 import {motion} from 'framer-motion';
 
 
