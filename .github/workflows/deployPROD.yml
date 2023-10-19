@@ -1,25 +1,25 @@
-name: Deploy on DEV
+name: Deploy on PROD
 on:
   push:
-    branches: ["develop"]
+    branches: ["main"]
 jobs:
   deploy:
-    name: Deploy on DEV
+    name: Deploy on PROD
     runs-on: ubuntu-latest
+    environment: production
     steps:
-    - name: Deploy on DEV
+    - name: Deploy on PROD
       uses: appleboy/ssh-action@v1.0.0
       with:
-        host: ${{ secrets.HOST }}
+        host: ${{ vars.HOST }}
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.KEY }}
         script_stop: true
         script: |
+          mkdir $(date +'%Y-%m-%d-%H%M%S') && cd $(date +'%Y-%m-%d-%H%M%S')
           git clone git@github.com:MrCrakerz/IdleRacerXtrem.git
           cd IdleRacerXtrem/front
-          git switch develop
           npm install
           npm run build
           rm -rf /var/www/html/*
           cp -r dist/* /var/www/html/
-          rm -rf /root/IdleRacerXtrem
