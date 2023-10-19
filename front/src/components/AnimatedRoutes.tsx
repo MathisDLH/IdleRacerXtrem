@@ -6,7 +6,6 @@ import Race from '../views/Race';
 import { AnimatePresence } from 'framer-motion';
 import NotFoundPage from '../views/NotFoundPage';
 import RegisterForm from '../views/RegisterForm';
-import LoginForm from '../views/LoginForm';
 import { useAuth } from '../context/Auth';
 
 const AnimatedRoutes = () => {
