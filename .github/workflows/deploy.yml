@@ -6,7 +6,6 @@ jobs:
   deploy:
     name: Deploy on DEV
     runs-on: ubuntu-latest
-    environment: develop
     steps:
     - name: Deploy on DEV
       uses: appleboy/ssh-action@v1.0.0
@@ -14,6 +13,7 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.KEY }}
+        script_stop: true
         script: |
           git clone git@github.com:MrCrakerz/IdleRacerXtrem.git
           cd IdleRacerXtrem/front
