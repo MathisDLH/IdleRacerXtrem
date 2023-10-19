@@ -1,14 +1,21 @@
 import '../assets/styles/UpgradesList.scss';
 import upgrades from "../assets/mock/upgrades.json";
 import Upgrade from "./Upgrade.tsx";
+import {UpgradeModel} from '../models/Upgrade.tsx';
 
 export default function UpgradesList() {
 
     return(
-        <div className={"upgrades"}>
-            {upgrades.motors.map((motor ) => {
+        <div id={"list"} className={"upgrades"}>
+            {upgrades.money.click.map((upgrade : UpgradeModel) => {
                 return(
-                    <Upgrade motor={motor}/>
+                    <Upgrade
+                        key={upgrade.id}
+                        id={upgrade.id}
+                        name={upgrade.name}
+                        price={upgrade.price}
+                        value={upgrade.value}
+                    />
                 );
             })}
         </div>

@@ -1,5 +1,5 @@
 import {motion} from 'framer-motion';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import IconButton from '@mui/material/IconButton';
 
 import first from "../assets/images/game/cars/6.png";
@@ -11,7 +11,7 @@ import UpgradesList from "../components/UpgradesList.tsx";
 
 const Game = () => {
 
-    const bonus :number = 1;
+    const [bonus] = useState(1);
     const [money, setMoney] = useState(0);
     const [shopOpen, setShopOpen] = useState(false);
 
@@ -22,6 +22,13 @@ const Game = () => {
     const click = () => {
         setMoney(money + bonus);
     }
+
+    useEffect(() => {
+        const id = setInterval(() => setMoney((oldMoney) => oldMoney + bonus), 500);
+        return () => {
+            clearInterval(id);
+        };
+    }, []);
 
     return(
         <motion.div

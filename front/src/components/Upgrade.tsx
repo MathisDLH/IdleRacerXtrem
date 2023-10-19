@@ -1,9 +1,11 @@
 import '../assets/styles/Upgrade.scss';
-export default function Upgrade({motor}:any) {
+import {UpgradeModel} from '../models/Upgrade.tsx';
+
+export default function Upgrade(upgrade: UpgradeModel) {
 
     return(
-        <div id={motor.id} className={"upgrade"}>
-            {motor.name}
+        <div className={"upgrade"}>
+            {upgrade.name}
         </div>
     )
 }
