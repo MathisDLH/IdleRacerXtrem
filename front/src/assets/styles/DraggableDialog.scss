@@ -1,8 +1,33 @@
 .dialog {
+    border-radius: 1vh;
     pointer-events: none;
 
-   .drag{
-      cursor: move;
-      pointer-events: auto;
-   }
+    [role="dialog"] {
+        border-radius: 1vw;
+    }
+
+    .drag{
+        cursor: move;
+        pointer-events: auto;
+    }
+
+    #draggable-dialog-title {
+        display: flex;
+        align-items: center;
+
+        background: var(--yellow);
+        background: linear-gradient(41deg, var(--yellow) 0%, var(--red) 100%);
+        color: white;
+        font-family: 'Pixelify Sans', sans-serif;
+
+        img {
+            height: 3vh;
+            margin-right: 1vh;
+            draggable: false;
+        }
+    }
+
+    #draggable-dialog-content {
+        padding: unset;
+    }
 }

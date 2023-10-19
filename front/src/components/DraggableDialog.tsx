@@ -21,9 +21,10 @@ type DraggableProps = {
     open: boolean,
     setOpen: any,
     title: string,
+    icon:any,
     Content: any
 }
-export default function DraggableDialog({open,setOpen,title,Content}:DraggableProps) {
+export default function DraggableDialog({open,setOpen,title,icon,Content}:DraggableProps) {
 
 
     const handleClose = (event:any, reason :any) => {
@@ -44,9 +45,10 @@ export default function DraggableDialog({open,setOpen,title,Content}:DraggablePr
         >
             <div className="drag">
                 <DialogTitle id="draggable-dialog-title">
-                    {title}
+                    <img src={icon} alt=""/>
+                    <span>{title}</span>
                 </DialogTitle>
-                <DialogContent>
+                <DialogContent id={"draggable-dialog-content"}>
                     {Content}
                 </DialogContent>
             </div>

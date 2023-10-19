@@ -1,0 +1,7 @@
+.upgrade {
+    height: 5vh;
+    background-color: var(--grey1);
+}
+.upgrade:nth-child(odd) {
+    background-color: var(--grey2);
+}

@@ -38,10 +38,10 @@ const Game = () => {
                     </IconButton>
                 </div>
             </header>
-            <div>
-                <DraggableDialog open={shopOpen} setOpen={setShopOpen} title={"Shop"} Content={<UpgradesList/>}>
-                </DraggableDialog>
-            </div>
+
+            <DraggableDialog open={shopOpen} title={"Upgrades"} icon={shop} setOpen={setShopOpen} Content={<UpgradesList/>}>
+            </DraggableDialog>
+
             <div id="up" onClick={click}>
                 <div id="sun"></div>
             </div>
