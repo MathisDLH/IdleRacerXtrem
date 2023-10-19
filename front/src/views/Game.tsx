@@ -7,6 +7,7 @@ import shop from "../assets/images/game/icons/shop.png";
 import '../assets/styles/Game.scss';
 
 import DraggableDialog from "../components/DraggableDialog.tsx";
+import UpgradesList from "../components/UpgradesList.tsx";
 
 const Game = () => {
 
@@ -38,7 +39,7 @@ const Game = () => {
                 </div>
             </header>
             <div>
-                <DraggableDialog open={shopOpen} setOpen={setShopOpen} title={"Shop"} content={"TODO"}>
+                <DraggableDialog open={shopOpen} setOpen={setShopOpen} title={"Shop"} Content={<UpgradesList/>}>
                 </DraggableDialog>
             </div>
             <div id="up" onClick={click}>
