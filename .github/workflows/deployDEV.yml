@@ -15,6 +15,7 @@ jobs:
         key: ${{ secrets.KEY }}
         script_stop: true
         script: |
+          mkdir $(date +'%Y-%m-%d-%H%M%S') && cd $(date +'%Y-%m-%d-%H%M%S')
           git clone git@github.com:MrCrakerz/IdleRacerXtrem.git
           cd IdleRacerXtrem/front
           git switch develop
@@ -22,4 +23,3 @@ jobs:
           npm run build
           rm -rf /var/www/html/*
           cp -r dist/* /var/www/html/
-          rm -rf /root/IdleRacerXtrem
