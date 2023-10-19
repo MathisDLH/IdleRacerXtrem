@@ -7,6 +7,8 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { User } from './users/user.entity';
 import { HealthModule } from './health/health.module';
+import { GameGateway } from './game/game.gateway';
+import { JwtModule } from '@nestjs/jwt';
 
 const entities = [User];
 @Module({
@@ -27,8 +29,9 @@ const entities = [User];
     UsersModule,
     AuthModule,
     HealthModule,
+    JwtModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, GameGateway],
 })
 export class AppModule {}
