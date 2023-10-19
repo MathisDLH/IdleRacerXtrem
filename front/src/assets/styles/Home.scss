@@ -46,11 +46,83 @@
 
 }
 
+.start-button-desactived {
+  background-color: #d3dddd;
+  color: #bccbcc;
+  font-size: 24px;
+  padding: 10px 20px;
+  border: none;
+  cursor: not-allowed;
+  text-transform: uppercase;
+}
+
 .start-button:hover {
   background-color: #FFA500;
   transform: scale(1.6); /* Agrandissement au survol */
   animation: breatheHover 200ms infinite alternate; /* Ajoute une animation de respiration au survol du menu */
 }
+
+/* Ajoutez ces styles pour les champs d'entrée */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  font-size: 18px;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.form-input {
+  padding: 10px;
+  border: 1px solid #fff;
+  background-color: transparent;
+  color: #fff;
+  font-size: 16px;
+  width: 100%;
+  border-radius: 5px;
+  transition: border-color 0.3s;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #FFD700; /* Couleur de bordure lorsque le champ est en focus */
+  animation: breatheHover 200ms infinite alternate; /* Ajoute une animation de respiration au survol du menu */
+}
+
+.login-modal{
+  border: solid 2px black;
+  padding: 1em;
+  border-radius: 10px;
+  margin-top: 5%;
+  margin-left: 35%;
+  max-width: 400px;
+  max-height: 600px;
+  text-align: center;
+  backdrop-filter: blur(10px); /* Ajustez la valeur de flou selon vos préférences */
+  animation: breatheModal 2500ms infinite alternate; /* Ajoute une animation de respiration au survol du menu */
+}
+
+.head-container{
+  cursor: pointer;
+  display: flex;
+  margin-left: 90%;
+}
+
+.car-icon{
+  margin-right: 1em;
+  max-width: 50px;
+}
+
+@keyframes breatheModal {
+  0% {
+    transform: scale(0.8);
+  }
+  100% {
+    transform: scale(0.85); /* Agrandissement à 1.05 fois la taille d'origine */
+  }
+}
+
 
 @keyframes breatheHover {
   0% {

@@ -7,6 +7,10 @@ declare const module: any;
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  var cors = require('cors')
+
+  app.use(cors()) // Use this after the variable declaration
+
   const config = new DocumentBuilder()
     .setTitle('IdleRacer API description')
     .setDescription('IdleRacer API description')
