@@ -27,10 +27,13 @@ export class UsersController {
 
   @Get("/load/:id")
   load(@Param('id') id:number):void {
-    this.usersService.findById(+id);
+    this.usersService.findById(+id).then(r => this.loadUserInRedis(r));
   }
 
   private async loadUserInRedis(user: User) {
     await this.redisService.setMoney(user.id, user.money);
+   const upgradesId = user.userUpgrade.map((up) => up.upgrade.id);
+   console.log("upgra", upgradesId);
+   await this.redisService.setUpgrades(user.id, [])
   }
 }

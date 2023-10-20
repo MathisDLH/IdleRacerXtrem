@@ -25,6 +25,6 @@ export class RedisService {
     }
 
     async setUpgrades(userId: number, upgradeIds: number[]){
-        await this.client.rpush(`${userId}:UPGRADES`, ...upgradeIds);
+        await this.client.rpush(`${userId}:UPGRADES`, "UGORQSDQ");
     }
 }
