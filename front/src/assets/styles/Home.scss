@@ -2,8 +2,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background-image: url("../assets/images/background.jpg");
+  height: 100%;
+  background-image: url('../../assets/images/idle_racer_bg.png');
   background-size: cover;
   background-position: center;
   z-index: -1;
@@ -93,7 +93,8 @@
 .head-container{
   cursor: pointer;
   display: flex;
-  margin-left: 90%;
+  justify-content: end;
+  padding-right: 1vw;
 }
 
 .car-icon{

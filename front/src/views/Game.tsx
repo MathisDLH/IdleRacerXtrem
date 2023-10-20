@@ -16,7 +16,6 @@ const Game = () => {
 
     const {token} = useAuth();
     const socket = io("ws://localhost:3000?token=" + token?.split("\"")[1].split("\"")[0], {transports: ['websocket']});
-    const [bonus] = useState(1);
     const [money, setMoney] = useState(0);
     const [shopOpen, setShopOpen] = useState(false);
 
@@ -25,7 +24,9 @@ const Game = () => {
     }
 
     const click = () => {
-        setMoney(money + bonus);
+        console.log("click");
+        socket.emit("click");
+        //setMoney(money + bonus);
     }
 
     useEffect(() => {
