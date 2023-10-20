@@ -4,6 +4,7 @@ import { OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
 import { UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Inject } from '@nestjs/common';
+import { UsersService } from 'src/users/users.service';
 
 interface UserPayload {
   userId: string;
@@ -21,20 +22,18 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   clients: Set<UserSocket> = new Set();
 
-  constructor(private readonly jwtService: JwtService) {
+  constructor(private readonly jwtService: JwtService, private readonly usersService: UsersService) {
     setInterval(() => {
       this.clients.forEach(client => {
         if (client.user) {
-          client.emit('money', this.getUserMoney(client.user.userId));
+          client.emit('money', this.getUserMoney(parseInt(client.user.userId)));
         }
       });
     }, 1000);
   }
   
-  
 
   handleConnection(client: UserSocket) {
-    // Ici, j'assume que le JWT est fourni comme paramètre de requête, ajustez selon votre mise en œuvre
     let token = client.handshake.query.token;
     if (Array.isArray(token)) {
       token = token[0];
@@ -57,11 +56,12 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   }
 
-  handleDisconnect(client: Socket) {
+  handleDisconnect(client: UserSocket) {
     console.log('Client disconnected', client.id);
     this.clients.delete(client);
   }
-  getUserMoney(userId: string): number {
-    return Math.random() * 1000;  
+  async getUserMoney(userId: number): Promise<string> {
+    const user = await this.usersService.findById(userId);
+    return user.money + user.money_unite;
   }
 }
