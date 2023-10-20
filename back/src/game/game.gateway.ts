@@ -49,6 +49,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       const payload = this.jwtService.verify(token, { secret: process.env.JWT_SECRET });
       client.user = await this.usersService.findById(parseInt(payload.userId));
       this.clients.add(client);
+      this.redisService.loadUserInRedis(client.user);
       console.log('New client connected');
     } catch (err) {
       console.error('Erreur de vérification JWT:', err);
@@ -75,11 +76,12 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
           redisInfos.upgrades.find((upgrade) => upgrade.id == element.generationUpgrade.id).amount += element.amount * element.value;
         }  
       }else{
-        user.money += element.amount * element.value;
+        redisInfos.money = actualMoney + (element.amount * element.value);
       }
       
       
     });
+    await this.redisService.updateUserData(user, redisInfos);
 
     return user.money.toString() + user.money_unite.toString();
   }
