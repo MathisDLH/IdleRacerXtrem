@@ -1,5 +1,5 @@
-const Race = () => {
-  return <h1>Race</h1>;
+const Race = (): JSX.Element => {
+  return <h1>Race</h1>
 }
 
-export default Race;
+export default Race

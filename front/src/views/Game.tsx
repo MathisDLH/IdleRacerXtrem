@@ -1,50 +1,47 @@
-import {motion} from 'framer-motion';
-import {useEffect, useState} from 'react';
-import IconButton from '@mui/material/IconButton';
+import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
+import IconButton from '@mui/material/IconButton'
 
-import first from "../assets/images/game/cars/6.png";
-import shop from "../assets/images/game/icons/shop.png";
-import '../assets/styles/Game.scss';
+import first from '../assets/images/game/cars/6.png'
+import shop from '../assets/images/game/icons/shop.png'
+import '../assets/styles/Game.scss'
 
-import DraggableDialog from "../components/DraggableDialog.tsx";
-import UpgradesList from "../components/UpgradesList.tsx";
+import DraggableDialog from '../components/DraggableDialog.tsx'
+import UpgradesList from '../components/UpgradesList.tsx'
 
 import io from "socket.io-client";
 import {useAuth} from "../context/Auth.tsx";
 
-const Game = () => {
+const Game = (): JSX.Element => {
+  const {token} = useAuth();
+  const socket = io("ws://localhost:3000?token=" + token?.split("\"")[1].split("\"")[0], {transports: ['websocket']});
+  const [money, setMoney] = useState(0)
+  const [shopOpen, setShopOpen] = useState(false)
 
-    const {token} = useAuth();
-    const socket = io("ws://localhost:3000?token=" + token?.split("\"")[1].split("\"")[0], {transports: ['websocket']});
-    const [money, setMoney] = useState(0);
-    const [shopOpen, setShopOpen] = useState(false);
+  const toggleShop = (): void => {
+    setShopOpen(!shopOpen)
+  }
 
-    const toggleShop = () :void => {
-        setShopOpen(!shopOpen);
-    }
+  const click = (): void => {
+	  socket.emit("click");
+  }
 
-    const click = () => {
-        console.log("click");
-        socket.emit("click");
-        //setMoney(money + bonus);
-    }
+  useEffect(() => {
+	  socket.on("connect", () => {
+	  });
+	  
+	  socket.on("disconnect", (reason) => {
+		  console.log(reason.includes("server") ? "disconnected by server" : "disconnected by client");
+	  });
+	  
+	  socket.on("money", (data:any) => {
+		  //TODO change once the type of data is changed
+		  const currentMoney:number = parseInt(data.split('UNIT')[0]);
+		  setMoney(currentMoney);
+	  });
+  }, [])
 
-    useEffect(() => {
-        socket.on("connect", () => {
-        });
-
-        socket.on("disconnect", (reason) => {
-            console.log(reason.includes("server") ? "disconnected by server" : "disconnected by client");
-        });
-
-        socket.on("money", (data:any) => {
-            //TODO change once the type of data is changed
-            const currentMoney:number = parseInt(data.split('UNIT')[0]);
-            setMoney(currentMoney);
-        });
-    }, []);
-
-    return(
+  return (
         <motion.div
         initial={{ opacity: 0, scale: 0, rotate: 45 }}
         animate={{ opacity: 1, scale: 1, rotate: 0 }}
@@ -60,7 +57,7 @@ const Game = () => {
                 </div>
             </header>
 
-            <DraggableDialog open={shopOpen} title={"Upgrades"} icon={shop} setOpen={setShopOpen} Content={<UpgradesList/>}>
+            <DraggableDialog open={shopOpen} title={'Upgrades'} icon={shop} setOpen={setShopOpen} Content={<UpgradesList/>}>
             </DraggableDialog>
 
             <div id="up" onClick={click}>
@@ -75,7 +72,7 @@ const Game = () => {
         </section>
         </motion.div>
 
-    )
+  )
 }
 
-export default Game;
+export default Game
