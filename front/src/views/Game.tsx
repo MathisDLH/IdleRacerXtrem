@@ -11,6 +11,8 @@ import UpgradesList from "../components/UpgradesList.tsx";
 
 const Game = () => {
 
+    //const ws = new WebSocket('ws://localhost:8080');
+
     const [bonus] = useState(1);
     const [money, setMoney] = useState(0);
     const [shopOpen, setShopOpen] = useState(false);
