@@ -3,14 +3,13 @@ import {
   BeforeInsert,
   Column,
   CreateDateColumn,
-  Entity, JoinTable, ManyToMany,
+  Entity,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
-import { Unit } from "../shared/shared.model";
-import { Upgrade } from "../upgrade/upgrade.entity";
+import {Unit} from "../shared/shared.model";
 import {UserUpgrade} from "../UserUpgrade/userUpgrade.entity";
 
 @Entity()
@@ -29,12 +28,6 @@ import {UserUpgrade} from "../UserUpgrade/userUpgrade.entity";
 
     @Column({type: "enum", enum: Unit, default: Unit.UNIT})
     money_unite: Unit;
-
-    @Column({default: 0})
-    fans: number;
-
-    @Column({type: "enum", enum: Unit, default: Unit.UNIT})
-    fans_unite: Unit;
 
     @Column()
     @CreateDateColumn()
