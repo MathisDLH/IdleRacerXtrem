@@ -24,4 +24,12 @@ export class UsersController {
   @Put(':id')
   addUpgrade(@Param('id') id: number, @Body() body: {upgradeId: number, amount:number}): void {
   }
+
+  @Get("/load/:id")
+  load(@Param('id') id:number):void {
+    this.usersService.findById(+id).then(r => {
+      this.redisService.loadUserInRedis(r).then(u => this.redisService.getUserData(r).then((d) => console.log(d)));
+
+    });
+  }
 }

@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import {RedisClient} from "./redis.provider";
-import {Unit} from "../shared/shared.model";
+import {IRedisData, IRedisUpgrade, Unit} from "../shared/shared.model";
 import {User} from "../users/user.entity";
 
 @Injectable()
@@ -57,29 +57,22 @@ export class RedisService {
             .set(`${user.id}:MONEY`, user.money, "EX", 3600)
             .set(`${user.id}:MONEY_UNIT`, user.money_unite, "EX", 3600)
             .lpush(`${user.id}:UPGRADES`, ...upgradesId)
-
         for (const e of user.userUpgrade) {
-            chain.set(`${user.id}:${e.upgrade.id}:TIMELEFT`, e.upgrade.timeToGenerate,"EX", 3600)
-            chain.set(`${user.id}:${e.upgrade.id}:BASETIME`, e.upgrade.timeToGenerate,"EX", 3600)
-            chain.set(`${user.id}:${e.upgrade.id}:GENERATEDUPGRADE`, e.upgrade.generationUpgrade?.id ?? 0,"EX", 3600)
-            chain.set(`${user.id}:${e.upgrade.id}:QUANTITY`, e.amount,"EX", 3600)
+            chain.hset(`${user.id}:${e.upgrade.id}`, {...e.upgrade, amount: e.amount, timeleft: e.upgrade.timeToGenerate} as IRedisUpgrade)
         }
         await chain.exec()
     }
 
     public async getUserData(user: User) {
-        const chain = this.client.multi()
-            .get(`${user.id}:MONEY`)
-            .get(`${user.id}:MONEY_UNIT`)
-            .lrange(`${user.id}:UPGRADES`, 0, -1)
-
+        const upgrades: IRedisUpgrade[] = [];
         for (const e of user.userUpgrade) {
-            chain.get(`${user.id}:${e.upgrade.id}:TIMELEFT`)
-            chain.get(`${user.id}:${e.upgrade.id}:BASETIME`)
-            chain.get(`${user.id}:${e.upgrade.id}:GENERATEDUPGRADE`)
-            chain.get(`${user.id}:${e.upgrade.id}:QUANTITY`)
+            upgrades.push(await this.client.hgetall(`${user.id}:${e.upgrade.id}`) as unknown as IRedisUpgrade)
         }
-        const data = await chain.exec()
+        const data: IRedisData = {
+            money: +await this.client.get(`${user.id}:MONEY`),
+            moneyUnit: await this.client.get(`${user.id}:MONEY_UNIT`) as Unit,
+            upgrades
+        }
         return data;
     }
 }

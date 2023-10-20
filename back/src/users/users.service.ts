@@ -16,7 +16,9 @@ export class UsersService {
  }
 
   async findById(id: number): Promise<User> {
-      return await this.userRepository.findOne({where: {id:id}, relations: { userUpgrade:true }});
+      const t =await this.userRepository.find({where: {id:id}, relations: { userUpgrade:true }});
+      return t[0];
+      //return await this.userRepository.findOne({where: {id:id}, relations: { userUpgrade:true }});
   }
 
   async findByEmail(email: string): Promise<User> {

@@ -18,7 +18,7 @@ export enum Unit {
 export interface IRedisData {
     money: number;
     moneyUnit: Unit;
-    upgrades: IRedisUpgrade;
+    upgrades: IRedisUpgrade[];
 }
 
 export interface IRedisUpgrade extends Upgrade {
