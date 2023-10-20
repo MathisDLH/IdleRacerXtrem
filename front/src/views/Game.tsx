@@ -9,12 +9,12 @@ import '../assets/styles/Game.scss'
 import DraggableDialog from '../components/DraggableDialog.tsx'
 import UpgradesList from '../components/UpgradesList.tsx'
 
-import io from "socket.io-client";
-import {useAuth} from "../context/Auth.tsx";
+import io from 'socket.io-client'
+import { useAuth } from '../context/Auth.tsx'
 
 const Game = (): JSX.Element => {
-  const {token} = useAuth();
-  const socket = io("ws://localhost:3000?token=" + token?.split("\"")[1].split("\"")[0], {transports: ['websocket']});
+  const { token } = useAuth()
+  const socket = io('ws://localhost:3000?token=' + token?.split('"')[1].split('"')[0], { transports: ['websocket'] })
   const [money, setMoney] = useState(0)
   const [shopOpen, setShopOpen] = useState(false)
 
@@ -23,22 +23,21 @@ const Game = (): JSX.Element => {
   }
 
   const click = (): void => {
-	  socket.emit("click");
+    socket.emit('click')
   }
 
   useEffect(() => {
-	  socket.on("connect", () => {
-	  });
-	  
-	  socket.on("disconnect", (reason) => {
-		  console.log(reason.includes("server") ? "disconnected by server" : "disconnected by client");
-	  });
-	  
-	  socket.on("money", (data:any) => {
-		  //TODO change once the type of data is changed
-		  const currentMoney:number = parseInt(data.split('UNIT')[0]);
-		  setMoney(currentMoney);
-	  });
+    socket.on('connect', () => {})
+
+    socket.on('disconnect', (reason) => {
+      console.log(reason.includes('server') ? 'disconnected by server' : 'disconnected by client')
+    })
+
+    socket.on('money', (data: any) => {
+      // TODO change once the type of data is changed
+      const currentMoney: number = parseInt(data.split('UNIT')[0])
+      setMoney(currentMoney)
+    })
   }, [])
 
   return (
@@ -57,8 +56,7 @@ const Game = (): JSX.Element => {
                 </div>
             </header>
 
-            <DraggableDialog open={shopOpen} title={'Upgrades'} icon={shop} setOpen={setShopOpen} Content={<UpgradesList/>}>
-            </DraggableDialog>
+            <DraggableDialog open={shopOpen} title={'Upgrades'} icon={shop} size="small" setOpen={setShopOpen} Content={<UpgradesList/>}></DraggableDialog>
 
             <div id="up" onClick={click}>
                 <div id="sun"></div>

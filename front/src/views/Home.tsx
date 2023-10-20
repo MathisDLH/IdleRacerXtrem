@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
-import '../assets/styles/Home.scss' // Importez votre fichier CSS ici
-import backgroundImage from '../assets/images/idle_racer_bg.png' // Chemin vers l'image
+import '../assets/styles/Home.scss'
+import backgroundImage from '../assets/images/idle_racer_bg.png'
 import flags from '../assets/images/race_flag.png'
 import carIcon from '../assets/images/auth/car_icon.png'
 import { motion } from 'framer-motion'
@@ -10,7 +10,6 @@ import LoginForm from '../components/LoginForm'
 import DraggableDialog from '../components/DraggableDialog'
 
 const Home = (): JSX.Element => {
-	
   const { user, isLoggedIn, signout } = useAuth()
   const [modalVisible, setModalVisible] = useState(false)
   const [modalSignOutVisible, setModalSignoutVisible] = useState(false)
@@ -22,8 +21,8 @@ const Home = (): JSX.Element => {
           signout()
           setModalSignoutVisible(false)
         }}>
-	        LOGOUT
-		</p>
+          LOGOUT
+        </p>
       </div>
     )
   }

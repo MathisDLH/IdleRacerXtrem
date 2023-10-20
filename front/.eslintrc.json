@@ -9,7 +9,9 @@
     ],
     "parserOptions": {
         "ecmaVersion": "latest",
-        "sourceType": "module"
+        "sourceType": "module",
+        "parser": "@typescript-eslint/parser",
+        "project": "./tsconfig.json"
     },
     "plugins": [
         "react"
@@ -17,6 +19,6 @@
     "rules": {
         "react/react-in-jsx-scope": "off",
         "@typescript-eslint/no-misused-promises": "off"
-    },
-    "ignorePatterns": [".eslintrc.cjs", "vite.config.ts", "src"]
+    }
+    //"ignorePatterns": [".eslintrc.cjs", "vite.config.ts", "src"]
 }
