@@ -9,10 +9,11 @@ import '../assets/styles/Game.scss';
 import DraggableDialog from "../components/DraggableDialog.tsx";
 import UpgradesList from "../components/UpgradesList.tsx";
 
+import {useSocket} from "../services/socket.service.ts";
+
 const Game = () => {
 
-    //const ws = new WebSocket('ws://localhost:8080');
-
+    const {socket, isConnected} = useSocket();
     const [bonus] = useState(1);
     const [money, setMoney] = useState(0);
     const [shopOpen, setShopOpen] = useState(false);
@@ -26,12 +27,14 @@ const Game = () => {
     }
 
     useEffect(() => {
-        const id = setInterval(() => setMoney((oldMoney) => oldMoney + bonus), 500);
-        return () => {
-            clearInterval(id);
-        };
-    }, []);
-
+        console.log(isConnected)
+        if (socket) {
+            socket.on('money', (data) => {
+                console.log('money')
+                console.log(data);
+            });
+        }
+    }, [socket]);
     return(
         <motion.div
         initial={{ opacity: 0, scale: 0, rotate: 45 }}
