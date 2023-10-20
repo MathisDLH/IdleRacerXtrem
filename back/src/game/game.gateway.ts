@@ -23,10 +23,10 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   clients: Set<UserSocket> = new Set();
 
   constructor(private readonly jwtService: JwtService, private readonly usersService: UsersService) {
-    setInterval(() => {
-      this.clients.forEach(client => {
+    setInterval(async () => {
+      this.clients.forEach(async (client) => {
         if (client.user) {
-          client.emit('money', this.getUserMoney(parseInt(client.user.userId)));
+          client.emit('money', await this.getUserMoney(parseInt(client.user.userId)));
         }
       });
     }, 1000);
@@ -62,6 +62,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
   async getUserMoney(userId: number): Promise<string> {
     const user = await this.usersService.findById(userId);
+    console.log(user.money + user.money_unite);
     return user.money + user.money_unite;
   }
 }
