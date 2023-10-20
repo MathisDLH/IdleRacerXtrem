@@ -18,16 +18,17 @@ function PaperComponent(props: PaperProps) {
 
 type DraggableProps = {
     children?: React.ReactNode,
+    big?: boolean
     open: boolean,
     setOpen: any,
     title: string,
-    icon:any,
+    icon: any,
     Content: any
 }
-export default function DraggableDialog({open,setOpen,title,icon,Content}:DraggableProps) {
+export default function DraggableDialog({ open, setOpen, title, icon, Content, big }: DraggableProps) {
 
 
-    const handleClose = (event:any, reason :any) => {
+    const handleClose = (event: any, reason: any) => {
         console.log(event)
         if (reason && reason == "backdropClick")
             return;
@@ -41,17 +42,18 @@ export default function DraggableDialog({open,setOpen,title,icon,Content}:Dragga
             PaperComponent={PaperComponent}
             aria-labelledby="draggable-dialog-title"
             hideBackdrop={true}
-            className={"dialog"}
+            className={"dialog " + (big ? "big" : "small")}
         >
             <div className="drag">
                 <DialogTitle id="draggable-dialog-title">
-                    <img src={icon} alt=""/>
+                    <img src={icon} alt="" />
                     <span>{title}</span>
                 </DialogTitle>
-                <DialogContent id={"draggable-dialog-content"}>
+                <DialogContent id="draggable-dialog-content">
                     {Content}
                 </DialogContent>
             </div>
         </Dialog>
     );
+    
 }

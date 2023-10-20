@@ -21,7 +21,6 @@ export const AuthProvider = (props: any) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     useEffect(() => {
-        // Check if the user is logged in when the component mounts
         const token = localStorage.getItem('access_token');
         console.log(token)
         if (token) {

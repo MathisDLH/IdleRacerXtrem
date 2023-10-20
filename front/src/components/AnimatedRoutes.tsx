@@ -11,14 +11,15 @@ import { useAuth } from '../context/Auth';
 const AnimatedRoutes = () => {
   const location = useLocation();
   const {isLoggedIn} = useAuth();
+  console.log(isLoggedIn);
 
   return (
     <AnimatePresence>
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Home />} />
         {!isLoggedIn && <Route path='/register' element={<RegisterForm />} />}
-        <Route path="/game" element={<Game />} />
-        <Route path="/race" element={<Race />} />
+        {isLoggedIn && < Route path="/game" element={<Game />} />}
+        {isLoggedIn && <Route path="/race" element={<Race />} />}
         <Route path='*' element={<NotFoundPage />} />
       </Routes>
     </AnimatePresence>

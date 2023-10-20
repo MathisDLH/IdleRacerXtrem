@@ -1,8 +1,86 @@
-.form-input{
-    margin-bottom: 1em;
-    max-width: 80%;
-}
+/* LoginForm.scss */
 
-.modal-content{
-    color: white;
-}
+/* Styling for the modal content container */
+.login-container {
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    padding: 20px;
+    text-align: center;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  /* Style for the heading */
+  .login-heading {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  /* Style for the error message */
+  .error-message {
+    color: red;
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  
+  /* Style for form groups (e.g., Email and Password) */
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  /* Style for labels (e.g., Email and Password) */
+  .form-label {
+    font-size: 16px;
+    text-align: left;
+    margin-bottom: 5px;
+  }
+  
+  /* Style for input fields */
+  .form-login-input {
+    width: 100%;
+    padding: 0.3vw;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border 0.3s;
+  }
+  
+  .form-input:focus {
+    border-color: #007bff; /* Highlight the input on focus */
+  }
+  
+  /* Style for the login button */
+  .login-button {
+    background-color: #007bff;
+    color: #fff;
+    font-size: 18px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .login-button:hover {
+    background-color: #0056b3; /* Darker color on hover */
+  }
+  
+  /* Style for the "New Account" link */
+  .new-account-link {
+    margin-top: 10px;
+  }
+  
+  .new-account-link p {
+    cursor: pointer;
+    color: #000;
+    text-decoration: underline;
+  }
+  
+  /* Style for the "Close" link */
+  close-link {
+    cursor: pointer;
+    color: #000;
+    text-decoration: underline;
+  }
+  
