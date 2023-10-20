@@ -7,6 +7,5 @@ export class RedisController {
 
   @Get()
   public async get(){
-    await this.service.set("TOTO", "1", 3600);
   }
 }

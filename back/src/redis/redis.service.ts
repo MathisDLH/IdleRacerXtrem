@@ -8,15 +8,20 @@ export class RedisService {
         private readonly client: RedisClient,
     ) {}
 
-    async set(key: string, value: string, expirationSeconds: number) {
-        await this.client.set(key, value, 'EX', expirationSeconds);
+
+    async getMoney(userId:string) {
+        await this.client.get(`${userId}:MONEY`);
     }
 
-    async incrBy(key:string, value: number) {
-        await this.client.incrby(key, value);
+    async setMoney(userId: string, money: number){
+        await this.client.set(`${userId}:MONEY`, money);
     }
 
-    async get(key: string): Promise<string | null> {
-        return await this.client.get(key);
+    async incrMoney(userId: string, amountToIncr: string){
+        await this.client.incrby(`${userId}:MONEY`, amountToIncr);
+    }
+
+    async decrMoney(userId: string, amountToDecr: string){
+        await this.client.decrby(`${userId}:MONEY`, amountToDecr);
     }
 }

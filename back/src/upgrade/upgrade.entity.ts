@@ -32,9 +32,9 @@ import {UserUpgrade} from "../UserUpgrade/userUpgrade.entity";
     @Column()
     ratio: number;
 
-  @OneToOne(() => Upgrade)
+    @OneToOne(() => Upgrade)
     @JoinColumn()
-    type: Upgrade;
+    generationUpgrade: Upgrade;
 
     @Column({comment: "Number of type generated"})
     value: number;
