@@ -1,48 +1,45 @@
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import Paper, { PaperProps } from '@mui/material/Paper';
-import Draggable from 'react-draggable';
-import "../assets/styles/DraggableDialog.scss"
+import Dialog from '@mui/material/Dialog'
+import DialogContent from '@mui/material/DialogContent'
+import DialogTitle from '@mui/material/DialogTitle'
+import Paper, { type PaperProps } from '@mui/material/Paper'
+import Draggable from 'react-draggable'
+import '../assets/styles/DraggableDialog.scss'
 
-function PaperComponent(props: PaperProps) {
-    return (
+function PaperComponent (props: PaperProps) {
+  return (
         <Draggable
             handle="#draggable-dialog-title"
             cancel={'[class*="MuiDialogContent-root"]'}
         >
             <Paper {...props} />
         </Draggable>
-    );
+  )
 }
 
-type DraggableProps = {
-    children?: React.ReactNode,
-    big?: boolean
-    open: boolean,
-    setOpen: any,
-    title: string,
-    icon: any,
-    Content: any
+interface DraggableProps {
+  children?: React.ReactNode
+  big?: boolean
+  open: boolean
+  setOpen: any
+  title: string
+  icon: any
+  Content: any
 }
-export default function DraggableDialog({ open, setOpen, title, icon, Content, big }: DraggableProps) {
+export default function DraggableDialog ({ open, setOpen, title, icon, Content, big }: DraggableProps) {
+  const handleClose = (event: any, reason: any) => {
+    console.log(event)
+    if (reason && reason == 'backdropClick') { return }
+    setOpen(false)
+  }
 
-
-    const handleClose = (event: any, reason: any) => {
-        console.log(event)
-        if (reason && reason == "backdropClick")
-            return;
-        setOpen(false);
-    };
-
-    return (
+  return (
         <Dialog
             open={open}
             onClose={handleClose}
             PaperComponent={PaperComponent}
             aria-labelledby="draggable-dialog-title"
             hideBackdrop={true}
-            className={"dialog " + (big ? "big" : "small")}
+            className={'dialog ' + (big ? 'big' : 'small')}
         >
             <div className="drag">
                 <DialogTitle id="draggable-dialog-title">
@@ -54,6 +51,5 @@ export default function DraggableDialog({ open, setOpen, title, icon, Content, b
                 </DialogContent>
             </div>
         </Dialog>
-    );
-    
+  )
 }

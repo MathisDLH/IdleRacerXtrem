@@ -1,16 +1,16 @@
-import { BrowserRouter as Router } from 'react-router-dom';
-import './assets/styles/App.scss';
-import AnimatedRoutes from './components/AnimatedRoutes';
-import { AuthProvider } from './context/Auth';
+import { BrowserRouter as Router } from 'react-router-dom'
+import './assets/styles/App.scss'
+import AnimatedRoutes from './components/AnimatedRoutes'
+import { AuthProvider } from './context/Auth'
 
-function App() {
+function App () {
   return (
     <Router>
       <AuthProvider>
         <AnimatedRoutes />
       </AuthProvider>
     </Router>
-  );
+  )
 }
 
-export default App;
+export default App

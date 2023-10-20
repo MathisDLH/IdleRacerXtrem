@@ -1,5 +1,5 @@
 const Race = () => {
-  return <h1>Race</h1>;
+  return <h1>Race</h1>
 }
 
-export default Race;
+export default Race

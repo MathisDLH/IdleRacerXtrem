@@ -1,30 +1,30 @@
-import React, { useState } from 'react';
-import { useAuth } from '../context/Auth';
+import React, { useState } from 'react'
+import { useAuth } from '../context/Auth'
 import '../assets/styles/LoginForm.scss'
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'
 
-type Props = {
+interface Props {
   setOpen: any
 }
 
 const LoginForm = ({ setOpen }: Props) => {
-  const { signIn } = useAuth();
+  const { signIn } = useAuth()
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState<string | null>(null)
 
   const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
+    e.preventDefault()
+    setError(null)
 
     try {
-      await signIn(email, password);
-      setOpen(false);
+      await signIn(email, password)
+      setOpen(false)
     } catch (error) {
-      setError('Identifiants incorrects. Veuillez réessayer.');
+      setError('Identifiants incorrects. Veuillez réessayer.')
     }
-  };
+  }
 
   return (
     <div className="login-container">
@@ -36,7 +36,7 @@ const LoginForm = ({ setOpen }: Props) => {
           <input
             type="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => { setEmail(e.target.value) }}
             className="form-login-input"
           />
         </div>
@@ -45,7 +45,7 @@ const LoginForm = ({ setOpen }: Props) => {
           <input
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => { setPassword(e.target.value) }}
             className="form-login-input"
           />
         </div>
@@ -56,7 +56,7 @@ const LoginForm = ({ setOpen }: Props) => {
         <p className="close-link" onClick={() => setOpen(false)}>Close</p>
       </form>
     </div>
-  );
-};
+  )
+}
 
-export default LoginForm;
+export default LoginForm

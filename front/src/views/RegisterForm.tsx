@@ -1,29 +1,29 @@
-import { useState } from 'react';
-import { useAuth } from '../context/Auth';
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from 'react'
+import { useAuth } from '../context/Auth'
+import { Link, useNavigate } from 'react-router-dom'
 
-import backgroundImage from '../assets/images/idle_racer_bg.png'; // Chemin vers l'image
-import flags from '../assets/images/race_flag.png';
-import { motion } from 'framer-motion';
+import backgroundImage from '../assets/images/idle_racer_bg.png' // Chemin vers l'image
+import flags from '../assets/images/race_flag.png'
+import { motion } from 'framer-motion'
 
 const RegisterForm = () => {
-  const { register } = useAuth();
+  const { register } = useAuth()
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const navigate = useNavigate();
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const navigate = useNavigate()
 
   const handleSignup = async (e: any) => {
-    e.preventDefault();
+    e.preventDefault()
 
     try {
-      const userData = await register(email, password);
-      navigate('/');
-      console.log('Utilisateur inscrit avec succès:', userData);
+      const userData = await register(email, password)
+      navigate('/')
+      console.log('Utilisateur inscrit avec succès:', userData)
     } catch (error) {
-      console.error(`Erreur lors de l'inscription`, error);
+      console.error('Erreur lors de l\'inscription', error)
     }
-  };
+  }
 
   return (
     <motion.div
@@ -42,7 +42,7 @@ const RegisterForm = () => {
             <input
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => { setEmail(e.target.value) }}
               className="form-input"
             />
           </div>
@@ -50,7 +50,7 @@ const RegisterForm = () => {
             <input
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => { setPassword(e.target.value) }}
               className="form-input"
             />
           </div>
@@ -58,10 +58,10 @@ const RegisterForm = () => {
             S'inscrire
           </button>
         </form>
-        <Link to='/' style={{cursor: 'pointer', color: 'black', textDecoration: 'underline'}}><p>EXIT</p></Link>
+        <Link to='/' style={{ cursor: 'pointer', color: 'black', textDecoration: 'underline' }}><p>EXIT</p></Link>
       </div>
     </motion.div>
-  );
+  )
 }
 
-export default RegisterForm;
+export default RegisterForm

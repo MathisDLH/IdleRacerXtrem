@@ -1,11 +1,10 @@
-import '../assets/styles/Upgrade.scss';
-import {UpgradeModel} from '../models/Upgrade.tsx';
+import '../assets/styles/Upgrade.scss'
+import { type UpgradeModel } from '../models/Upgrade.tsx'
 
-export default function Upgrade(upgrade: UpgradeModel) {
-
-    return(
-        <div className={"upgrade"}>
+export default function Upgrade (upgrade: UpgradeModel) {
+  return (
+        <div className={'upgrade'}>
             {upgrade.name}
         </div>
-    )
+  )
 }
