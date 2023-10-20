@@ -30,7 +30,10 @@ const Home = () => {
 	  
   
 	return (
-		<motion.div style={{ backgroundImage: `url(${backgroundImage})` }}
+		<motion.div style={{
+			backgroundImage: `url(${backgroundImage})`,
+			height: '100%',
+		}}
 		
 		initial={{ opacity: 0, scale: 0, rotate: 45 }}
 		animate={{ opacity: 1, scale: 1, rotate: 0 }}
