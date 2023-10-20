@@ -60,8 +60,8 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     console.log('Client disconnected', client.id);
     this.clients.delete(client);
   }
-  async getUserMoney(userId: number): Promise<number> {
+  async getUserMoney(userId: number): Promise<string> {
     const user = await this.usersService.findById(userId);
-    return user.money;
+    return user.money + user.money_unite;
   }
 }
