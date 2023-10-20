@@ -14,11 +14,7 @@ interface UserSocket extends Socket {
   user?: UserPayload;
 }
 
-@WebSocketGateway({
-    cors: {
-      origin: '*',
-    }
-})
+@WebSocketGateway({cors: {origin: '*'}})
 export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @WebSocketServer()
