@@ -7,7 +7,6 @@ import { motion } from 'framer-motion';
 import { useAuth } from '../context/Auth';
 import { useState } from 'react';
 import LoginForm from '../components/LoginForm';
-import { Modal } from '@mui/material';
 import DraggableDialog from '../components/DraggableDialog';
 
 const Home = () => {
