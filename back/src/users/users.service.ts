@@ -20,13 +20,6 @@ export class UsersService {
   }
 
   async findByEmail(email: string): Promise<User> {
-        return await this.userRepository.findOneBy({email});
-    }
-
-  async addUpgrade(userId: number, upgradeId: number, amount: number):Promise<UserUpgrade> {
-        //If exist Amount increment
-        const exist = await this.userUpgradeRepository.exist({where: {userId, upgradeId}});
-        if(!exist) return this.userUpgradeRepository.create({userId, upgradeId, amount});
-        await this.userUpgradeRepository.increment({userId, upgradeId}, 'amount', amount);
+        return await this.userRepository.findOne({where: {email}, select: ["email", "password"]});
     }
 }

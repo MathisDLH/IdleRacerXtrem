@@ -4,10 +4,12 @@ import {UsersService} from './users.service';
 import {CreateUserDto} from './dto/create-user.dto';
 import {UserUpgrade} from "../UserUpgrade/userUpgrade.entity";
 import {User} from "./user.entity";
+import {RedisService} from "../redis/redis.service";
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService,
+              private readonly redisService: RedisService) {}
 
   @Post("/register")
   create(@Body() createUserDto: CreateUserDto): Promise<User> {
@@ -20,7 +22,15 @@ export class UsersController {
   }
 
   @Put(':id')
-  addUpgrade(@Param('id') id: number, @Body() body: {upgradeId: number, amount:number}): Promise<UserUpgrade> {
-      return this.usersService.addUpgrade(id, body.upgradeId, body.amount);
+  addUpgrade(@Param('id') id: number, @Body() body: {upgradeId: number, amount:number}): void {
+  }
+
+  @Get("/load/:id")
+  load(@Param('id') id:number):void {
+    this.usersService.findById(+id);
+  }
+
+  private async loadUserInRedis(user: User) {
+    await this.redisService.setMoney(user.id, user.money);
   }
 }

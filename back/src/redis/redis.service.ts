@@ -8,12 +8,11 @@ export class RedisService {
         private readonly client: RedisClient,
     ) {}
 
-
     async getMoney(userId:string) {
         await this.client.get(`${userId}:MONEY`);
     }
 
-    async setMoney(userId: string, money: number){
+    async setMoney(userId: number, money: number){
         await this.client.set(`${userId}:MONEY`, money);
     }
 
@@ -23,5 +22,9 @@ export class RedisService {
 
     async decrMoney(userId: string, amountToDecr: string){
         await this.client.decrby(`${userId}:MONEY`, amountToDecr);
+    }
+
+    async setUpgrades(userId: number, upgradeIds: number[]){
+        await this.client.rpush(`${userId}:UPGRADES`, ...upgradeIds);
     }
 }
