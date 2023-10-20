@@ -7,14 +7,14 @@ interface Props {
   setOpen: any
 }
 
-const LoginForm = ({ setOpen }: Props) => {
+const LoginForm = ({ setOpen }: Props): JSX.Element => {
   const { signIn } = useAuth()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault()
     setError(null)
 
@@ -29,7 +29,7 @@ const LoginForm = ({ setOpen }: Props) => {
   return (
     <div className="login-container">
       <h1 className="login-heading">LOGIN</h1>
-      {error && <p className="error-message">{error}</p>}
+      {(error != null) && <p className="error-message">{error}</p>}
       <form onSubmit={handleLogin}>
         <div className="form-group">
           <p className="form-label">EMAIL</p>

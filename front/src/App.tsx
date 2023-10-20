@@ -3,7 +3,7 @@ import './assets/styles/App.scss'
 import AnimatedRoutes from './components/AnimatedRoutes'
 import { AuthProvider } from './context/Auth'
 
-function App () {
+function App (): JSX.Element {
   return (
     <Router>
       <AuthProvider>

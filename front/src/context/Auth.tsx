@@ -12,18 +12,25 @@ const AuthContext = createContext({
   register: async (_email: string, _password: string) => { }
 })
 
-export const useAuth = () => {
+interface AuthContextInterface {
+  user: User | null
+  isLoggedIn: boolean
+  signIn: (email: string, password: string) => Promise<void>
+  signout: () => void
+  register: (email: string, password: string) => Promise<void>
+}
+export const useAuth = (): AuthContextInterface => {
   return useContext(AuthContext)
 }
 
-export const AuthProvider = (props: any) => {
+export const AuthProvider = (props: any): JSX.Element => {
   const [user, setUser] = useState<User | null>(null)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
 
   useEffect(() => {
     const token = localStorage.getItem('access_token')
     console.log(token)
-    if (token) {
+    if (token != null) {
       const decoded: any = jwt_decode(token)
       userService.getUser(decoded.userId)
         .then((user: User) => {
@@ -36,11 +43,11 @@ export const AuthProvider = (props: any) => {
     }
   }, [])
 
-  const signIn = async (email: string, password: string) => {
+  const signIn = async (email: string, password: string): Promise<void> => {
     try {
       const promiseToken = await userService.loginUser(email, password)
       const token = promiseToken.access_token
-      if (token) {
+      if (token != null) {
         const decoded: any = jwt_decode(token)
         const user: User = await userService.getUser(decoded.userId)
         setUser(user)
@@ -54,12 +61,12 @@ export const AuthProvider = (props: any) => {
     }
   }
 
-  const register = async (email: string, password: string) => {
+  const register = async (email: string, password: string): Promise<void> => {
     const data = await userService.createUser(email, password)
     return data
   }
 
-  const signout = () => {
+  const signout = (): void => {
     setUser(null)
     setIsLoggedIn(false)
     localStorage.removeItem('access_token')

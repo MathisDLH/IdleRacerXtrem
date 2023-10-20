@@ -8,7 +8,7 @@ import NotFoundPage from '../views/NotFoundPage'
 import RegisterForm from '../views/RegisterForm'
 import { useAuth } from '../context/Auth'
 
-const AnimatedRoutes = () => {
+const AnimatedRoutes = (): JSX.Element => {
   const location = useLocation()
   const { isLoggedIn } = useAuth()
   console.log(isLoggedIn)

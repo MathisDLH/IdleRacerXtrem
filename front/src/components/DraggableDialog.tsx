@@ -5,7 +5,7 @@ import Paper, { type PaperProps } from '@mui/material/Paper'
 import Draggable from 'react-draggable'
 import '../assets/styles/DraggableDialog.scss'
 
-function PaperComponent (props: PaperProps) {
+function PaperComponent (props: PaperProps): JSX.Element {
   return (
         <Draggable
             handle="#draggable-dialog-title"
@@ -18,18 +18,19 @@ function PaperComponent (props: PaperProps) {
 
 interface DraggableProps {
   children?: React.ReactNode
-  big?: boolean
+  size: string
   open: boolean
   setOpen: any
   title: string
   icon: any
   Content: any
 }
-export default function DraggableDialog ({ open, setOpen, title, icon, Content, big }: DraggableProps) {
-  const handleClose = (event: any, reason: any) => {
+export default function DraggableDialog ({ open, setOpen, title, icon, Content, size }: DraggableProps): JSX.Element {
+  const handleClose = (event: any, reason: any): void => {
     console.log(event)
-    if (reason && reason == 'backdropClick') { return }
-    setOpen(false)
+    if (!(reason !== null && reason === 'backdropClick')) {
+      setOpen(false)
+    }
   }
 
   return (
@@ -39,7 +40,7 @@ export default function DraggableDialog ({ open, setOpen, title, icon, Content, 
             PaperComponent={PaperComponent}
             aria-labelledby="draggable-dialog-title"
             hideBackdrop={true}
-            className={'dialog ' + (big ? 'big' : 'small')}
+            className={'dialog ' + size}
         >
             <div className="drag">
                 <DialogTitle id="draggable-dialog-title">

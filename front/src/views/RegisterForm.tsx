@@ -6,18 +6,18 @@ import backgroundImage from '../assets/images/idle_racer_bg.png' // Chemin vers 
 import flags from '../assets/images/race_flag.png'
 import { motion } from 'framer-motion'
 
-const RegisterForm = () => {
+const RegisterForm = (): JSX.Element => {
   const { register } = useAuth()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const navigate = useNavigate()
 
-  const handleSignup = async (e: any) => {
+  const handleSignup = async (e: any): Promise<void> => {
     e.preventDefault()
 
     try {
-      const userData = await register(email, password)
+      const [userData] = await Promise.all([register(email, password)])
       navigate('/')
       console.log('Utilisateur inscrit avec succès:', userData)
     } catch (error) {
@@ -55,7 +55,7 @@ const RegisterForm = () => {
             />
           </div>
           <button type="submit" className="start-button">
-            S'inscrire
+            Register
           </button>
         </form>
         <Link to='/' style={{ cursor: 'pointer', color: 'black', textDecoration: 'underline' }}><p>EXIT</p></Link>

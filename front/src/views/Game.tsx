@@ -9,7 +9,7 @@ import '../assets/styles/Game.scss'
 import DraggableDialog from '../components/DraggableDialog.tsx'
 import UpgradesList from '../components/UpgradesList.tsx'
 
-const Game = () => {
+const Game = (): JSX.Element => {
   const [bonus] = useState(1)
   const [money, setMoney] = useState(0)
   const [shopOpen, setShopOpen] = useState(false)
@@ -18,7 +18,7 @@ const Game = () => {
     setShopOpen(!shopOpen)
   }
 
-  const click = () => {
+  const click = (): void => {
     setMoney(money + bonus)
   }
 

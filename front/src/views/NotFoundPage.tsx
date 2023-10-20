@@ -2,7 +2,7 @@ import '../assets/styles/Home.scss' // Importez votre fichier CSS ici
 import backgroundImage from '../assets/images/page_not_found.jpg'
 import { motion } from 'framer-motion'
 
-const NotFoundPage = () => {
+const NotFoundPage = (): JSX.Element => {
   return (
     <motion.div className="menu" style={{ backgroundImage: `url(${backgroundImage})` }}
 

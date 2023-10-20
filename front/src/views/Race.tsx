@@ -1,4 +1,4 @@
-const Race = () => {
+const Race = (): JSX.Element => {
   return <h1>Race</h1>
 }
 

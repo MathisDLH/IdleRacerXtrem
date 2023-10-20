@@ -3,7 +3,7 @@ import upgrades from '../assets/mock/upgrades.json'
 import Upgrade from './Upgrade.tsx'
 import { type UpgradeModel } from '../models/Upgrade.tsx'
 
-export default function UpgradesList () {
+export default function UpgradesList (): JSX.Element {
   return (
         <div id={'list'} className={'upgrades'}>
             {upgrades.money.click.map((upgrade: UpgradeModel) => {
