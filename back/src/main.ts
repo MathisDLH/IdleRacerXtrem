@@ -9,7 +9,9 @@ async function bootstrap() {
 
   var cors = require('cors')
 
-  app.use(cors()) // Use this after the variable declaration
+  //app.use(cors()) // Use this after the variable declaration
+
+  app.enableCors();
 
   const config = new DocumentBuilder()
     .setTitle('IdleRacer API description')
