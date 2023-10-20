@@ -1,6 +1,9 @@
 .upgrade {
-    height: 5vh;
+    height: 8vh;
     background-color: var(--grey1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 .upgrade:nth-child(odd) {
     background-color: var(--grey2);
