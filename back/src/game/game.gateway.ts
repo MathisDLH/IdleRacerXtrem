@@ -6,6 +6,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Inject } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { User } from 'src/users/user.entity';
+import { RedisService } from 'src/redis/redis.service';
 
 interface UserSocket extends Socket {
   user?: User;
@@ -23,7 +24,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   clients: Set<UserSocket> = new Set();
 
-  constructor(private readonly jwtService: JwtService, private readonly usersService: UsersService) {
+  constructor(private readonly jwtService: JwtService, private readonly usersService: UsersService, private readonly redisService: RedisService) {
     setInterval(async () => {
       this.clients.forEach(async (client) => {
         if (client.user) {
@@ -67,11 +68,22 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async getUserMoney(user: User): Promise<string> {
 
     //Algo de calcul de l'argent à virer et des quantités à mettre à jour.
-    /*var redisInfos = getRedisInfos(User);
+    var redisInfos = await this.redisService.getUserData(user);
     var actualMoney = redisInfos.money;
+    var augmentNext = 0; 
     redisInfos.upgrades.forEach(element => {
+      if(element.id > 1){
+        element.timeleft = element.timeleft - 1;
+        if (element.timeleft == 0 ){
+          element.timeleft = element.timeToGenerate;
+          redisInfos.upgrades.find((upgrade) => upgrade.id == element.generationUpgrade.id).amount += element.amount * element.value;
+        }  
+      }else{
+        user.money += element.amount * element.value;
+      }
       
-    });*/
+      
+    });
 
     return user.money.toString() + user.money_unite.toString();
   }
