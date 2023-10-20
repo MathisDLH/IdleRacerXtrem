@@ -1,16 +1,17 @@
-import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
-import { AuthModule } from './auth/auth.module';
-import { User } from './users/user.entity';
-import { HealthModule } from './health/health.module';
-import { GameGateway } from './game/game.gateway';
-import { JwtModule } from '@nestjs/jwt';
-import { Upgrade } from "./upgrade/upgrade.entity";
+import {Module} from '@nestjs/common';
+import {ConfigModule} from '@nestjs/config';
+import {TypeOrmModule} from '@nestjs/typeorm';
+import {AppController} from './app.controller';
+import {AppService} from './app.service';
+import {UsersModule} from './users/users.module';
+import {AuthModule} from './auth/auth.module';
+import {User} from './users/user.entity';
+import {HealthModule} from './health/health.module';
+import {GameGateway} from './game/game.gateway';
+import {JwtModule} from '@nestjs/jwt';
+import {Upgrade} from "./upgrade/upgrade.entity";
 import {UserUpgrade} from "./UserUpgrade/userUpgrade.entity";
+import {RedisModule} from "./redis/redis.module";
 
 const entities = [User, Upgrade, UserUpgrade];
 @Module({
@@ -33,6 +34,7 @@ const entities = [User, Upgrade, UserUpgrade];
     AuthModule,
     HealthModule,
     JwtModule,
+      RedisModule,
   ],
   controllers: [AppController],
   providers: [AppService, GameGateway],
