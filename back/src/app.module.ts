@@ -9,8 +9,10 @@ import { User } from './users/user.entity';
 import { HealthModule } from './health/health.module';
 import { GameGateway } from './game/game.gateway';
 import { JwtModule } from '@nestjs/jwt';
+import { Upgrade } from "./upgrade/upgrade.entity";
+import {UserUpgrade} from "./UserUpgrade/userUpgrade.entity";
 
-const entities = [User];
+const entities = [User, Upgrade, UserUpgrade];
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -20,12 +22,13 @@ const entities = [User];
       type: 'mysql',
       host: process.env.DATABASE_HOST,
       port: parseInt(process.env.DATABASE_PORT),
-      username: process.env.DATABASE_USER, // change this line
+      username: process.env.DATABASE_USER,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
       entities: entities,
       synchronize: true,
     }),
+    TypeOrmModule.forFeature([User]),
     UsersModule,
     AuthModule,
     HealthModule,
