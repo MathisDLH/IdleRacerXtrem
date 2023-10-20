@@ -1,0 +1,14 @@
+.game-button {
+    --size: 5vh;
+    height: var(--size);
+    width: var(--size);
+
+    font-family: 'Pixelify Sans', sans-serif;
+    font-size: 0.8rem;
+    color: var(--white);
+
+    margin-right: 1vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
