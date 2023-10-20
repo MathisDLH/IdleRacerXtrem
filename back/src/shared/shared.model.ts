@@ -1,3 +1,5 @@
+import {Upgrade} from "../upgrade/upgrade.entity";
+
 export enum Unit {
     UNIT = "UNIT",
     MILLION = "MILLION",     // One Million
@@ -10,4 +12,16 @@ export enum Unit {
     OCTILLION = "OCTILLION",   // One Octillion
     NONILLION = "NONILLION",   // One Nonillion
     DECILLION = "DECILLION",   // One Decillion
+}
+
+
+export interface IRedisData {
+    money: number;
+    moneyUnit: Unit;
+    upgrades: IRedisUpgrade;
+}
+
+export interface IRedisUpgrade extends Upgrade {
+    timeleft:number;
+    amount: number;
 }
