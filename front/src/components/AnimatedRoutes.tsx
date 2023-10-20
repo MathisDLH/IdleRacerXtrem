@@ -11,7 +11,6 @@ import { useAuth } from '../context/Auth';
 const AnimatedRoutes = () => {
   const location = useLocation();
   const {isLoggedIn} = useAuth();
-  console.log(isLoggedIn);
 
   return (
     <AnimatePresence>

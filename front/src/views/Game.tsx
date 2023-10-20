@@ -10,10 +10,12 @@ import DraggableDialog from "../components/DraggableDialog.tsx";
 import UpgradesList from "../components/UpgradesList.tsx";
 
 import io from "socket.io-client";
+import {useAuth} from "../context/Auth.tsx";
 
 const Game = () => {
 
-    const socket = io("ws://localhost:3000?")
+    const {token} = useAuth();
+    const socket = io("ws://localhost:3000?token=" + token?.split("\"")[1].split("\"")[0], {transports: ['websocket']});
     const [bonus] = useState(1);
     const [money, setMoney] = useState(0);
     const [shopOpen, setShopOpen] = useState(false);
@@ -28,7 +30,6 @@ const Game = () => {
 
     useEffect(() => {
         socket.on("connect", () => {
-            console.log("connected");
         });
 
         socket.on("disconnect", (reason) => {
@@ -36,7 +37,9 @@ const Game = () => {
         });
 
         socket.on("money", (data:any) => {
-            console.log(data);
+            //TODO change once the type of data is changed
+            const currentMoney:number = parseInt(data.split('UNIT')[0]);
+            setMoney(currentMoney);
         });
     }, []);
 
