@@ -9,11 +9,11 @@ import '../assets/styles/Game.scss';
 import DraggableDialog from "../components/DraggableDialog.tsx";
 import UpgradesList from "../components/UpgradesList.tsx";
 
-import {useSocket} from "../services/socket.service.ts";
+import io from "socket.io-client";
 
 const Game = () => {
 
-    const {socket, isConnected} = useSocket();
+    const socket = io("ws://localhost:3000?")
     const [bonus] = useState(1);
     const [money, setMoney] = useState(0);
     const [shopOpen, setShopOpen] = useState(false);
@@ -27,14 +27,19 @@ const Game = () => {
     }
 
     useEffect(() => {
-        console.log(isConnected)
-        if (socket) {
-            socket.on('money', (data) => {
-                console.log('money')
-                console.log(data);
-            });
-        }
-    }, [socket]);
+        socket.on("connect", () => {
+            console.log("connected");
+        });
+
+        socket.on("disconnect", (reason) => {
+            console.log(reason.includes("server") ? "disconnected by server" : "disconnected by client");
+        });
+
+        socket.on("money", (data:any) => {
+            console.log(data);
+        });
+    }, []);
+
     return(
         <motion.div
         initial={{ opacity: 0, scale: 0, rotate: 45 }}
