@@ -33,8 +33,11 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
   
   @SubscribeMessage('click')
-  handleClick(client: UserSocket, payload: any): void {
+  async handleClick(client: UserSocket): Promise<void> {
     console.log('Click event received');
+    this.redisService.incrMoney(client.user.id.toString(), "1");
+    client.emit('money', await this.getUserMoney(client.user));
+
   }
 
   async handleConnection(client: UserSocket) {
