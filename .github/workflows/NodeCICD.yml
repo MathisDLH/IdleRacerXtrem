@@ -1,4 +1,4 @@
-name: Node CI
+name: Build and Deploy
 
 on: [push]
 
@@ -38,6 +38,7 @@ jobs:
               dist
   deploy-back:
     runs-on: ubuntu-latest
+    environment: develop
     needs: build-back
     steps:
     - name: download artifact
@@ -56,6 +57,7 @@ jobs:
         target: back
   deploy-front:
     runs-on: ubuntu-latest
+    environment: develop
     needs: build-front
     steps:
     - name: download artifact
