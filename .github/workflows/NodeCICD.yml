@@ -56,7 +56,7 @@ jobs:
         target: back
   deploy-front:
     runs-on: ubuntu-latest
-    needs: build-back
+    needs: build-front
     steps:
     - name: download artifact
       uses: actions/download-artifact@v3
