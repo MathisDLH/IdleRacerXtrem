@@ -13,6 +13,8 @@ async function bootstrap() {
 
   app.enableCors();
 
+  app.setGlobalPrefix('api');
+
   const config = new DocumentBuilder()
     .setTitle('IdleRacer API description')
     .setDescription('IdleRacer API description')
