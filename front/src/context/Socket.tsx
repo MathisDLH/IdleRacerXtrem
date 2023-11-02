@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect } from 'react';
 import io from 'socket.io-client';
 import {useAuth} from "./Auth.tsx";
 
+const WS_URL = import.meta.env.VITE_WS_URL;
 interface WebSocketContextInterface {
 	socket: any;
 }
@@ -12,7 +13,9 @@ const WebSocketContext = createContext({
 
 const WebSocketProvider = (props:any) => {
 	const { token } = useAuth();
-	const socket = io(`ws://localhost:3000?token=${token?.split('"')[1].split('"')[0]}`, { transports: ['websocket'] });
+	
+	const url = WS_URL + '?token=' + token;
+	const socket = io(url, { transports: ['websocket'] });
 	
 	useEffect(() => {
 		return () => {
