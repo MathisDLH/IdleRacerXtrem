@@ -24,7 +24,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       this.clients.forEach(async (client) => {
         if (client.user) {
           await this.updateMoney(client.user);
-          
           client.emit('money', await this.redisService.getUserData(client.user));
         }
       });
@@ -34,8 +33,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('click')
   async handleClick(client: UserSocket): Promise<void> {
     this.redisService.incrMoney(client.user.id.toString(), "1");
-    client.emit('money', await this.getUserMoney(client.user));
-
+    client.emit('money', await this.redisService.getUserData(client.user));
   }
 
   async handleConnection(client: UserSocket) {
