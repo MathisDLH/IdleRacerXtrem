@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: develop
     steps:
-    - name: Deploy on DEV
+    - name: setup
       uses: appleboy/ssh-action@v1.0.0
       with:
         host: ${{ vars.HOST }}
@@ -16,11 +16,29 @@ jobs:
         key: ${{ secrets.KEY }}
         script_stop: true
         script: |
-          mkdir $(date +'%Y-%m-%d-%H%M%S') && cd $(date +'%Y-%m-%d-%H%M%S')
+          mkdir deploy-folder
+          cd deploy-folder
           git clone git@github.com:MrCrakerz/IdleRacerXtrem.git
-          cd IdleRacerXtrem/front
           git switch develop
+    - name: build back
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ vars.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        script_stop: true
+        script: |
+          cd deploy-folder/IdleRacerXtrem/back
           npm install
           npm run build
-          rm -rf /var/www/html/*
-          cp -r dist/* /var/www/html/
+    - name: build front
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ vars.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        script_stop: true
+        script: |
+          cd deploy-folder/IdleRacerXtrem/front
+          npm install
+          npm run build
