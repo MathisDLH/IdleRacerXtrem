@@ -19,7 +19,7 @@ jobs:
         with:
           name: artifact_back
           path: |
-              dist
+             back/dist
   build-front:
     runs-on: ubuntu-latest
     steps:
