@@ -19,10 +19,7 @@ import {UserUpgrade} from "../UserUpgrade/userUpgrade.entity";
 
     @Column()
     name: string;
-
-    @Column({comment: "Time in seconds"})
-    timeToGenerate: number;
-
+    
     @Column()
     price: number;
 
@@ -32,11 +29,10 @@ import {UserUpgrade} from "../UserUpgrade/userUpgrade.entity";
     @Column()
     ratio: number;
 
-    @OneToOne(() => Upgrade)
-    @JoinColumn()
-    generationUpgrade: Upgrade;
+    @Column()
+    generationUpgradeId: number;
 
-    @Column({comment: "Number of type generated"})
+    @Column('float', {comment: "Nombre de type généré"})
     value: number;
 
   @OneToMany(() => UserUpgrade, userUpgrade => userUpgrade.upgrade)

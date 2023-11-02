@@ -57,7 +57,7 @@ export class RedisService {
             .set(`${user.id}:MONEY`, user.money, "EX", 3600)
             .set(`${user.id}:MONEY_UNIT`, user.money_unite, "EX", 3600)
         for (const e of user.userUpgrade) {
-            chain.hset(`${user.id}:${e.upgrade.id}`, {...e.upgrade, amount: e.amount, timeleft: e.upgrade.timeToGenerate} as IRedisUpgrade)
+            chain.hset(`${user.id}:${e.upgrade.id}`, e)
         }
         await chain.exec()
     }
@@ -78,7 +78,7 @@ export class RedisService {
     public async updateUserData(user: User, data: IRedisData) {
         const chain
             = this.client.multi()
-            .set(`${user.id}:MONEY`, data.money, "EX", 3600)
+            .incrbyfloat(`${user.id}:MONEY`, data.money)
             .set(`${user.id}:MONEY_UNIT`, data.moneyUnit, "EX", 3600)
         for (const e of data.upgrades) {
             chain.hset(`${user.id}:${e.id}`, e)

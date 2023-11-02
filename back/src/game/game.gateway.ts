@@ -7,6 +7,7 @@ import { Inject } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { User } from 'src/users/user.entity';
 import { RedisService } from 'src/redis/redis.service';
+import { IRedisData } from 'src/shared/shared.model';
 
 interface UserSocket extends Socket {
   user?: User;
@@ -24,6 +25,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     setInterval(async () => {
       this.clients.forEach(async (client) => {
         if (client.user) {
+          await this.updateMoney(client.user);
           client.emit('money', await this.getUserMoney(client.user));
         }
       });
@@ -62,27 +64,28 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     console.log('Client disconnected', client.id);
     this.clients.delete(client);
   }
-  async getUserMoney(user: User): Promise<string> {
+  async updateMoney(user: User): Promise<IRedisData> {
 
     //Algo de calcul de l'argent à virer et des quantités à mettre à jour.
     var redisInfos = await this.redisService.getUserData(user);
-    var actualMoney = redisInfos.money;
-    var augmentNext = 0; 
+   //console.log(redisInfos);
     redisInfos.upgrades.forEach(element => {
       if(element.id > 1){
-        element.timeleft = element.timeleft - 1;
-        if (element.timeleft == 0 ){
-          element.timeleft = element.timeToGenerate;
-          redisInfos.upgrades.find((upgrade) => upgrade.id == element.generationUpgrade.id).amount += element.amount * element.value;
-        }  
+          redisInfos.upgrades.find((upgrade) => upgrade.id == element.generationUpgradeId).amount = Number(redisInfos.upgrades.find((upgrade) => upgrade.id == element.generationUpgradeId).amount) + element.amount * element.value;
+          console.log(redisInfos.upgrades.find((upgrade) => upgrade.id == element.generationUpgradeId).amount);
       }else{
-        redisInfos.money = actualMoney + (element.amount * element.value);
+        redisInfos.money = (element.amount * element.value);
       }
       
       
     });
     await this.redisService.updateUserData(user, redisInfos);
+    return redisInfos;
 
-    return user.money.toString() + user.money_unite.toString();
+  }
+
+  async getUserMoney(user: User): Promise<string> {
+    var redisInfos = await this.redisService.getUserData(user);
+    return redisInfos.money.toString() + redisInfos.moneyUnit.toString();
   }
 }

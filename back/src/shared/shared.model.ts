@@ -22,6 +22,5 @@ export interface IRedisData {
 }
 
 export interface IRedisUpgrade extends Upgrade {
-    timeleft:number;
     amount: number;
 }
