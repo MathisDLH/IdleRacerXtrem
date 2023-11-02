@@ -24,7 +24,8 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       this.clients.forEach(async (client) => {
         if (client.user) {
           await this.updateMoney(client.user);
-          client.emit('money', await this.getUserMoney(client.user));
+          
+          client.emit('money', await this.redisService.getUserData(client.user));
         }
       });
     }, 1000);
