@@ -4,12 +4,11 @@ import { type User } from '../interfaces/user.interface'
 import * as userService from '../services/auth.service'
 import jwt_decode from 'jwt-decode'
 
-
-function removeQuotes(inputString) {
+function removeQuotes (inputString: string): string {
   if (inputString.startsWith('"') && inputString.endsWith('"')) {
-    return inputString.slice(1, -1);
+    return inputString.slice(1, -1)
   } else {
-    return inputString;
+    return inputString
   }
 }
 
@@ -49,7 +48,7 @@ export const AuthProvider = (props: any): JSX.Element => {
         .then((user: User) => {
           setUser(user)
           setIsLoggedIn(true)
-          setToken( removeQuotes(token) )
+          setToken(removeQuotes(token))
         })
         .catch((error) => {
           console.error('Erreur lors de la récupération de l\'utilisateur:', error)
@@ -68,8 +67,8 @@ export const AuthProvider = (props: any): JSX.Element => {
         setUser(user)
         setIsLoggedIn(true)
         localStorage.setItem('access_token', JSON.stringify(token))
-        //refresh page
-        window.location.reload();
+        // refresh page
+        window.location.reload()
       } else {
         console.error('Token d\'accès non valide.')
       }
