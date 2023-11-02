@@ -10,6 +10,7 @@ import DraggableDialog from '../components/DraggableDialog.tsx'
 import UpgradesList from '../components/UpgradesList.tsx'
 import { useWebSocket } from '../context/Socket.tsx'
 
+
 interface WebSocketContextInterface {
   socket: any
 }
@@ -17,18 +18,42 @@ interface WebSocketContextInterface {
 const Game = (): JSX.Element => {
   const { socket }: WebSocketContextInterface = useWebSocket()
   const [money, setMoney] = useState<number>(0)
+  const [oldMoney, setOldMoney] = useState<number>(0)
+  const [difference, setDifference] = useState<number>(0)
   const [shopOpen, setShopOpen] = useState<boolean>(false)
 
   const toggleShop = (): void => {
     setShopOpen(!shopOpen)
   }
 
-  const click = (): void => {
+  const click = (event: any): void => {
     if (socket) {
+      setOldMoney(money)
       socket.emit('click')
+      setDifference(money - oldMoney)
+      createClickEffect(event)
     } else {
       console.log('Socket is null')
     }
+  }
+  const createClickEffect = (event: any): void => {
+    const clickEffect = document.createElement('div')
+    const max = 50
+    const randomX = Math.floor(Math.random() * max) + 1
+    const randomY = Math.floor(Math.random() * max) + 1
+    const randomDirectionX = Math.floor(Math.random() * 2) + 1 === 1 ? '-' : '+'
+    const randomDirectionY = Math.floor(Math.random() * 2) + 1 === 1 ? '-' : '+'
+    const x = randomDirectionX === '-' ? event.clientX - randomX : event.clientX + randomX
+    const y = randomDirectionY === '-' ? event.clientY - randomY : event.clientY + randomY
+    clickEffect.textContent = `+${difference}$`
+    clickEffect.className = 'click_effect'
+    clickEffect.style.top = `${y}px`
+    clickEffect.style.left = `${x}px`
+    document.body.appendChild(clickEffect)
+
+    setTimeout(() => {
+      clickEffect.remove()
+    }, 1000)
   }
 
   // Moved socket event listeners outside of the useEffect
@@ -40,9 +65,8 @@ const Game = (): JSX.Element => {
         console.log(reason.includes('server') ? 'Disconnected by server' : 'Disconnected by client')
       }
       const onMoney = (data: any): void => {
-        // TODO change once the type of data is changed
-        console.log('Received', data)
-        const currentMoney: number = parseInt(data.split('UNIT')[0])
+        console.log(data)
+        const currentMoney: number = data.money
         setMoney(currentMoney)
       }
 

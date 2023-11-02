@@ -121,3 +121,12 @@
         100% { transform: translateX(-1000%)}
     }
 }
+
+.click_effect {
+    position: absolute;
+    pointer-events: none;
+    font-family: 'Pixelify Sans', sans-serif;
+    color: white;
+    font-size: 2rem;
+    text-shadow: #ffbd17 3px 3px 1vw;
+}
