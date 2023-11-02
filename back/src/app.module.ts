@@ -12,6 +12,7 @@ import {JwtModule} from '@nestjs/jwt';
 import {Upgrade} from "./upgrade/upgrade.entity";
 import {UserUpgrade} from "./UserUpgrade/userUpgrade.entity";
 import {RedisModule} from "./redis/redis.module";
+import {UpgradeModule} from "./upgrade/upgrade.module";
 
 const entities = [User, Upgrade, UserUpgrade];
 @Module({
@@ -34,7 +35,8 @@ const entities = [User, Upgrade, UserUpgrade];
     AuthModule,
     HealthModule,
     JwtModule,
-      RedisModule,
+    RedisModule,
+    UpgradeModule,
   ],
   controllers: [AppController],
   providers: [AppService, GameGateway],

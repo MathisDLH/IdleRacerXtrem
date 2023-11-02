@@ -1,13 +1,10 @@
 import { WebSocketGateway, WebSocketServer, SubscribeMessage } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
-import { UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Inject } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { User } from 'src/users/user.entity';
 import { RedisService } from 'src/redis/redis.service';
-import { IRedisData } from 'src/shared/shared.model';
 import { JsonWebTokenError } from 'jsonwebtoken';
 
 interface UserSocket extends Socket {
