@@ -8,6 +8,7 @@ import { UsersService } from 'src/users/users.service';
 import { User } from 'src/users/user.entity';
 import { RedisService } from 'src/redis/redis.service';
 import { IRedisData } from 'src/shared/shared.model';
+import { JsonWebTokenError } from 'jsonwebtoken';
 
 interface UserSocket extends Socket {
   user?: User;
@@ -55,10 +56,13 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       this.redisService.loadUserInRedis(client.user);
       console.log('New client connected');
     } catch (err) {
-      console.error('Erreur de vérification JWT:', err);
+      if (err instanceof JsonWebTokenError) {
+        console.error('Erreur de vérification JWT:', err.message);
+      } else {
+        console.error(err);
+      }
       client.disconnect();
     }
-
   }
 
   handleDisconnect(client: UserSocket) {
@@ -68,20 +72,21 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 
   
-  async updateMoney(user: User): Promise<IRedisData> {
-    //Algo de calcul de l'argent à virer et des quantités à mettre à jour.
+  async updateMoney(user: User): Promise<void> {
     var redisInfos = await this.redisService.getUserData(user);
-    redisInfos.upgrades.forEach(element => {
-      if(element.id > 1){
-          redisInfos.upgrades.find((upgrade) => upgrade.id == element.generationUpgradeId).amount = element.amount * element.value;
-          element.amount = 0;
-      }else{
-        redisInfos.money = (element.amount * element.value);
-      } 
-    });
-    await this.redisService.updateUserData(user, redisInfos);
-    return redisInfos;
-
+    if (redisInfos.upgrades.length > 0) {
+      redisInfos.upgrades.forEach(element => {
+        if(element.id > 1){
+            redisInfos.upgrades.find((upgrade) => upgrade.id == element.generationUpgradeId).amount = element.amount * element.value;
+            element.amount = 0;
+        }else{
+          redisInfos.money = (element.amount * element.value);
+          console.log(redisInfos)
+  
+        } 
+      });
+      await this.redisService.updateUserData(user, redisInfos);   
+    }
   }
 
   async getUserMoney(user: User): Promise<string> {
