@@ -10,7 +10,6 @@ import DraggableDialog from '../components/DraggableDialog.tsx'
 import UpgradesList from '../components/UpgradesList.tsx'
 import { useWebSocket } from '../context/Socket.tsx'
 
-
 interface WebSocketContextInterface {
   socket: any
 }
@@ -52,8 +51,11 @@ const Game = (): JSX.Element => {
     document.body.appendChild(clickEffect)
 
     setTimeout(() => {
-      clickEffect.remove()
-    }, 1000)
+      clickEffect.className = 'click_effect removed'
+      setTimeout(() => {
+        clickEffect.remove()
+      }, 1000)
+    }, 500)
   }
 
   // Moved socket event listeners outside of the useEffect

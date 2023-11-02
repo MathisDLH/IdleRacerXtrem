@@ -129,4 +129,8 @@
     color: white;
     font-size: 2rem;
     text-shadow: #ffbd17 3px 3px 1vw;
+    transition: opacity 0.5s;
+}
+.removed {
+    opacity: 0;
 }
