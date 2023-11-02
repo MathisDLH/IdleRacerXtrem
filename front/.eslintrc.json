@@ -19,6 +19,6 @@
     "rules": {
         "react/react-in-jsx-scope": "off",
         "@typescript-eslint/no-misused-promises": "off"
-    }
-    //"ignorePatterns": [".eslintrc.cjs", "vite.config.ts", "src"]
+    },
+    "ignorePatterns": [".eslintrc.cjs", "src"]
 }
