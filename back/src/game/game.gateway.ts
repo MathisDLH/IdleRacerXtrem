@@ -34,7 +34,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   
   @SubscribeMessage('click')
   async handleClick(client: UserSocket): Promise<void> {
-    console.log('Click event received');
     this.redisService.incrMoney(client.user.id.toString(), "1");
     client.emit('money', await this.getUserMoney(client.user));
 
@@ -49,7 +48,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       client.disconnect();
       return;
     }
-
     try {
       const payload = this.jwtService.verify(token, { secret: process.env.JWT_SECRET });
       client.user = await this.usersService.findById(parseInt(payload.userId));
@@ -67,20 +65,20 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     console.log('Client disconnected', client.id);
     this.clients.delete(client);
   }
-  async updateMoney(user: User): Promise<IRedisData> {
 
+
+  
+  async updateMoney(user: User): Promise<IRedisData> {
     //Algo de calcul de l'argent à virer et des quantités à mettre à jour.
     var redisInfos = await this.redisService.getUserData(user);
    //console.log(redisInfos);
     redisInfos.upgrades.forEach(element => {
       if(element.id > 1){
           redisInfos.upgrades.find((upgrade) => upgrade.id == element.generationUpgradeId).amount = Number(redisInfos.upgrades.find((upgrade) => upgrade.id == element.generationUpgradeId).amount) + element.amount * element.value;
-          console.log(redisInfos.upgrades.find((upgrade) => upgrade.id == element.generationUpgradeId).amount);
       }else{
+        this.redisService.incrMoney(user.id.toString(), (element.amount * element.value).toString());
         redisInfos.money = (element.amount * element.value);
-      }
-      
-      
+      } 
     });
     await this.redisService.updateUserData(user, redisInfos);
     return redisInfos;
