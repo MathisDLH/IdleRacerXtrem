@@ -71,12 +71,11 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async updateMoney(user: User): Promise<IRedisData> {
     //Algo de calcul de l'argent à virer et des quantités à mettre à jour.
     var redisInfos = await this.redisService.getUserData(user);
-   //console.log(redisInfos);
     redisInfos.upgrades.forEach(element => {
       if(element.id > 1){
-          redisInfos.upgrades.find((upgrade) => upgrade.id == element.generationUpgradeId).amount = Number(redisInfos.upgrades.find((upgrade) => upgrade.id == element.generationUpgradeId).amount) + element.amount * element.value;
+          redisInfos.upgrades.find((upgrade) => upgrade.id == element.generationUpgradeId).amount = element.amount * element.value;
+          element.amount = 0;
       }else{
-        this.redisService.incrMoney(user.id.toString(), (element.amount * element.value).toString());
         redisInfos.money = (element.amount * element.value);
       } 
     });

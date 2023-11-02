@@ -81,7 +81,8 @@ export class RedisService {
             .incrbyfloat(`${user.id}:MONEY`, data.money)
             .set(`${user.id}:MONEY_UNIT`, data.moneyUnit, "EX", 3600)
         for (const e of data.upgrades) {
-            chain.hset(`${user.id}:${e.id}`, e)
+            chain.hincrby(`${user.id}:${e.id}`,"amount" , e.amount)
+            console.log(e.amount);
         }
         await chain.exec()
     }
