@@ -19,6 +19,7 @@ jobs:
           mkdir deploy-folder
           cd deploy-folder
           git clone git@github.com:MrCrakerz/IdleRacerXtrem.git
+          cd IdleRacerXtrem
           git switch develop
     - name: build back
       uses: appleboy/ssh-action@v1.0.0
