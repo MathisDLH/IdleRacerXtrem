@@ -32,8 +32,8 @@ jobs:
           cd deploy-folder/IdleRacerXtrem/back
           npm install
           npm run build
-          rm -rf ~/back/*
-          cp -r dist/* ~/back
+          rm -rf ~/back
+          cp -r back ~
           pm2 restart back
     - name: build front
       uses: appleboy/ssh-action@v1.0.0
