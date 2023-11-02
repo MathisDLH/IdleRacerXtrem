@@ -43,3 +43,13 @@ jobs:
           cd deploy-folder/IdleRacerXtrem/front
           npm install
           npm run build
+    - name: clean
+      uses: appleboy/ssh-action@v1.0.0
+      if: always()
+      with:
+        host: ${{ vars.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        script_stop: true
+        script: |
+          rm -rf deploy-folder
