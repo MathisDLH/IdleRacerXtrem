@@ -5,7 +5,6 @@ import Upgrade from './Upgrade.tsx'
 import { Box, Tab, Tabs, Typography } from '@mui/material'
 import '../assets/styles/UpgradesList.scss'
 import { useAuth } from '../context/Auth.tsx'
-import {renderToReadableStream} from "react-dom/server";
 
 export default function UpgradesList (): JSX.Element {
   const [value, setValue] = useState<number>(0)
