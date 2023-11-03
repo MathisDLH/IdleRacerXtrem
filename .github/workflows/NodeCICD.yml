@@ -16,9 +16,7 @@ jobs:
         run: |
           cd back
           npm install -g @nestjs/cli
-          npm install -g node-prune
           npm install --omit=dev
-          node-prune
           npm run build --if-present
           tar -czvf back.tar.gz dist node_modules
       - name: Archive production artifacts
