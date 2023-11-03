@@ -49,7 +49,7 @@ const LoginForm = ({ setOpen }: Props): JSX.Element => {
             className="form-login-input"
           />
         </div>
-        <button type="submit" className="login-button">
+        <button type="submit" className="btn-hover color-4">
           LOGIN
         </button>
         <Link to='/register' className="new-account-link"><p>New Account</p></Link>
