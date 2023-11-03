@@ -24,7 +24,7 @@ jobs:
           name: artifact_back
           path: |
              back/dist
-             node_modules
+             back/node_modules
   build-front:
     runs-on: ubuntu-latest
     steps:
