@@ -18,6 +18,7 @@ const entities = [User, Upgrade, UserUpgrade];
 @Module({
   imports: [
     ConfigModule.forRoot({
+      envFilePath: ['.env'],
       isGlobal: true,
     }),
     TypeOrmModule.forRoot({
