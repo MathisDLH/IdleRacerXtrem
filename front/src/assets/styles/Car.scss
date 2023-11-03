@@ -1,0 +1,13 @@
+.car-container{
+    position: absolute;
+    background-color: aqua;
+    text-align: center;
+}
+
+.car-container>p{
+    font-size:large;
+}
+
+img#car{
+    -webkit-transform: scaleX(-1);
+}
