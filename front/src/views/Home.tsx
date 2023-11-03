@@ -29,7 +29,7 @@ const Home = (): JSX.Element => {
 
   return (
     <motion.div style={{ backgroundImage: `url(${backgroundImage})` }}
-
+      className="background-image"
       initial={{ opacity: 0, scale: 0, rotate: 45 }}
       animate={{ opacity: 1, scale: 1, rotate: 0 }}
       exit={{ opacity: 0, scale: 0, rotate: 45 }}

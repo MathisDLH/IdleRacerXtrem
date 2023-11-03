@@ -91,15 +91,24 @@
 }
 
 .head-container{
+  position: absolute;
+  width: 100%;
   cursor: pointer;
   display: flex;
   justify-content: end;
-  padding-right: 1vw;
+
+  p{
+    margin-right: 1vw;
+  }
 }
 
 .car-icon{
   margin-right: 1em;
   max-width: 50px;
+}
+
+.background-image{
+  height: 100%;
 }
 
 @keyframes breatheModal {
