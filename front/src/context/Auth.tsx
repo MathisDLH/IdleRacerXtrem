@@ -40,7 +40,6 @@ export const AuthProvider = (props: any): JSX.Element => {
 
   useEffect(() => {
     const token = localStorage.getItem('access_token')
-    console.log(token)
     if (token != null) {
       const decoded: any = jwt_decode(token)
       if (decoded.userId === undefined) throw new Error('Token d\'accès non valide.')

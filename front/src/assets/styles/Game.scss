@@ -34,7 +34,7 @@
         .part {
             padding: 2vh;
             font-family: 'Pixelify Sans', sans-serif;
-            color: #ffbd17;
+            color: var(--yellow);
             font-size: 2rem;
         }
 
@@ -54,7 +54,7 @@
             margin-top: 10vw;
             height: var(--size);
             width: var(--size);
-            background-color: #ffbd17;
+            background-color: var(--yellow);
             border-radius: 50%;
             box-shadow: 0 0 5vw 5vw #fdd349;
         }
@@ -128,7 +128,7 @@
     font-family: 'Pixelify Sans', sans-serif;
     color: white;
     font-size: 2rem;
-    text-shadow: #ffbd17 3px 3px 1vw;
+    text-shadow: var(--yellow) 3px 3px 1vw;
     transition: opacity 0.5s;
 }
 .removed {

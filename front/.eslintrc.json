@@ -19,7 +19,8 @@
     "rules": {
         "react/react-in-jsx-scope": "off",
         "@typescript-eslint/no-misused-promises": "off",
-        "@typescript-eslint/strict-boolean-expressions": "off"
-    },
+        "@typescript-eslint/strict-boolean-expressions": "off",
+        "no-multiple-empty-lines": ["error", { "max": 2, "maxBOF": 0, "maxEOF": 0 }]
+},
     "ignorePatterns": [".eslintrc.cjs"]
 }
