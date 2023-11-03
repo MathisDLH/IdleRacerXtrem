@@ -16,7 +16,9 @@ jobs:
         run: |
           cd back
           npm install -g @nestjs/cli
+          npm install -g node-prune
           npm install --omit=dev
+          node-prune
           npm run build --if-present
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
