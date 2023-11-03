@@ -10,7 +10,7 @@ interface Props {
 const LoginForm = ({ setOpen }: Props): JSX.Element => {
   const { signIn } = useAuth()
 
-  const [email, setEmail] = useState('')
+  const [name, setName] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
 
@@ -19,7 +19,7 @@ const LoginForm = ({ setOpen }: Props): JSX.Element => {
     setError(null)
 
     try {
-      await signIn(email, password)
+      await signIn(name, password)
       setOpen(false)
     } catch (error) {
       setError('Identifiants incorrects. Veuillez réessayer.')
@@ -32,11 +32,11 @@ const LoginForm = ({ setOpen }: Props): JSX.Element => {
       {(error != null) && <p className="error-message">{error}</p>}
       <form onSubmit={handleLogin}>
         <div className="form-group">
-          <p className="form-label">EMAIL</p>
+          <p className="form-label">NAME</p>
           <input
-            type="email"
-            value={email}
-            onChange={(e) => { setEmail(e.target.value) }}
+            type="text"
+            value={name}
+            onChange={(e) => { setName(e.target.value) }}
             className="form-login-input"
           />
         </div>

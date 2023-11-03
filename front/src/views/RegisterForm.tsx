@@ -10,6 +10,7 @@ const RegisterForm = (): JSX.Element => {
   const { register } = useAuth()
 
   const [email, setEmail] = useState('')
+  const [name, setName] = useState('')
   const [password, setPassword] = useState('')
   const navigate = useNavigate()
 
@@ -17,7 +18,7 @@ const RegisterForm = (): JSX.Element => {
     e.preventDefault()
 
     try {
-      const [userData] = await Promise.all([register(email, password)])
+      const [userData] = await Promise.all([register(name, email, password)])
       navigate('/')
       console.log('Utilisateur inscrit avec succès:', userData)
     } catch (error) {
@@ -38,6 +39,14 @@ const RegisterForm = (): JSX.Element => {
         <h1 className="game-title">Idle Racer</h1>
         <h1 className="page-title">Inscription</h1>
         <form onSubmit={handleSignup}>
+        <div className="form-group">
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => { setName(e.target.value) }}
+              className="form-input"
+            />
+          </div>
           <div className="form-group">
             <input
               type="email"
