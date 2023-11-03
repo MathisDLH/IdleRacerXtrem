@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import type UpgradeInterface from '../interfaces/upgrade.interface.ts'
 import * as UpgradeService from '../services/upgrades.service.ts'
 import Upgrade from './Upgrade.tsx'
-import { Box, Tab, Tabs, Typography } from '@mui/material'
+import { Box, Tab, Tabs } from '@mui/material'
 import '../assets/styles/UpgradesList.scss'
 import { useAuth } from '../context/Auth.tsx'
 
@@ -34,7 +34,7 @@ export default function UpgradesList (): JSX.Element {
       >
         {value === index && (
           <Box sx={{ p: 3 }}>
-            <Typography>{children}</Typography>
+            {children}
           </Box>
         )}
       </div>
@@ -45,6 +45,20 @@ export default function UpgradesList (): JSX.Element {
     const fetchData = async (): Promise<void> => {
       const data = await UpgradeService.getUpgrades(token || '')
       setUpgrades(data)
+      if (data.length === 0) {
+        setUpgrades([
+          {
+            id: 0,
+            name: 'mock',
+            price: 0,
+            price_string: '0',
+            ratio: 1,
+            generationUpgradeId: 0,
+            value: 0,
+            imagePath: 'mock-upgrade.png'
+          }
+        ])
+      }
     }
     fetchData()
   }, [])

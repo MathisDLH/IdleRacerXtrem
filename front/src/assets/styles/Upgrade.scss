@@ -1,10 +1,10 @@
 .upgrade {
     height: 8vh;
-    background-color: var(--grey1);
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
-.upgrade:nth-child(odd) {
-    background-color: var(--grey2);
+
+.btn-hover{
+    width: 100px;
 }

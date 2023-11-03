@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { useAuth } from '../context/Auth'
-import '../assets/styles/LoginForm.scss'
 import { Link } from 'react-router-dom'
+import '../assets/styles/LoginForm.scss'
+import '../assets/styles/LuxuryButtons.scss'
 
 interface Props {
   setOpen: any
