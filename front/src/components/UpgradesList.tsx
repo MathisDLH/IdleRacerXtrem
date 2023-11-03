@@ -8,7 +8,7 @@ import { useAuth } from '../context/Auth.tsx'
 
 export default function UpgradesList (): JSX.Element {
   const [value, setValue] = useState<number>(0)
-  const { token } = useAuth()
+  const { token } = useAuth();
   const [upgrades, setUpgrades] = useState<UpgradeInterface[]>([])
 
   const handleChange = (_: any, newValue: number): void => {
@@ -78,7 +78,7 @@ export default function UpgradesList (): JSX.Element {
       <div className={'upgrades'}>
         <TabPanel value={value} index={0}>
           {upgrades.map((upgrade: UpgradeInterface) => {
-            return <Upgrade key={upgrade.id} token={token} upgrade={upgrade}/>
+            return <Upgrade key={upgrade.id} token={token ?? ''} upgrade={upgrade}/>
           })}
         </TabPanel>
       </div>
