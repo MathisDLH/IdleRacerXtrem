@@ -2,13 +2,14 @@ import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import IconButton from '@mui/material/IconButton'
 
-import first from '../assets/images/game/cars/6.png'
 import shop from '../assets/images/game/icons/shop.png'
 import '../assets/styles/Game.scss'
 
 import DraggableDialog from '../components/DraggableDialog.tsx'
 import UpgradesList from '../components/UpgradesList.tsx'
 import { useWebSocket } from '../context/Socket.tsx'
+import { useAuth } from '../context/Auth.tsx'
+import { cars } from '../utils/cars.utils.ts'
 
 interface WebSocketContextInterface {
   socket: any
@@ -20,6 +21,8 @@ const Game = (): JSX.Element => {
   const [oldMoney, setOldMoney] = useState<number>(0)
   const [difference, setDifference] = useState<number>(0)
   const [shopOpen, setShopOpen] = useState<boolean>(false)
+
+  const {user} = useAuth();
 
   const toggleShop = (): void => {
     setShopOpen(!shopOpen)
@@ -109,7 +112,7 @@ const Game = (): JSX.Element => {
         <div id="down" onClick={click}>
           <div id="road-line"></div>
           <div id="car-shadow"></div>
-          <img id="car" src={first} alt="" />
+          <img id="car" src={cars[user!.skin_id]} alt="" />
         </div>
       </section>
     </motion.div>

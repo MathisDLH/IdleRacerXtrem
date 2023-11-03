@@ -19,12 +19,18 @@ import {UserUpgrade} from "../UserUpgrade/userUpgrade.entity";
   
     @Column({ unique: true })
     email: string;
+
+    @Column({ unique: true })
+    name: string;
   
     @Column({ select: false })
     password: string;
 
     @Column({default: 0})
     money: number;
+
+    @Column({default: 1})
+    skin_id: number;
 
     @Column({type: "enum", enum: Unit, default: Unit.UNIT})
     money_unite: Unit;

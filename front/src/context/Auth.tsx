@@ -16,18 +16,18 @@ const AuthContext = createContext({
   user: null as User | null,
   isLoggedIn: false,
   token: null as string | null,
-  signIn: async (_email: string, _password: string): Promise<void> => { },
+  signIn: async (_name: string, _password: string): Promise<void> => { },
   signout: () => { },
-  register: async (_email: string, _password: string): Promise<void> => { }
+  register: async (_name: string, _email: string, _password: string): Promise<void> => { }
 })
 
 interface AuthContextInterface {
   user: User | null
   isLoggedIn: boolean
   token: string | null
-  signIn: (email: string, password: string) => Promise<void>
+  signIn: (name: string, password: string) => Promise<void>
   signout: () => void
-  register: (email: string, password: string) => Promise<void>
+  register: (name:string, email: string, password: string) => Promise<void>
 }
 export const useAuth = (): AuthContextInterface => {
   return useContext(AuthContext)
@@ -56,9 +56,9 @@ export const AuthProvider = (props: any): JSX.Element => {
     }
   }, [])
 
-  const signIn = async (email: string, password: string): Promise<void> => {
+  const signIn = async (name: string, password: string): Promise<void> => {
     try {
-      const promiseToken = await userService.loginUser(email, password)
+      const promiseToken = await userService.loginUser(name, password)
       const token = promiseToken.access_token
       if (token != null) {
         const decoded: any = jwt_decode(token)
@@ -76,8 +76,8 @@ export const AuthProvider = (props: any): JSX.Element => {
     }
   }
 
-  const register = async (email: string, password: string): Promise<void> => {
-    await userService.createUser(email, password)
+  const register = async (name:string, email: string, password: string): Promise<void> => {
+    await userService.createUser(name, email, password)
   }
 
   const signout = (): void => {

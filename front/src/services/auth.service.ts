@@ -3,16 +3,17 @@ import { type User } from '../interfaces/user.interface'
 
 const API_BASE_URL: any = import.meta.env.VITE_API_URL
 
-export async function createUser (email: string, password: string): Promise<void> {
+export async function createUser (name:string, email: string, password: string): Promise<void> {
   await axios.post(`${API_BASE_URL}/users/register`, {
+    name,
     email,
     password
   })
 }
 
-export async function loginUser (email: string, password: string): Promise<any> {
+export async function loginUser (name: string, password: string): Promise<any> {
   const response = await axios.post(`${API_BASE_URL}/auth/login`, {
-    email,
+    name,
     password
   })
   return response.data
