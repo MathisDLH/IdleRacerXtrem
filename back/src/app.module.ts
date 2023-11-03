@@ -13,6 +13,7 @@ import {Upgrade} from "./upgrade/upgrade.entity";
 import {UserUpgrade} from "./UserUpgrade/userUpgrade.entity";
 import {RedisModule} from "./redis/redis.module";
 import {UpgradeModule} from "./upgrade/upgrade.module";
+import { SeedingService } from './seeding/seeding.service';
 
 const entities = [User, Upgrade, UserUpgrade];
 @Module({
@@ -32,6 +33,7 @@ const entities = [User, Upgrade, UserUpgrade];
       synchronize: true,
     }),
     TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([Upgrade]),
     UsersModule,
     AuthModule,
     HealthModule,
@@ -40,6 +42,6 @@ const entities = [User, Upgrade, UserUpgrade];
     UpgradeModule,
   ],
   controllers: [AppController],
-  providers: [AppService, GameGateway],
+  providers: [AppService, GameGateway,SeedingService],
 })
 export class AppModule {}
