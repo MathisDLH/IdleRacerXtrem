@@ -1,86 +1,116 @@
 /* LoginForm.scss */
 
 /* Styling for the modal content container */
+
 .login-container {
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    border-radius: 5px;
-    padding: 20px;
-    text-align: center;
-    max-width: 400px;
-    margin: 0 auto;
-  }
-  
-  /* Style for the heading */
-  .login-heading {
-    font-size: 24px;
-    margin-bottom: 20px;
-  }
-  
-  /* Style for the error message */
-  .error-message {
-    color: red;
-    font-size: 14px;
-    margin-bottom: 10px;
-  }
-  
-  /* Style for form groups (e.g., Email and Password) */
-  .form-group {
-    margin-bottom: 15px;
-  }
-  
-  /* Style for labels (e.g., Email and Password) */
-  .form-label {
-    font-size: 16px;
-    text-align: left;
-    margin-bottom: 5px;
-  }
-  
-  /* Style for input fields */
-  .form-login-input {
-    width: 100%;
-    padding: 0.3vw;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-    transition: border 0.3s;
-  }
-  
-  .form-input:focus {
-    border-color: #007bff; /* Highlight the input on focus */
-  }
-  
-  /* Style for the login button */
-  .login-button {
-    background-color: #007bff;
-    color: #fff;
-    font-size: 18px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .login-button:hover {
-    background-color: #0056b3; /* Darker color on hover */
-  }
-  
-  /* Style for the "New Account" link */
-  .new-account-link {
-    margin-top: 10px;
-  }
-  
-  .new-account-link p {
-    cursor: pointer;
-    color: #000;
-    text-decoration: underline;
-  }
-  
-  /* Style for the "Close" link */
-  close-link {
-    cursor: pointer;
-    color: #000;
-    text-decoration: underline;
-  }
-  
+  font-family: 'Pixelify Sans', sans-serif;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  padding: 20px;
+  text-align: center;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* Style for the heading */
+.login-heading {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+/* Style for the error message */
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+/* Style for form groups (e.g., Email and Password) */
+.form-group {
+  margin-bottom: 15px;
+}
+
+/* Style for labels (e.g., Email and Password) */
+.form-label {
+  font-size: 16px;
+  text-align: left;
+  margin-bottom: 5px;
+}
+
+/* Style for input fields */
+.form-login-input {
+  width: 100%;
+  padding: 0.3vw;
+  border: 2px solid black;
+  font-size: 16px;
+  transition: border 0.3s;
+}
+input:focus {
+  outline: solid var(--red);
+  border: none;
+}
+.form-login-input[type=text]
+{
+  font-family: 'Pixelify Sans', sans-serif;
+}
+
+.form-input:focus {
+  border-color: #007bff;
+  /* Highlight the input on focus */
+}
+
+.btn-hover {
+  font-family: 'Pixelify Sans', sans-serif !important;
+  width: 200px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  margin: 20px;
+  height: 55px;
+  text-align:center;
+  border: none;
+  background-size: 300% 100%;
+
+  border-radius: 50px;
+  moz-transition: all .4s ease-in-out;
+  -o-transition: all .4s ease-in-out;
+  -webkit-transition: all .4s ease-in-out;
+  transition: all .4s ease-in-out;
+}
+
+.btn-hover:hover {
+  background-position: 100% 0;
+  moz-transition: all .4s ease-in-out;
+  -o-transition: all .4s ease-in-out;
+  -webkit-transition: all .4s ease-in-out;
+  transition: all .4s ease-in-out;
+}
+
+.btn-hover:focus {
+  outline: none;
+}
+
+.btn-hover.color-4 {
+  background-image: linear-gradient(to right, #fc6076, #ff9a44, var(--yellow), var(--red));
+  box-shadow: 0 4px 15px 0 rgba(252, 104, 110, 0.75);
+}
+
+/* Style for the "New Account" link */
+.new-account-link {
+  margin-top: 10px;
+}
+
+.new-account-link p {
+  cursor: pointer;
+  color: #000;
+  text-decoration: underline;
+}
+
+/* Style for the "Close" link */
+close-link {
+  cursor: pointer;
+  color: #000;
+  text-decoration: underline;
+}
