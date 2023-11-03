@@ -1,8 +1,8 @@
 import '../assets/styles/Upgrade.scss'
-import { type UpgradeModel } from '../models/Upgrade.tsx'
 import GameButton from './GameButton.tsx'
+import { type UpgradeInterface } from '../interfaces/upgrade.interface.ts'
 
-export default function Upgrade (upgrade: UpgradeModel): JSX.Element {
+export default function Upgrade (upgrade: UpgradeInterface): JSX.Element {
   function click (): void {
 
   }
