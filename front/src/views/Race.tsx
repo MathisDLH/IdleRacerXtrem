@@ -4,9 +4,8 @@ const Race = (): JSX.Element => {
   return (
     <div>
       <Car
-      id="carRace"
       playerName="Test"
-      skin_id={10}
+      skinId={10}
       ></Car>
     </div>
   )
