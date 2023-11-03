@@ -1,7 +1,11 @@
 name: Build and Deploy
 
-on: [push]
 
+concurrency: deploying_app
+
+on:
+  push:
+    branches: ["develop"]
 jobs:
   build-back:
     runs-on: ubuntu-latest
@@ -20,6 +24,7 @@ jobs:
           name: artifact_back
           path: |
              back/dist
+             node_modules
   build-front:
     runs-on: ubuntu-latest
     steps:
