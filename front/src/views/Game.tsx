@@ -2,7 +2,6 @@ import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import IconButton from '@mui/material/IconButton'
 
-import first from '../assets/images/game/cars/6.png'
 import shop from '../assets/images/game/icons/shop.png'
 import '../assets/styles/Game.scss'
 

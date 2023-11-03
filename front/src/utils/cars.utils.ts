@@ -25,6 +25,7 @@ export const cars = [
   car_8,
   car_9,
   car_10,
+  car_11,
   car_12,
   car_13,
   car_14,
