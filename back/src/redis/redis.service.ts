@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import {RedisClient} from "./redis.provider";
 import {IRedisData, IRedisUpgrade, Unit} from "../shared/shared.model";
-import {User} from "../users/user.entity";
+import {User} from "../user/user.entity";
 
 @Injectable()
 export class RedisService {

@@ -1,34 +1,32 @@
-import { NestFactory } from '@nestjs/core';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { AppModule } from './app.module';
-
-declare const module: any;
+import {NestFactory} from '@nestjs/core';
+import {DocumentBuilder, SwaggerModule} from '@nestjs/swagger';
+import {AppModule} from './app.module';
+import {ValidationPipe} from "@nestjs/common";
+import {CustomIoAdapter} from "./config/customIoAdapter";
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+    const app = await NestFactory.create(AppModule);
 
-  var cors = require('cors')
+    app.enableCors();
 
-  //app.use(cors()) // Use this after the variable declaration
+    app.setGlobalPrefix('api');
 
-  app.enableCors();
+    app.useGlobalPipes(new ValidationPipe());
 
-  app.setGlobalPrefix('api');
+    const adapter = new CustomIoAdapter(app);
 
-  const config = new DocumentBuilder()
-    .setTitle('IdleRacer API description')
-    .setDescription('IdleRacer API description')
-    .setVersion('1.0')
-    .addTag('idleracer')
-    .addBearerAuth()
-    .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+    app.useWebSocketAdapter(adapter);
 
-  await app.listen(3000);
-  if (module.hot) {
-    module.hot.accept();
-    module.hot.dispose(() => app.close());
-  }
+    const config = new DocumentBuilder()
+        .setTitle('IdleRacerXtrem API')
+        .setDescription('API for the IdleRacerXtrem application')
+        .setVersion('1.0')
+        .addBearerAuth()
+        .build();
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('api', app, document);
+
+    await app.listen(3000);
 }
+
 bootstrap();

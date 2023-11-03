@@ -1,19 +1,16 @@
 import {Module} from '@nestjs/common';
 import {ConfigModule} from '@nestjs/config';
 import {TypeOrmModule} from '@nestjs/typeorm';
-import {AppController} from './app.controller';
-import {AppService} from './app.service';
-import {UsersModule} from './users/users.module';
+import {UserModule} from './user/user.module';
 import {AuthModule} from './auth/auth.module';
-import {User} from './users/user.entity';
-import {HealthModule} from './health/health.module';
+import {User} from './user/user.entity';
 import {GameGateway} from './game/game.gateway';
 import {JwtModule} from '@nestjs/jwt';
 import {Upgrade} from "./upgrade/upgrade.entity";
 import {UserUpgrade} from "./UserUpgrade/userUpgrade.entity";
 import {RedisModule} from "./redis/redis.module";
 import {UpgradeModule} from "./upgrade/upgrade.module";
-import { SeedingService } from './seeding/seeding.service';
+import {SeedingService} from './seeding/seeding.service';
 
 const entities = [User, Upgrade, UserUpgrade];
 @Module({
@@ -34,14 +31,12 @@ const entities = [User, Upgrade, UserUpgrade];
     }),
     TypeOrmModule.forFeature([User]),
     TypeOrmModule.forFeature([Upgrade]),
-    UsersModule,
+    UserModule,
     AuthModule,
-    HealthModule,
     JwtModule,
     RedisModule,
     UpgradeModule,
   ],
-  controllers: [AppController],
-  providers: [AppService, GameGateway,SeedingService],
+  providers: [GameGateway,SeedingService],
 })
 export class AppModule {}

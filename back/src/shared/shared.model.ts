@@ -50,3 +50,4 @@ export interface IRedisData {
 export interface IRedisUpgrade extends Upgrade {
     amount: number;
 }
+

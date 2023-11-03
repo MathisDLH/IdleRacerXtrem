@@ -1,19 +1,32 @@
+import {Controller, Get, UseGuards} from '@nestjs/common';
+import {JwtAuthGuard} from 'src/auth/jwt-auth.guard';
+import {UpgradeService} from './upgrade.service';
+import {ApiBearerAuth, ApiResponse, ApiTags} from "@nestjs/swagger";
+import {Upgrade} from "./upgrade.entity";
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { UpgradeService } from './upgrade.service';
 import { Request } from '@nestjs/common';
 import { BuyUpgradeDto } from './dto/buy-upgrade.dto';
 
-@Controller('upgrades')
+@ApiBearerAuth()
+@ApiTags("Upgrade")
+@Controller('upgrade')
 export class UpgradeController {
-  constructor(private readonly upgradeService: UpgradeService) {}
+    constructor(private readonly upgradeService: UpgradeService) {
+    }
 
-  @UseGuards(JwtAuthGuard)
-  @Get()
-  async getUpgrades() {
-    const upgrades = await this.upgradeService.findAll();
-    return JSON.stringify(upgrades);
-  }
+    @UseGuards(JwtAuthGuard)
+    @Get()
+    @ApiResponse({
+        status: 200,
+        description: 'Retrieve all upgrades of the game',
+        type: Upgrade,
+        isArray: true
+    })
+    async findAll(): Promise<Upgrade[]> {
+        return await this.upgradeService.findAll();
+    }
 
   @UseGuards(JwtAuthGuard)
   @Post("/buyUpgrade")

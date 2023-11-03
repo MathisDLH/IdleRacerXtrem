@@ -1,5 +1,5 @@
 import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
-import {User} from "../users/user.entity";
+import {User} from "../user/user.entity";
 import {Upgrade} from "../upgrade/upgrade.entity";
 
 @Entity()
@@ -12,7 +12,6 @@ export class UserUpgrade extends BaseEntity {
 
     @Column()
     amount: number;
-
 
     @ManyToOne(() => User, (user) => user.userUpgrade)
     public user: User
