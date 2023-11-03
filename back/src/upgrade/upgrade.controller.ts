@@ -1,13 +1,9 @@
-import {Controller, Get, UseGuards} from '@nestjs/common';
+import {Body, Controller, Get, Post, Request, UseGuards} from '@nestjs/common';
 import {JwtAuthGuard} from 'src/auth/jwt-auth.guard';
 import {UpgradeService} from './upgrade.service';
 import {ApiBearerAuth, ApiResponse, ApiTags} from "@nestjs/swagger";
 import {Upgrade} from "./upgrade.entity";
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { UpgradeService } from './upgrade.service';
-import { Request } from '@nestjs/common';
-import { BuyUpgradeDto } from './dto/buy-upgrade.dto';
+import {BuyUpgradeDto} from './dto/buy-upgrade.dto';
 
 @ApiBearerAuth()
 @ApiTags("Upgrade")
