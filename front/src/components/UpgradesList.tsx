@@ -43,7 +43,7 @@ export default function UpgradesList (): JSX.Element {
 
   useEffect(() => {
     const fetchData = async (): Promise<void> => {
-      const data = await UpgradeService.getUpgrades(token || '')
+      const data = await UpgradeService.getUpgrades(token ?? '')
       setUpgrades(data)
       if (data.length === 0) {
         setUpgrades([
@@ -51,7 +51,7 @@ export default function UpgradesList (): JSX.Element {
             id: 0,
             name: 'mock',
             price: 0,
-            price_string: '0',
+            price_unit: 'UNIT',
             ratio: 1,
             generationUpgradeId: 0,
             value: 0,
@@ -64,7 +64,7 @@ export default function UpgradesList (): JSX.Element {
   }, [])
 
   return (
-    <div id={'list'} className={'upgrades'}>
+    <div id={'list'} className={'upgrades-container'}>
       <Box>
         <Tabs value={value}
           onChange={handleChange}
@@ -75,11 +75,13 @@ export default function UpgradesList (): JSX.Element {
           <Tab label={'Races'}/>
         </Tabs>
       </Box>
-      <TabPanel value={value} index={0}>
-        {upgrades.map((upgrade: UpgradeInterface) => {
-          return <Upgrade key={upgrade.id} {...upgrade}/>
-        })}
-      </TabPanel>
+      <div className={'upgrades'}>
+        <TabPanel value={value} index={0}>
+          {upgrades.map((upgrade: UpgradeInterface) => {
+            return <Upgrade key={upgrade.id} token={token} upgrade={upgrade}/>
+          })}
+        </TabPanel>
+      </div>
     </div>
   )
 }

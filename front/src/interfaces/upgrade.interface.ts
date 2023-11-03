@@ -2,7 +2,7 @@ export default interface UpgradeInterface {
   id: number
   name: string
   price: number
-  price_string: string
+  price_unit: string
   ratio: number
   generationUpgradeId: number
   value: number

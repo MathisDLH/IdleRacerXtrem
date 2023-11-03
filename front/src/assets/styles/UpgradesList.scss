@@ -1,6 +1,5 @@
-.upgrades {
+.upgrades-container {
     width: 400px;
-    overflow: auto;
     font-family: 'Pixelify Sans', sans-serif;
 
     >button{
@@ -15,8 +14,9 @@
         }
     }
 
-    ul > li {
-        list-style: unset;
+    .upgrades{
+        height: 30vh;
+        overflow-y: scroll;
     }
 
 }

@@ -2,16 +2,17 @@
     border-radius: 1vh;
     pointer-events: none;
 
+    [role="dialog"] {
+        border-radius: 1vw;
+        overflow-y: hidden;
+    }
+
     &.small{
-        [role="dialog"] {
-            border-radius: 1vw;
-        }
+
     }
 
     &.big{
-        [role="dialog"] {
-            border-radius: 1vw;
-        }  
+
     }
 
     .drag{
@@ -37,5 +38,6 @@
 
     #draggable-dialog-content {
         padding: unset;
+        overflow: unset;
     }
 }
