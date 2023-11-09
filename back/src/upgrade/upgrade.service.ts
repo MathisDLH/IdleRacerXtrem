@@ -72,7 +72,13 @@ export class UpgradeService {
   }
 
     async updateById(userId: number, upgradeId: number, amount: number, amountUnit: Unit, amountBought: number) {
-        return this.userUpgradeRepository.update({upgradeId: upgradeId, userId: userId}, {amount, amountUnit,amountBought})
+      if(this.userUpgradeRepository.exist({where: {upgradeId, userId}})) {
+        return this.userUpgradeRepository.update({upgradeId: upgradeId, userId: userId }, {amount, amountUnit,amountBought})
+      } else {
+        return this.userUpgradeRepository.save({upgradeId: upgradeId, userId: userId ,amount, amountUnit,amountBought})
+      }
+       
+     
 
     }
 }
