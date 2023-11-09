@@ -1,0 +1,59 @@
+.score-tab {
+    font-family: 'Pixelify Sans', sans-serif;
+    text-align: center;
+    border-radius: 1vh;
+    pointer-events: none;
+  }
+  
+  .score-tab.small {
+    border-radius: 1vw;
+  }
+  
+  .score-tab.big {
+    border-radius: 1vw;
+    width: 20vw;
+  }
+  
+  
+  .score-table {
+    border-radius: 1vh;
+    border: 1px solid var(--grey);
+    margin-top: 1vh;
+    width: 100%;
+    background: white;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  .score-table th {
+    background-color: var(--yellow);
+    color: white;
+    padding: 0.5vh;
+  }
+  
+  .score-table td {
+    padding: 0.5vh;
+    text-align: center;
+  }
+  
+  .score-table tr:nth-child(even) {
+    background-color: var(--light-grey);
+  }
+  
+  .score-table tr:nth-child(odd) {
+    background-color: white;
+  }
+  
+  .score-table p {
+    text-align: center;
+    margin: 2vh;
+  }
+  
+  /* Define your custom CSS variables (colors, fonts, etc.) here */
+  :root {
+    --yellow: #FFD700;
+    --red: #FF0000;
+    --blue: #0077B6;
+    --grey: #A7A9AC;
+    --light-grey: #F0F0F0;
+  }
+  

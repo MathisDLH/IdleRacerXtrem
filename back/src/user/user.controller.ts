@@ -20,4 +20,10 @@ export class UsersController {
   find(@Param('id') id: string): Promise<User> {
     return this.usersService.findById(+id);
   }
+
+  
+  @Get('/scores')
+  findScoreTab(): Promise<User[]> {
+    return this.usersService.findUsersByScore();
+  }
 }

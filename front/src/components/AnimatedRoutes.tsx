@@ -7,6 +7,7 @@ import { AnimatePresence } from 'framer-motion'
 import NotFoundPage from '../views/NotFoundPage'
 import RegisterForm from '../views/RegisterForm'
 import { useAuth } from '../context/Auth'
+import ScoreTab from '../views/ScoreTab'
 
 const AnimatedRoutes = (): JSX.Element => {
   const location = useLocation()
@@ -20,6 +21,7 @@ const AnimatedRoutes = (): JSX.Element => {
         {isLoggedIn && < Route path="/game" element={<Game />} />}
         {isLoggedIn && <Route path="/race" element={<Race />} />}
         <Route path='*' element={<NotFoundPage />} />
+        <Route path='/scores' element={<ScoreTab />} />
       </Routes>
     </AnimatePresence>
   )

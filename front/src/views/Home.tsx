@@ -34,8 +34,8 @@ const Home = (): JSX.Element => {
       animate={{ opacity: 1, scale: 1, rotate: 0 }}
       exit={{ opacity: 0, scale: 0, rotate: 45 }}
     >
-      <DraggableDialog icon={carIcon} open={modalVisible} size="big" setOpen={setModalVisible} title="Login" Content={<LoginForm setOpen={setModalVisible}/>}/>
-      {(user != null) && <DraggableDialog icon={carIcon} open={modalSignOutVisible} size="big" setOpen={setModalSignoutVisible} title={user.email} Content={<SignOutModal/>}/>}
+      <DraggableDialog icon={carIcon} open={modalVisible} size="big" setOpen={setModalVisible} title="Login" Content={<LoginForm setOpen={setModalVisible} />} />
+      {(user != null) && <DraggableDialog icon={carIcon} open={modalSignOutVisible} size="big" setOpen={setModalSignoutVisible} title={user.email} Content={<SignOutModal />} />}
       <div className='head-container' onClick={() => { if (!isLoggedIn) { setModalVisible(true) } else { setModalSignoutVisible(true) } }}>
         <img alt='car_icon' src={carIcon} className='car-icon' />
         <p>{isLoggedIn && (user != null) ? user.email : 'Login'}</p>
@@ -47,6 +47,11 @@ const Home = (): JSX.Element => {
           <Link to="/game">
             <button className={(user != null) ? 'start-button' : 'start-button-desactived'}>START</button>
           </Link>
+          <div style={{ marginTop: '1em' }}>
+            <Link to="/scores">
+            <button className={(user != null) ? 'start-button' : 'start-button-desactived'}>SCORES</button>
+            </Link>
+          </div>
         </div>
       </div>
     </motion.div>

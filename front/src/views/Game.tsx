@@ -22,7 +22,7 @@ const Game = (): JSX.Element => {
   const [difference, setDifference] = useState<number>(0)
   const [shopOpen, setShopOpen] = useState<boolean>(false)
 
-  const {user} = useAuth();
+  const { user } = useAuth()
 
   const toggleShop = (): void => {
     setShopOpen(!shopOpen)
