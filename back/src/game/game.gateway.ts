@@ -10,7 +10,7 @@ import {UserService} from 'src/user/user.service';
 import {User} from 'src/user/user.entity';
 import {RedisService} from 'src/redis/redis.service';
 import {Logger} from "@nestjs/common";
-import {IRedisData} from "../shared/shared.model";
+import {IRedisData, Unit} from "../shared/shared.model";
 import {UpgradeService} from "../upgrade/upgrade.service";
 
 
@@ -53,7 +53,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     @SubscribeMessage('click')
     async handleClick(client: UserSocket): Promise<void> {
-        this.redisService.incrMoney(client.user.id, 1);
+        this.redisService.incrMoney(client.user.id, 1,Unit.UNIT);
         client.emit('money', await this.redisService.getUserData(client.user));
     }
 
@@ -81,9 +81,12 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
             redisInfos.upgrades.forEach(element => {
 
                 if (element.id > 1) {
-                    redisInfos.upgrades.find((upgrade) => upgrade.id == element.generationUpgradeId).amount = element.amount * element.value;
+                  let generatedUpgrade =  redisInfos.upgrades.find((upgrade) => upgrade.id == element.generationUpgradeId);
+                  generatedUpgrade.amount =  element.amount * element.value;
+                  generatedUpgrade.amountUnit =  element.amountUnit;
                 } else { // Fan
                     redisInfos.money = (element.amount * element.value);
+                    redisInfos.moneyUnit = element.amountUnit
                 }
                 element.amount = 0;
             });

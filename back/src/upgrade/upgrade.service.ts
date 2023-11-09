@@ -57,7 +57,18 @@ export class UpgradeService {
       }
 
     } else {
-      
+      let upgrade = await this.upgradeRepository.findOne({ where: { id: Number(buyUpgradeDto.upgradeId) } });
+
+      let unit = upgrade.price_unit
+
+      if(userUpgrade.amountBought > 10 ){
+         unit = upgrade.price_unit + ( Math.floor(userUpgrade.amountBought / 10) * 3 );
+      }
+
+      let value = upgrade.price * +buyUpgradeDto.quantity;
+        if(await this.redisService.pay(userId,{value, unit})){
+          
+        }
     }
     this.logger.log("OK buyUpgrade");
   }
@@ -77,8 +88,5 @@ export class UpgradeService {
       } else {
         return this.userUpgradeRepository.save({upgradeId: upgradeId, userId: userId ,amount, amountUnit,amountBought})
       }
-       
-     
-
     }
 }
