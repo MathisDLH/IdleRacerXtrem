@@ -16,9 +16,56 @@ export class RedisService {
         return await this.client.hgetall(`${userId}:${upgradeId}`);
     }
 
+    async addUpgrade(userId: number, upgrade: IRedisUpgrade) {
+        await this.client.hset(`${userId}:${upgrade.id}`, upgrade);
+    }
 
-    async incrMoney(userId: string, amountToIncr: string) {
-        await this.client.incrby(`${userId}:MONEY`, amountToIncr);
+
+    async incrMoney(userId: number, amountToIncr: number) {
+       let money = await this.client.incrby(`${userId}:MONEY`, amountToIncr);
+       let unityToIncrement = 0;
+       while (money > 1001) {
+         money /= 1000;
+         unityToIncrement += 3;
+       }
+       await this.client.incrby(`${userId}:MONEY_UNIT`, unityToIncrement);
+       await this.client.set(`${userId}:MONEY`, money);
+       return money;
+    }
+
+    async getUserMoney(userId: number) {
+        return await Number(this.client.get(`${userId}:MONEY`));
+    }
+
+    async getUserMoneyUnit(userId: number): Promise<Unit> {
+        const unit = await this.client.get(`${userId}:MONEY_UNIT`);
+        return Unit[unit as keyof typeof Unit];
+    }
+
+    async pay(userId: number, amount: { value: number, unit: Unit }) : Promise<boolean> {
+        let userMoney = await this.getUserMoney(+userId);
+        let userMoneyUnit = await this.getUserMoneyUnit(+userId);
+        if (userMoneyUnit >= amount.unit) {
+            let differenceUnite = userMoneyUnit - amount.unit;
+            let valueToDecrement = amount.value
+            if (differenceUnite > 0) {
+                valueToDecrement /= Math.pow(10, differenceUnite);
+            }
+            if (userMoney >= amount.value) {
+                userMoney = await this.client.decrby(`${userId}:MONEY`, valueToDecrement);
+                let unityToDecrement = 0;
+                while (userMoney < 1) {
+                    userMoney = userMoney * 1000;
+                    unityToDecrement += 3;
+                }
+                if (unityToDecrement > 0 ){
+                    userMoneyUnit = await this.client.decrby(`${userId}:MONEY_UNIT`, unityToDecrement);
+                    await this.client.set(`${userId}:MONEY`, userMoney);
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
     public async loadUserInRedis(user: User) {
@@ -31,10 +78,11 @@ export class RedisService {
             .set(`${user.id}:MONEY_UNIT`, user.money_unite, "EX", 3600)
         for (const e of user.userUpgrade) {
             // TODO: Faire une méthode typée pour l'enregistrment redis des upgrades
-            chain.hset(`${user.id}:${e.upgrade.id}`, {
+            this.addUpgrade(user.id,{
                 id: e.upgrade.id,
                 amount: e.amount,
                 amountUnit: e.amountUnit,
+                amountBought : e.amountBought, 
                 value: e.upgrade.value,
                 generationUpgradeId: e.upgrade.generationUpgradeId
             })
@@ -50,7 +98,7 @@ export class RedisService {
         const data: IRedisData = {
             userId: user.id,
             money: +await this.client.get(`${user.id}:MONEY`),
-            moneyUnit: await this.client.get(`${user.id}:MONEY_UNIT`) as Unit,
+            moneyUnit: await this.getUserMoneyUnit(user.id),
             upgrades
         }
         return data;

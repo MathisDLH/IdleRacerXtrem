@@ -33,19 +33,41 @@ export class UpgradeService {
     }
 
 
-    async buyUpgrade(buyUpgradeDto: BuyUpgradeDto, userId: string): Promise<UserUpgrade> {
-        let upgrade = await this.redisService.getUpgrade(Number(userId), Number(buyUpgradeDto.upgradeId));
-
-        if (!upgrade) {
-            return this.create(userId, buyUpgradeDto);
-        } else {
-            upgrade.amount += Number(buyUpgradeDto.quantity);
-            return this.userUpgradeRepository.save(upgrade);
+  async buyUpgrade(buyUpgradeDto: BuyUpgradeDto, userId: number){
+    let userUpgrade = await this.redisService.getUpgrade(Number(userId), Number(buyUpgradeDto.upgradeId));
+    if (Object.keys(userUpgrade).length === 0) {
+      let upgrade = await this.upgradeRepository.findOne({ where: { id: Number(buyUpgradeDto.upgradeId) } });
+      if(this.canCreateUpgrade(userId, upgrade)){
+        let value = upgrade.price * +buyUpgradeDto.quantity;
+        let unit = upgrade.price_unit
+        if(await this.redisService.pay(userId,{value, unit})){
+          await this.redisService.addUpgrade(userId, {
+            id: upgrade.id,
+            amount: +buyUpgradeDto.quantity,
+            amountUnit: Unit.UNIT,
+            amountBought: +buyUpgradeDto.quantity,
+            value: upgrade.value,
+            generationUpgradeId: upgrade.generationUpgradeId
+          })
         }
-    }
+      }
 
-    async updateById(userId: number, upgradeId: number, amount: number, amountUnit: Unit) {
-        return this.userUpgradeRepository.update({upgradeId: upgradeId, userId: userId}, {amount, amountUnit})
+    } else {
+      
+    }
+  }
+
+  async canCreateUpgrade(userId : number , upgrade : Upgrade): Promise<boolean>{
+    let pastUpgrade = await this.redisService.getUpgrade(userId, upgrade.id - 1);
+    if (Object.keys(pastUpgrade).length !== 0) {
+        
+        return true;
+    }
+    return false;
+  }
+
+    async updateById(userId: number, upgradeId: number, amount: number, amountUnit: Unit, amountBought: number) {
+        return this.userUpgradeRepository.update({upgradeId: upgradeId, userId: userId}, {amount, amountUnit,amountBought})
 
     }
 }
