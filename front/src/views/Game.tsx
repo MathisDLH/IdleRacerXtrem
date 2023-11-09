@@ -25,7 +25,7 @@ const Game = (): JSX.Element => {
   const [shopOpen, setShopOpen] = useState<boolean>(false)
   const { user } = useAuth()
   const [skin, setSkin] = useState<number>(user?.skin_id ?? 0)
-  const [carPosition, setCarPosition] = useState<number>(0)
+  // const [carPosition, setCarPosition] = useState<number>(0)
 
   const toggleShop = (): void => {
     setShopOpen(!shopOpen)
