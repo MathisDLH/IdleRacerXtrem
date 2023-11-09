@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import {Inject, Injectable} from '@nestjs/common';
 import {RedisClient} from "./redis.provider";
 import {IRedisData, IRedisUpgrade, Unit} from "../shared/shared.model";
 import {User} from "../user/user.entity";
@@ -8,15 +8,16 @@ export class RedisService {
     public constructor(
         @Inject('REDIS_CLIENT')
         private readonly client: RedisClient,
-    ) {}
+    ) {
+    }
 
 
-async getUpgrade(userId: number, upgradeId: number){
-    return await this.client.hgetall(`${userId}:${upgradeId}`);
-}
+    async getUpgrade(userId: number, upgradeId: number) {
+        return await this.client.hgetall(`${userId}:${upgradeId}`);
+    }
 
 
-    async incrMoney(userId: string, amountToIncr: string){
+    async incrMoney(userId: string, amountToIncr: string) {
         await this.client.incrby(`${userId}:MONEY`, amountToIncr);
     }
 
@@ -30,7 +31,13 @@ async getUpgrade(userId: number, upgradeId: number){
             .set(`${user.id}:MONEY_UNIT`, user.money_unite, "EX", 3600)
         for (const e of user.userUpgrade) {
             // TODO: Faire une méthode typée pour l'enregistrment redis des upgrades
-            chain.hset(`${user.id}:${e.upgrade.id}`, {id:e.upgrade.id, amount: e.amount, amountUnit: e.amountUnit, value: e.upgrade.value, generationUpgradeId: e.upgrade.generationUpgradeId })
+            chain.hset(`${user.id}:${e.upgrade.id}`, {
+                id: e.upgrade.id,
+                amount: e.amount,
+                amountUnit: e.amountUnit,
+                value: e.upgrade.value,
+                generationUpgradeId: e.upgrade.generationUpgradeId
+            })
         }
         await chain.exec()
     }
@@ -55,7 +62,7 @@ async getUpgrade(userId: number, upgradeId: number){
             .incrbyfloat(`${user.id}:MONEY`, data.money)
             .set(`${user.id}:MONEY_UNIT`, data.moneyUnit, "EX", 3600)
         for (const e of data.upgrades) {
-            chain.hincrbyfloat(`${user.id}:${e.id}`,"amount" , e.amount)
+            chain.hincrbyfloat(`${user.id}:${e.id}`, "amount", e.amount)
             //Mettre à jour l'unité des upgrades
         }
         await chain.exec()

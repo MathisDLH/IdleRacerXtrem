@@ -9,14 +9,14 @@ import {RedisService} from 'src/redis/redis.service';
 
 @Injectable()
 export class UpgradeService {
-  constructor(
-    @InjectRepository(UserUpgrade)
+    constructor(
+        @InjectRepository(UserUpgrade)
         private userUpgradeRepository: Repository<UserUpgrade>,
         @InjectRepository(Upgrade)
-    private upgradeRepository: Repository<Upgrade>,
-    private readonly redisService: RedisService,
-  ) {
-  }
+        private upgradeRepository: Repository<Upgrade>,
+        private readonly redisService: RedisService,
+    ) {
+    }
 
     async create(userId: string, buyUpgradeDto: BuyUpgradeDto) {
         let userUpgrade = this.userUpgradeRepository.create({
@@ -29,12 +29,12 @@ export class UpgradeService {
     }
 
     findAll(): Promise<Upgrade[]> {
-        return this.upgradeRepository.find();}
-
+        return this.upgradeRepository.find();
+    }
 
 
     async buyUpgrade(buyUpgradeDto: BuyUpgradeDto, userId: string): Promise<UserUpgrade> {
-      let upgrade = await this.redisService.getUpgrade(Number(userId),Number(buyUpgradeDto.upgradeId));
+        let upgrade = await this.redisService.getUpgrade(Number(userId), Number(buyUpgradeDto.upgradeId));
 
         if (!upgrade) {
             return this.create(userId, buyUpgradeDto);
