@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { getScores } from '../services/users.service'
 import { type User } from '../interfaces/user.interface'
 import '../assets/styles/ScoreTab.scss'
