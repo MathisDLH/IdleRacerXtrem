@@ -1,44 +1,46 @@
 import {Upgrade} from "../upgrade/upgrade.entity";
 
 export enum Unit {
-    UNIT = "UNIT",
-    MILLION = "MILLION",     // One Million
-    BILLION = "BILLION",     // One Billion
-    TRILLION = "TRILLION",   // One Trillion
-    QUADRILLION = "QUADRILLION", // One Quadrillion
-    QUINTILLION = "QUINTILLION", // One Quintillion
-    SEXTILLION = "SEXTILLION",  // One Sextillion
-    SEPTILLION = "SEPTILLION",  // One Septillion
-    OCTILLION = "OCTILLION",   // One Octillion
-    NONILLION = "NONILLION",   // One Nonillion
-    DECILLION = "DECILLION",   // One Decillion
-    UNDECILLION = "UNDECILLION",   // One Undecillion
-    DUODECILLION = "DUODECILLION", // One Duodecillion
-    TREDECILLION = "TREDECILLION", // One Tredecillion
-    QUATTUORDECILLION = "QUATTUORDECILLION", // One Quattuordecillion
-    QUINDECILLION = "QUINDECILLION", // One Quindecillion
-    SEXDECILLION = "SEXDECILLION",   // One Sexdecillion
-    SEPTENDECILLION = "SEPTENDECILLION", // One Septendecillion
-    OCTODECILLION = "OCTODECILLION", // One Octodecillion
-    NOVEMDECILLION = "NOVEMDECILLION", // One Novemdecillion
-    VIGINTILLION = "VIGINTILLION",
-    UNVIGINTILLION = "UNVIGINTILLION", // One Unvigintillion (10^66)
-    DUOVIGINTILLION = "DUOVIGINTILLION", // One Duovigintillion (10^69)
-    TRESVIGINTILLION = "TRESVIGINTILLION", // One Tresvigintillion (10^72)
-    QUATTUORVIGINTILLION = "QUATTUORVIGINTILLION", // One Quattuorvigintillion (10^75)
-    QUINQUAVIGINTILLION = "QUINQUAVIGINTILLION", // One Quinquavigintillion (10^78)
-    SESVIGINTILLION = "SESVIGINTILLION", // One Sesvigintillion (10^81)
-    SEPTENVIGINTILLION = "SEPTENVIGINTILLION", // One Septenvigintillion (10^84)
-    OCTOVIGINTILLION = "OCTOVIGINTILLION", // One Octovigintillion (10^87)
-    NOVEMVIGINTILLION = "NOVEMVIGINTILLION", // One Novemvigintillion (10^90)
-    TRIGINTILLION = "TRIGINTILLION", // One Trigintillion (10^93)
-    UNTRIGINTILLION = "UNTRIGINTILLION", // One Untrigintillion (10^96)
-    DUOTRIGINTILLION = "DUOTRIGINTILLION", // One Duotrigintillion (10^99)
-    TRESTRIGINTILLION = "TRESTRIGINTILLION", // One Trestrigintillion (10^102)
-    QUATTUORTRIGINTILLION = "QUATTUORTRIGINTILLION", // One Quattuortrigintillion (10^105)
-    QUINQUATRIGINTILLION = "QUINQUATRIGINTILLION", // One Quinquatrigintillion (10^108)
-    SESTRIGINTILLION = "SESTRIGINTILLION",  
+    UNIT = 0, 
+    K = 3,
+    MILLION = 6, 
+    BILLION = 9, 
+    TRILLION = 12,
+    QUADRILLION = 15,
+    QUINTILLION = 18,
+    SEXTILLION = 21,
+    SEPTILLION = 24,
+    OCTILLION = 27,
+    NONILLION = 30,
+    DECILLION = 33,
+    UNDECILLION = 36,
+    DUODECILLION = 39,
+    TREDECILLION = 42,
+    QUATTUORDECILLION = 45,
+    QUINDECILLION = 48,
+    SEXDECILLION = 51,
+    SEPTENDECILLION = 54,
+    OCTODECILLION = 57,
+    NOVEMDECILLION = 60,
+    VIGINTILLION = 63,
+    UNVIGINTILLION = 66,
+    DUOVIGINTILLION = 69,
+    TRESVIGINTILLION = 72,
+    QUATTUORVIGINTILLION = 75,
+    QUINQUAVIGINTILLION = 78,
+    SESVIGINTILLION = 81,
+    SEPTENVIGINTILLION = 84,
+    OCTOVIGINTILLION = 87,
+    NOVEMVIGINTILLION = 90,
+    TRIGINTILLION = 93,
+    UNTRIGINTILLION = 96,
+    DUOTRIGINTILLION = 99,
+    TRESTRIGINTILLION = 102,
+    QUATTUORTRIGINTILLION = 105,
+    QUINQUATRIGINTILLION = 108,
+    SESTRIGINTILLION = 111,
 }
+
 
 
 export interface IRedisData {
@@ -53,6 +55,7 @@ export interface IRedisUpgrade {
     generationUpgradeId: number;
     amount: number;
     amountUnit: Unit;
+    amountBought : number,
     value: number;
 }
 

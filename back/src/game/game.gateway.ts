@@ -53,7 +53,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     @SubscribeMessage('click')
     async handleClick(client: UserSocket): Promise<void> {
-        this.redisService.incrMoney(client.user.id.toString(), "1");
+        this.redisService.incrMoney(client.user.id, 1);
         client.emit('money', await this.redisService.getUserData(client.user));
     }
 
@@ -97,7 +97,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         const upgrades = redisInfos.upgrades;
         await this.userService.update(newUser as User);
         for (const upgrade of upgrades) {
-            await this.upgradeService.updateById(user.id, upgrade.id, upgrade.amount, upgrade.amountUnit);
+            await this.upgradeService.updateById(user.id, upgrade.id, upgrade.amount, upgrade.amountUnit, upgrade.amountBought);
         }
 
     }
