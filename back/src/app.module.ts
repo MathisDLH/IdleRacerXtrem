@@ -11,32 +11,38 @@ import {UserUpgrade} from "./UserUpgrade/userUpgrade.entity";
 import {RedisModule} from "./redis/redis.module";
 import {UpgradeModule} from "./upgrade/upgrade.module";
 import {SeedingService} from './seeding/seeding.service';
+import {Skin} from "./skin/skin.entity";
+import {SkinModule} from "./skin/skin.module";
 
-const entities = [User, Upgrade, UserUpgrade];
+const entities = [User, Upgrade, UserUpgrade, Skin];
+
 @Module({
-  imports: [
-    ConfigModule.forRoot({
-      envFilePath: ['.env'],
-      isGlobal: true,
-    }),
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: process.env.DATABASE_HOST,
-      port: parseInt(process.env.DATABASE_PORT),
-      username: process.env.DATABASE_USER,
-      password: process.env.DATABASE_PASSWORD,
-      database: process.env.DATABASE_NAME,
-      entities: entities,
-      synchronize: true,
-    }),
-    TypeOrmModule.forFeature([User]),
-    TypeOrmModule.forFeature([Upgrade]),
-    UserModule,
-    AuthModule,
-    JwtModule,
-    RedisModule,
-    UpgradeModule,
-  ],
-  providers: [GameGateway,SeedingService],
+    imports: [
+        ConfigModule.forRoot({
+            envFilePath: ['.env'],
+            isGlobal: true,
+        }),
+        TypeOrmModule.forRoot({
+            type: 'mysql',
+            host: process.env.DATABASE_HOST,
+            port: parseInt(process.env.DATABASE_PORT),
+            username: process.env.DATABASE_USER,
+            password: process.env.DATABASE_PASSWORD,
+            database: process.env.DATABASE_NAME,
+            entities: entities,
+            synchronize: true,
+        }),
+        TypeOrmModule.forFeature([User]),
+        TypeOrmModule.forFeature([Upgrade]),
+        TypeOrmModule.forFeature([Skin]),
+        UserModule,
+        SkinModule,
+        AuthModule,
+        JwtModule,
+        RedisModule,
+        UpgradeModule,
+    ],
+    providers: [GameGateway, SeedingService],
 })
-export class AppModule {}
+export class AppModule {
+}

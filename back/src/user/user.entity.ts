@@ -4,7 +4,10 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    JoinColumn, JoinTable,
+    ManyToMany,
     OneToMany,
+    OneToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
@@ -12,6 +15,7 @@ import * as bcrypt from 'bcryptjs';
 import {Unit} from "../shared/shared.model";
 import {UserUpgrade} from "../UserUpgrade/userUpgrade.entity";
 import {ApiProperty} from "@nestjs/swagger";
+import {Skin} from "../skin/skin.entity";
 
 
 @Entity()
@@ -36,8 +40,12 @@ export class User extends BaseEntity {
     money: number;
 
     @ApiProperty()
-    @Column({default: 1})
-    skin_id: number;
+    @Column({default: 0})
+    currentSkin: number;
+
+    @ApiProperty()
+    @Column({type: 'simple-array'})
+    ownedSkins: string[];
 
     @ApiProperty()
     @Column({type: "enum", enum: Unit, default: Unit.UNIT})

@@ -31,7 +31,8 @@ export class AuthService {
             {
                 name: payload.name,
                 email: payload.email,
-                password: payload.password
+                password: payload.password,
+                ownedSkins: []
             }
         );
         user = await user.save();

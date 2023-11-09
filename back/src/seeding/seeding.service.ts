@@ -4,22 +4,23 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Upgrade } from 'src/upgrade/upgrade.entity';
 import { Unit } from 'src/shared/shared.model';
+import {Skin} from "../skin/skin.entity";
 
 @Injectable()
 export class SeedingService implements OnModuleInit {
     constructor(
         @InjectRepository(Upgrade)
         private readonly upgradeRepository: Repository<Upgrade>,
+        @InjectRepository(Skin)
+        private readonly skinRepository: Repository<Skin>,
     ) { }
 
     async onModuleInit() {
-        await this.seedData();
+        await this.seedUpgrades();
+        await this.seedSkins();
     }
 
-    private async checkTable() {
-
-    }
-    private async seedData() {
+    private async seedUpgrades() {
 
         const count = await this.upgradeRepository.count();
 
@@ -53,6 +54,32 @@ export class SeedingService implements OnModuleInit {
                 { id: 26, name: 'GP Dimentionnel', price: 10, price_unit: Unit.SESVIGINTILLION, ratio: 1, generationUpgradeId: 25, value: 0.1, imagePath: 'test.png' },
             ];
             await this.upgradeRepository.save(data);
+        }
+    }
+
+    private async seedSkins() {
+
+        const count = await this.skinRepository.count();
+
+        if (count == 0) {
+            const data = [
+                {price: 1000},
+                {price: 2000},
+                {price: 3000},
+                {price: 4000},
+                {price: 5000},
+                {price: 6000},
+                {price: 7000},
+                {price: 8000},
+                {price: 9000},
+                {price: 10000},
+                {price: 11000},
+                {price: 12000},
+                {price: 13000},
+                {price: 14000},
+                {price: 15000}
+            ];
+            await this.skinRepository.save(data);
         }
     }
 }
