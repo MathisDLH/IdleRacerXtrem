@@ -45,7 +45,9 @@ export default function Upgrade (props: { token?: string, upgrade: UpgradeInterf
   return (
     <div className={'upgrade prevent-select'}>
       <span>{upgrade.name}</span>
-      <button className={'btn-hover color-4'} onClick={click}>{calculatePrice()}</button>
+      <div>
+        <button className={'btn-hover color-4'} onClick={click}>{calculatePrice()}</button>
+      </div>
     </div>
   )
 }

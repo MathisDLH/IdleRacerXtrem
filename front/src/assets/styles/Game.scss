@@ -34,16 +34,14 @@
                 img {
                     height: 3vh;
                 }
-
-                &.left {
-
-                }
             }
 
             .part {
+
                 padding: 2vh;
                 font-family: 'Pixelify Sans', sans-serif;
-                color: var(--yellow);
+                color: white;
+                text-shadow: var(--yellow) 3px 3px 1vw;
                 font-size: 2rem;
             }
         }

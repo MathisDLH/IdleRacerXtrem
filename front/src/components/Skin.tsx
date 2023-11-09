@@ -1,11 +1,12 @@
-import type skinInterface from '../interfaces/skin.interface.ts'
 import { cars } from '../utils/cars.utils.ts'
 import '../assets/styles/Skin.scss'
 import { useAuth } from '../context/Auth.tsx'
+import type skinInterface from '../interfaces/skin.interface.ts'
 
 const Skin = (props: { skin: skinInterface }): JSX.Element => {
   const skin: skinInterface = props.skin
   const { user, setUser } = useAuth()
+
 
   function click (): void {
     console.log('change skin to: ' + skin.id)

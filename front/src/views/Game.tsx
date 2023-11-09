@@ -11,10 +11,7 @@ import UpgradesList from '../components/UpgradesList.tsx'
 import { useWebSocket } from '../context/Socket.tsx'
 import { useAuth } from '../context/Auth.tsx'
 import { cars } from '../utils/cars.utils.ts'
-
-interface WebSocketContextInterface {
-  socket: any
-}
+import type WebSocketContextInterface from '../interfaces/websocketcontext.interface.ts'
 
 const Game = (): JSX.Element => {
   const { socket }: WebSocketContextInterface = useWebSocket()
@@ -22,8 +19,8 @@ const Game = (): JSX.Element => {
   const [oldMoney, setOldMoney] = useState<number>(0)
   const [difference, setDifference] = useState<number>(0)
   const [shopOpen, setShopOpen] = useState<boolean>(false)
-
   const { user } = useAuth()
+  const [carPosition, setCarPosition] = useState<number>(0)
 
   const toggleShop = (): void => {
     setShopOpen(!shopOpen)
@@ -65,8 +62,10 @@ const Game = (): JSX.Element => {
   const goHome = (): void => {
     window.location.href = '/'
   }
-  // Moved socket event listeners outside of the useEffect
-  // to ensure they are set up only once.
+
+  /**
+   * Socket events
+   */
   useEffect(() => {
     if (socket) {
       const onConnect = (): void => {}
@@ -106,7 +105,7 @@ const Game = (): JSX.Element => {
             </IconButton>
           </div>
           <div className={'right'}>
-            <span className="part">{money}$</span>
+            <span className="part prevent-select">{money + '$'}</span>
             <IconButton className="icon" aria-label="shop" size="large" onClick={toggleShop}>
               <img src={shop} alt={''} />
             </IconButton>
