@@ -1,15 +1,21 @@
-import {Controller, Get, Param} from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 
-import {UserService} from './user.service';
-import {User} from "./user.entity";
-import {RedisService} from "../redis/redis.service";
-import {ApiResponse, ApiTags} from "@nestjs/swagger";
+import { UserService } from './user.service';
+import { User } from "./user.entity";
+import { RedisService } from "../redis/redis.service";
+import { ApiResponse, ApiTags } from "@nestjs/swagger";
 
 @ApiTags("User")
 @Controller('user')
 export class UsersController {
   constructor(private readonly usersService: UserService,
-              private readonly redisService: RedisService) {}
+    private readonly redisService: RedisService) { }
+
+  @Get('/scores')
+  findScoreTab(): Promise<User[]> {
+    console.log('AAAAAAAAAAAAAAA')
+    return this.usersService.findUsersByScore();
+  }
 
   @Get(':id')
   @ApiResponse({
@@ -21,9 +27,4 @@ export class UsersController {
     return this.usersService.findById(+id);
   }
 
-  
-  @Get('/scores')
-  findScoreTab(): Promise<User[]> {
-    return this.usersService.findUsersByScore();
-  }
 }
