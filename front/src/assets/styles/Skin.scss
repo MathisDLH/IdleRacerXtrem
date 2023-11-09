@@ -1,0 +1,11 @@
+.skin{
+    height: 8vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    img{
+        -webkit-transform: scaleX(-1);
+        width: 50%;
+    }
+}

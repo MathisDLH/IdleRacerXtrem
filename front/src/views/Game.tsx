@@ -121,7 +121,7 @@ const Game = (): JSX.Element => {
         <div id="down" onClick={click}>
           <div id="road-line"></div>
           <div id="car-shadow"></div>
-          <img id="car" src={cars[user!.skin_id]} alt="" />
+          <img id="car" src={cars[user?.skin_id || 0]} alt="" />
         </div>
       </section>
     </motion.div>
