@@ -96,7 +96,8 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     async pushRedisToDb(user: User) {
         const redisInfos: IRedisData = await this.redisService.getUserData(user);
-        const newUser = {id: user.id, money: redisInfos.money};
+        console.log(redisInfos)
+        const newUser = {id: user.id, money: redisInfos.money, money_unite: redisInfos.moneyUnit };
         const upgrades = redisInfos.upgrades;
         await this.userService.update(newUser as User);
         for (const upgrade of upgrades) {

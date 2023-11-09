@@ -58,16 +58,16 @@ export class UpgradeService {
 
     } else {
       let upgrade = await this.upgradeRepository.findOne({ where: { id: Number(buyUpgradeDto.upgradeId) } });
-
       let unit = upgrade.price_unit
 
       if(userUpgrade.amountBought > 10 ){
-         unit = upgrade.price_unit + ( Math.floor(userUpgrade.amountBought / 10) * 3 );
+         unit +=  Math.floor(userUpgrade.amountBought / 10) * 3 ;
       }
 
       let value = upgrade.price * +buyUpgradeDto.quantity;
         if(await this.redisService.pay(userId,{value, unit})){
-          
+          this.redisService.incrUpgrade(userId,upgrade.id,+buyUpgradeDto.quantity,Unit.UNIT);
+          this.redisService.incrUpgradeAmountBought(userId,upgrade.id,+buyUpgradeDto.quantity)
         }
     }
     this.logger.log("OK buyUpgrade");
@@ -83,7 +83,9 @@ export class UpgradeService {
   }
 
     async updateById(userId: number, upgradeId: number, amount: number, amountUnit: Unit, amountBought: number) {
-      if(this.userUpgradeRepository.exist({where: {upgradeId, userId}})) {
+      this.logger.log("Upgrade", upgradeId, userId, amount, amountUnit, amountBought);
+      if(await this.userUpgradeRepository.exist({where: {upgradeId, userId}})) {
+        console.log('upgradeid',upgradeId);
         return this.userUpgradeRepository.update({upgradeId: upgradeId, userId: userId }, {amount, amountUnit,amountBought})
       } else {
         return this.userUpgradeRepository.save({upgradeId: upgradeId, userId: userId ,amount, amountUnit,amountBought})

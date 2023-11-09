@@ -22,7 +22,9 @@ export class RedisService {
     }
 
 
-
+    async incrUpgradeAmountBought(userId: number, upgradeId: number, amountToIncr: number) {
+        return +await this.client.hincrbyfloat(`${userId}:${upgradeId}`, "amountBought", amountToIncr);
+    }
 
     async incrMoney(userId: number, amountToIncr: number, unit: Unit) {
         let moneyUnit = +await this.getUserMoneyUnit(userId);
@@ -76,23 +78,15 @@ export class RedisService {
     async pay(userId: number, amount: { value: number, unit: Unit }): Promise<boolean> {
         let userMoney = await this.getUserMoney(userId);
         let userMoneyUnit = +await this.getUserMoneyUnit(userId);
-        console.log(1)
-        console.log(userMoneyUnit)
-        console.log(amount.unit)
 
         if (userMoneyUnit >= amount.unit) {
-            console.log(11)
             let differenceUnite = userMoneyUnit - amount.unit;
             let valueToDecrement = amount.value
             if (differenceUnite > 0) {
-                console.log(111)
                 valueToDecrement /= Math.pow(10, differenceUnite);
             }
-            console.log(1111)
-            console.log(userMoney)
-            console.log(amount.value)
+
             if (userMoney >= amount.value) {
-                console.log(5)
                 userMoney = await this.client.decrby(`${userId}:MONEY`, valueToDecrement);
                 let unityToDecrement = 0;
                 while (userMoney < 1) {
@@ -132,6 +126,7 @@ export class RedisService {
     }
 
     public async getUserData(user: User) {
+        console.log("qskjh")
         const upgrades: IRedisUpgrade[] = [];
         let i = 0;
         let end = false;
