@@ -1,17 +1,19 @@
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
-import IconButton from '@mui/material/IconButton'
-
 import shop from '../assets/images/game/icons/shop.png'
 import back from '../assets/images/game/icons/back.png'
 import '../assets/styles/Game.scss'
 
 import DraggableDialog from '../components/DraggableDialog.tsx'
 import UpgradesList from '../components/UpgradesList.tsx'
+import IconButton from '@mui/material/IconButton'
+
+import type WebSocketContextInterface from '../interfaces/websocketcontext.interface.ts'
 import { useWebSocket } from '../context/Socket.tsx'
 import { useAuth } from '../context/Auth.tsx'
+
 import { cars } from '../utils/cars.utils.ts'
-import type WebSocketContextInterface from '../interfaces/websocketcontext.interface.ts'
+import { eventEmitter } from '../utils/event-emitter.ts'
 
 const Game = (): JSX.Element => {
   const { socket }: WebSocketContextInterface = useWebSocket()
@@ -20,7 +22,7 @@ const Game = (): JSX.Element => {
   const [difference, setDifference] = useState<number>(0)
   const [shopOpen, setShopOpen] = useState<boolean>(false)
   const { user } = useAuth()
-  const [carPosition, setCarPosition] = useState<number>(0)
+  const [skin, setSkin] = useState<number>(user?.skin_id ?? 0)
 
   const toggleShop = (): void => {
     setShopOpen(!shopOpen)
@@ -36,6 +38,7 @@ const Game = (): JSX.Element => {
       console.log('Socket is null')
     }
   }
+
   const createClickEffect = (event: any): void => {
     const clickEffect = document.createElement('div')
     const max = 50
@@ -73,7 +76,6 @@ const Game = (): JSX.Element => {
         console.log(reason.includes('server') ? 'Disconnected by server' : 'Disconnected by client')
       }
       const onMoney = (data: any): void => {
-        console.log(data)
         const currentMoney: number = data.money
         setMoney(currentMoney)
       }
@@ -90,6 +92,15 @@ const Game = (): JSX.Element => {
       }
     }
   }, [socket])
+
+  /**
+   * Skin event
+   */
+  useEffect(() => {
+    eventEmitter.on('skin', (event: any) => {
+      setSkin(event)
+    })
+  }, [])
 
   return (
     <motion.div
@@ -120,7 +131,7 @@ const Game = (): JSX.Element => {
         <div id="down" onClick={click}>
           <div id="road-line"></div>
           <div id="car-shadow"></div>
-          <img id="car" src={cars[user?.skin_id || 0]} alt="" />
+          <img id="car" src={cars[skin || 0]} alt="" />
         </div>
       </section>
     </motion.div>
