@@ -22,7 +22,7 @@ const Game = (): JSX.Element => {
   const [difference, setDifference] = useState<number>(0)
   const [shopOpen, setShopOpen] = useState<boolean>(false)
 
-  const {user} = useAuth();
+  const { user } = useAuth()
 
   const toggleShop = (): void => {
     setShopOpen(!shopOpen)
@@ -70,7 +70,7 @@ const Game = (): JSX.Element => {
         console.log(reason.includes('server') ? 'Disconnected by server' : 'Disconnected by client')
       }
       const onMoney = (data: any): void => {
-        // console.log(data)
+        console.log(data)
         const currentMoney: number = data.money
         setMoney(currentMoney)
       }
