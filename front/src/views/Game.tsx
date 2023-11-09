@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import IconButton from '@mui/material/IconButton'
 
 import shop from '../assets/images/game/icons/shop.png'
+import back from '../assets/images/game/icons/back.png'
 import '../assets/styles/Game.scss'
 
 import DraggableDialog from '../components/DraggableDialog.tsx'
@@ -61,6 +62,9 @@ const Game = (): JSX.Element => {
     }, 500)
   }
 
+  const goHome = (): void => {
+    window.location.href = '/'
+  }
   // Moved socket event listeners outside of the useEffect
   // to ensure they are set up only once.
   useEffect(() => {
@@ -70,7 +74,7 @@ const Game = (): JSX.Element => {
         console.log(reason.includes('server') ? 'Disconnected by server' : 'Disconnected by client')
       }
       const onMoney = (data: any): void => {
-        // console.log(data)
+        console.log(data)
         const currentMoney: number = data.money
         setMoney(currentMoney)
       }
@@ -96,10 +100,15 @@ const Game = (): JSX.Element => {
     >
       <section id="game">
         <header>
-          <span className="part">{money}$</span>
-          <div>
-            <IconButton className="icon" aria-label="delete" size="large" onClick={toggleShop}>
-              <img src={shop} alt="" />
+          <div className={'left'}>
+            <IconButton className="icon" size="large" onClick={goHome}>
+              <img src={back} alt={''}/>
+            </IconButton>
+          </div>
+          <div className={'right'}>
+            <span className="part">{money}$</span>
+            <IconButton className="icon" aria-label="shop" size="large" onClick={toggleShop}>
+              <img src={shop} alt={''} />
             </IconButton>
           </div>
         </header>
@@ -112,7 +121,7 @@ const Game = (): JSX.Element => {
         <div id="down" onClick={click}>
           <div id="road-line"></div>
           <div id="car-shadow"></div>
-          <img id="car" src={cars[user!.skin_id]} alt="" />
+          <img id="car" src={cars[user?.skin_id || 0]} alt="" />
         </div>
       </section>
     </motion.div>

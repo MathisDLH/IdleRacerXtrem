@@ -18,7 +18,8 @@ const AuthContext = createContext({
   token: null as string | null,
   signIn: async (_name: string, _password: string): Promise<void> => { },
   signout: () => { },
-  register: async (_name: string, _email: string, _password: string): Promise<void> => { }
+  register: async (_name: string, _email: string, _password: string): Promise<void> => { },
+  setUser: (_user: User) => { }
 })
 
 interface AuthContextInterface {
@@ -28,6 +29,7 @@ interface AuthContextInterface {
   signIn: (name: string, password: string) => Promise<void>
   signout: () => void
   register: (name: string, email: string, password: string) => Promise<void>
+  setUser: (user: User) => void
 }
 export const useAuth = (): AuthContextInterface => {
   return useContext(AuthContext)
@@ -92,7 +94,8 @@ export const AuthProvider = (props: any): JSX.Element => {
     token,
     signIn,
     signout,
-    register
+    register,
+    setUser
   }
 
   return (

@@ -1,15 +1,24 @@
 import { useEffect, useState } from 'react'
-import type UpgradeInterface from '../interfaces/upgrade.interface.ts'
-import * as UpgradeService from '../services/upgrades.service.ts'
-import Upgrade from './Upgrade.tsx'
 import { Box, Tab, Tabs } from '@mui/material'
-import '../assets/styles/UpgradesList.scss'
+
+import type UpgradeInterface from '../interfaces/upgrade.interface.ts'
+import type skinInterface from '../interfaces/skin.interface.ts'
+
+import * as UpgradeService from '../services/upgrades.service.ts'
+
+import { cars } from '../utils/cars.utils.ts'
+
 import { useAuth } from '../context/Auth.tsx'
+import Upgrade from './Upgrade.tsx'
+import Skin from './Skin.tsx'
+
+import '../assets/styles/UpgradesList.scss'
 
 export default function UpgradesList (): JSX.Element {
   const [value, setValue] = useState<number>(0)
-  const { token } = useAuth();
+  const { token } = useAuth()
   const [upgrades, setUpgrades] = useState<UpgradeInterface[]>([])
+  const [skins, setSkins] = useState<skinInterface[]>([])
 
   const handleChange = (_: any, newValue: number): void => {
     console.log(newValue)
@@ -41,6 +50,9 @@ export default function UpgradesList (): JSX.Element {
     )
   }
 
+  /**
+   * Fetch upgrades from API
+   */
   useEffect(() => {
     const fetchData = async (): Promise<void> => {
       const data = await UpgradeService.getUpgrades(token ?? '')
@@ -63,6 +75,21 @@ export default function UpgradesList (): JSX.Element {
     fetchData()
   }, [])
 
+  /**
+   * Get skins
+   */
+  useEffect(() => {
+    cars.map((car): void => {
+      const id = parseInt(car.split('.png')[0].split('cars/')[1]) - 1
+      const availables = skins
+      availables.push({
+        id: id,
+        price: id * 100
+      })
+      setSkins(availables)
+    })
+  }, [])
+
   return (
     <div id={'list'} className={'upgrades-container'}>
       <Box>
@@ -73,12 +100,18 @@ export default function UpgradesList (): JSX.Element {
         >
           <Tab label={'Money'}/>
           <Tab label={'Races'}/>
+          <Tab label={'Skins'}/>
         </Tabs>
       </Box>
       <div className={'upgrades'}>
         <TabPanel value={value} index={0}>
           {upgrades.map((upgrade: UpgradeInterface) => {
             return <Upgrade key={upgrade.id} token={token ?? ''} upgrade={upgrade}/>
+          })}
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+          {skins.map((skin: skinInterface) => {
+            return <Skin key={skin.id} skin={skin}/>
           })}
         </TabPanel>
       </div>

@@ -9,7 +9,7 @@ export async function getUpgrades (token: string): Promise<UpgradeInterface[]> {
       headers: { Authorization: `Bearer ${token}` }
     }
     const response = await axios.get(
-      `${API_BASE_URL}/upgrades`,
+      `${API_BASE_URL}/upgrade`,
       config
     )
     console.log(response.data)
@@ -19,13 +19,13 @@ export async function getUpgrades (token: string): Promise<UpgradeInterface[]> {
   }
 }
 
-export async function buyUpgrade (token: string, body: { id: number, quantity: number }): Promise<void> {
+export async function buyUpgrade (token: string, body: { upgrade_id: number, quantity: number }): Promise<void> {
   try {
     const config = {
       headers: { Authorization: `Bearer ${token}` }
     }
     const response = await axios.post(
-      `${API_BASE_URL}/buyUpgrade`,
+      `${API_BASE_URL}/upgrade/buyUpgrade`,
       body,
       config
     )
