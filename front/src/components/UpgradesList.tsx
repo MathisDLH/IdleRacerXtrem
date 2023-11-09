@@ -79,15 +79,15 @@ export default function UpgradesList (): JSX.Element {
    * Get skins
    */
   useEffect(() => {
+    console.log('allcars', cars)
     cars.map((car): void => {
       const id = parseInt(car.split('.png')[0].split('cars/')[1]) - 1
-      console.log('SKINSS', skins);
+      console.log('id',id)
       const availables = skins
       availables.push({
         id: id,
         price: id * 100
       })
-      console.log('AVAILABLE', availables);
       setSkins(availables)
     })
   }, [])
