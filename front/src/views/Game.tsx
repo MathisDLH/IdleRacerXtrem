@@ -10,7 +10,6 @@ import IconButton from '@mui/material/IconButton'
 
 import type WebSocketContextInterface from '../interfaces/websocketcontext.interface.ts'
 import { useWebSocket } from '../context/Socket.tsx'
-import { useAuth } from '../context/Auth.tsx'
 
 import { cars } from '../utils/cars.utils.ts'
 import { eventEmitter } from '../utils/event-emitter.ts'
@@ -23,7 +22,7 @@ const Game = (): JSX.Element => {
   const [oldMoney, setOldMoney] = useState<number>(0)
   const [difference, setDifference] = useState<number>(0)
   const [shopOpen, setShopOpen] = useState<boolean>(false)
-  const { user } = useAuth()
+  //  const { user } = useAuth()
   const [skin, setSkin] = useState<string>(cars[0])
   // const [carPosition, setCarPosition] = useState<number>(0)
 
