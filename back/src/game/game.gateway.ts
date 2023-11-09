@@ -10,6 +10,8 @@ import {UserService} from 'src/user/user.service';
 import {User} from 'src/user/user.entity';
 import {RedisService} from 'src/redis/redis.service';
 import {Logger} from "@nestjs/common";
+import {IRedisData} from "../shared/shared.model";
+import {UpgradeService} from "../upgrade/upgrade.service";
 
 
 export interface UserSocket extends Socket {
@@ -28,6 +30,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     private readonly logger: Logger = new Logger(GameGateway.name)
 
     constructor(private readonly userService: UserService,
+                private readonly upgradeService: UpgradeService,
                 private readonly redisService: RedisService) {
         setInterval(async () => {
             this.socketConnected.forEach(async (client) => {
@@ -76,25 +79,26 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         const redisInfos = await this.redisService.getUserData(user);
         if (redisInfos.upgrades.length > 0) {
             redisInfos.upgrades.forEach(element => {
+
                 if (element.id > 1) {
                     redisInfos.upgrades.find((upgrade) => upgrade.id == element.generationUpgradeId).amount = element.amount * element.value;
-                    element.amount = 0;
-                } else {
+                } else { // Fan
                     redisInfos.money = (element.amount * element.value);
-
                 }
+                element.amount = 0;
             });
             await this.redisService.updateUserData(user, redisInfos);
         }
     }
 
     async pushRedisToDb(user: User) {
-        const redisInfos = await this.redisService.getUserData(user);
-        const newUser = {...user, money: redisInfos.money};
+        const redisInfos: IRedisData = await this.redisService.getUserData(user);
+        const newUser = {id: user.id, money: redisInfos.money};
+        const upgrades = redisInfos.upgrades;
         await this.userService.update(newUser as User);
-    }
-    async getUserMoney(user: User): Promise<string> {
-        const redisInfos = await this.redisService.getUserData(user);
-        return redisInfos.money.toString() + redisInfos.moneyUnit.toString();
+        for (const upgrade of upgrades) {
+            await this.upgradeService.updateById(user.id, upgrade.id, upgrade.amount, upgrade.amountUnit);
+        }
+
     }
 }

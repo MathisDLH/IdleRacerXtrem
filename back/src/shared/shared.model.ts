@@ -42,12 +42,17 @@ export enum Unit {
 
 
 export interface IRedisData {
+    userId: number;
     money: number;
     moneyUnit: Unit;
     upgrades: IRedisUpgrade[];
 }
 
-export interface IRedisUpgrade extends Upgrade {
+export interface IRedisUpgrade {
+    id: number;
+    generationUpgradeId: number;
     amount: number;
+    amountUnit: Unit;
+    value: number;
 }
 
