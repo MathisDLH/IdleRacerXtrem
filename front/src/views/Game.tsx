@@ -14,6 +14,8 @@ import { useAuth } from '../context/Auth.tsx'
 
 import { cars } from '../utils/cars.utils.ts'
 import { eventEmitter } from '../utils/event-emitter.ts'
+import background from '../assets/images/game/background.png'
+import road from '../assets/images/game/road.png'
 
 const Game = (): JSX.Element => {
   const { socket }: WebSocketContextInterface = useWebSocket()
@@ -23,6 +25,7 @@ const Game = (): JSX.Element => {
   const [shopOpen, setShopOpen] = useState<boolean>(false)
   const { user } = useAuth()
   const [skin, setSkin] = useState<number>(user?.skin_id ?? 0)
+  const [carPosition, setCarPosition] = useState<number>(0)
 
   const toggleShop = (): void => {
     setShopOpen(!shopOpen)
@@ -99,8 +102,13 @@ const Game = (): JSX.Element => {
   useEffect(() => {
     eventEmitter.on('skin', (event: any) => {
       setSkin(event)
+      const car = document.getElementById('car')
+      const rect = car?.getBoundingClientRect()
+      const carBottomPosition = rect?.bottom ?? 0
+      console.log(carBottomPosition)
     })
   }, [])
+
 
   return (
     <motion.div
@@ -125,10 +133,10 @@ const Game = (): JSX.Element => {
 
         <DraggableDialog open={shopOpen} title={'Upgrades'} icon={shop} size="small" setOpen={setShopOpen} Content={<UpgradesList />} />
 
-        <div id="up" onClick={click}>
-          <div id="sun"></div>
+        <div id="up" style={{ backgroundImage: `url(${background})` }} onClick={click}>
+
         </div>
-        <div id="down" onClick={click}>
+        <div id="down" style={{ backgroundImage: `url(${road})` }} onClick={click}>
           <div id="road-line"></div>
           <div id="car-shadow"></div>
           <img id="car" src={cars[skin || 0]} alt="" />
