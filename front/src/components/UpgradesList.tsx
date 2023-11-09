@@ -79,14 +79,11 @@ export default function UpgradesList (): JSX.Element {
    * Get skins
    */
   useEffect(() => {
-    console.log('allcars', cars)
-    cars.map((car): void => {
-      const id = parseInt(car.split('.png')[0].split('cars/')[1]) - 1
-      console.log('id',id)
+    cars.map((car, index): void => {
       const availables = skins
       availables.push({
-        id: id,
-        price: id * 100
+        path: car,
+        price: index * 100
       })
       setSkins(availables)
     })
@@ -112,8 +109,8 @@ export default function UpgradesList (): JSX.Element {
           })}
         </TabPanel>
         <TabPanel value={value} index={2}>
-          {skins.map((skin: skinInterface) => {
-            return <Skin key={skin.id} skin={skin}/>
+          {skins.map((skin: skinInterface, index) => {
+            return <Skin key={index} skin={skin}/>
           })}
         </TabPanel>
       </div>

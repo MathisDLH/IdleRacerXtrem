@@ -24,7 +24,7 @@ const Game = (): JSX.Element => {
   const [difference, setDifference] = useState<number>(0)
   const [shopOpen, setShopOpen] = useState<boolean>(false)
   const { user } = useAuth()
-  const [skin, setSkin] = useState<number>(user?.skin_id ?? 0)
+  const [skin, setSkin] = useState<string>(cars[0])
   // const [carPosition, setCarPosition] = useState<number>(0)
 
   const toggleShop = (): void => {
@@ -101,7 +101,7 @@ const Game = (): JSX.Element => {
    */
   useEffect(() => {
     eventEmitter.on('skin', (event: any) => {
-      setSkin(event)
+      setSkin(event.path)
       const car = document.getElementById('car')
       const rect = car?.getBoundingClientRect()
       const carBottomPosition = rect?.bottom ?? 0
@@ -139,7 +139,7 @@ const Game = (): JSX.Element => {
         <div id="down" style={{ backgroundImage: `url(${road})` }} onClick={click}>
           <div id="road-line"></div>
           <div id="car-shadow"></div>
-          <img id="car" src={cars[skin || 0]} alt="" />
+          <img id="car" src={skin ?? cars[0]} alt="" />
         </div>
       </section>
     </motion.div>

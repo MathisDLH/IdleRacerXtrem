@@ -1,4 +1,4 @@
 export default interface skinInterface {
-  id: number
+  path: string
   price: number
 }
