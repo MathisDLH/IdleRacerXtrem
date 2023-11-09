@@ -13,6 +13,9 @@ export class UserUpgrade extends BaseEntity {
     @Column()
     amount: number;
 
+    @Column()
+    amountBought: number;
+
     @ManyToOne(() => User, (user) => user.userUpgrade)
     public user: User
 

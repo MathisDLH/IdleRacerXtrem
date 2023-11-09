@@ -33,6 +33,10 @@ export class RedisService {
     async setUpgrades(userId: number, upgradeIds: number[]){
         await this.client.lpush(`${userId}:UPGRADES`,...upgradeIds);
     }
+
+    async getUpgrade(userId: number, upgradeId: number){
+        return await this.client.hgetall(`${userId}:${upgradeId}`);
+    }
      async setTimeleft(userId: number, upgradeId:number, timeLeft: number) {
          await this.client.set(`${userId}:${upgradeId}:TIMELEFT`, timeLeft);
      }

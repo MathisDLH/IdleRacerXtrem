@@ -1,21 +1,23 @@
-import {Injectable} from '@nestjs/common';
-import {InjectRepository} from '@nestjs/typeorm';
-import {Repository} from 'typeorm';
-import {Upgrade} from './upgrade.entity';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Upgrade } from './upgrade.entity';
 import { UserUpgrade } from 'src/UserUpgrade/userUpgrade.entity';
 import { BuyUpgradeDto } from './dto/buy-upgrade.dto';
+import { RedisService } from 'src/redis/redis.service';
 
 @Injectable()
 export class UpgradeService {
-    constructor(
-        @InjectRepository(UserUpgrade)
-    private userUpgradeRepository : Repository<UserUpgrade>,
+  constructor(
+    @InjectRepository(UserUpgrade)
+    private userUpgradeRepository: Repository<UserUpgrade>,
     @InjectRepository(Upgrade)
-        private upgradeRepository: Repository<Upgrade>,
-    ) {
-    }
+    private upgradeRepository: Repository<Upgrade>,
+    private readonly redisService: RedisService,
+  ) {
+  }
 
-    async create(userId: string, buyUpgradeDto: BuyUpgradeDto) {
+  async create(userId: string, buyUpgradeDto: BuyUpgradeDto) {
     let userUpgrade = this.userUpgradeRepository.create({
       userId: Number(userId),
       upgradeId: Number(buyUpgradeDto.upgradeId),
@@ -23,10 +25,15 @@ export class UpgradeService {
     });
     userUpgrade = await userUpgrade.save();
     return userUpgrade;
-}findAll(): Promise<Upgrade[]> {
-        return this.upgradeRepository.find();
-    }async buyUpgrade(buyUpgradeDto : BuyUpgradeDto, userId: string): Promise<UserUpgrade>{
-    let upgrade = await this.userUpgradeRepository.findOne({ where: { userId: Number(userId), upgradeId: Number(buyUpgradeDto.upgradeId) } });
+  } 
+  
+  findAll(): Promise<Upgrade[]> {
+    return this.upgradeRepository.find();
+  }
+
+  async buyUpgrade(buyUpgradeDto: BuyUpgradeDto, userId: string): Promise<UserUpgrade> {
+    let upgrade = await this.redisService.getUpgrade(Number(userId),Number(buyUpgradeDto.upgradeId));
+    //let upgrade = await this.userUpgradeRepository.findOne({ where: { userId: Number(userId), upgradeId: Number(buyUpgradeDto.upgradeId) } });
 
     if (!upgrade) {
       return this.create(userId, buyUpgradeDto);
