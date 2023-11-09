@@ -14,33 +14,44 @@
 
         display: flex;
         align-items: center;
-        justify-content: end;
+        justify-content: space-between;
 
-        >div{
+
+        .left,.right{
+            display: flex;
+            align-items: center;
+
+            margin-left: 2vw;
             margin-right: 2vw;
-        }
-        .icon {
-            background-color: rgba(255, 255, 255, 0.8);
-            z-index: 100;
-            &:hover{
-                background-color: white;
+
+            .icon {
+                background-color: rgba(255, 255, 255, 0.8);
+                z-index: 100;
+                &:hover{
+                    background-color: white;
+                }
+
+                img {
+                    height: 3vh;
+                }
+
+                &.left {
+
+                }
             }
 
-            img {
-                height: 3vh;
+            .part {
+                padding: 2vh;
+                font-family: 'Pixelify Sans', sans-serif;
+                color: var(--yellow);
+                font-size: 2rem;
             }
         }
 
-        .part {
-            padding: 2vh;
-            font-family: 'Pixelify Sans', sans-serif;
-            color: var(--yellow);
-            font-size: 2rem;
-        }
 
-        #right {
 
-        }
+
+
     }
 
     #up{
