@@ -78,16 +78,14 @@ export class RedisService {
     async pay(userId: number, amount: { value: number, unit: Unit }): Promise<boolean> {
         let userMoney = await this.getUserMoney(userId);
         let userMoneyUnit = +await this.getUserMoneyUnit(userId);
-
         if (userMoneyUnit >= amount.unit) {
             let differenceUnite = userMoneyUnit - amount.unit;
             let valueToDecrement = amount.value
             if (differenceUnite > 0) {
                 valueToDecrement /= Math.pow(10, differenceUnite);
             }
-
-            if (userMoney >= amount.value) {
-                userMoney = await this.client.decrby(`${userId}:MONEY`, valueToDecrement);
+            if (userMoney >= valueToDecrement) {
+                userMoney = +await this.client.incrbyfloat(`${userId}:MONEY`, -valueToDecrement);
                 let unityToDecrement = 0;
                 while (userMoney < 1) {
                     userMoney = userMoney * 1000;
@@ -126,7 +124,6 @@ export class RedisService {
     }
 
     public async getUserData(user: User) {
-        console.log("qskjh")
         const upgrades: IRedisUpgrade[] = [];
         let i = 0;
         let end = false;
@@ -138,11 +135,6 @@ export class RedisService {
             } else {
                 upgrades.push(userUpgrade as unknown as IRedisUpgrade);
             }
-        }
-
-        for (const e of user.userUpgrade) {
-            console.log(e);
-
         }
         const data: IRedisData = {
             userId: user.id,

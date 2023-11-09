@@ -13,7 +13,6 @@ export class UsersController {
 
   @Get('/scores')
   findScoreTab(): Promise<User[]> {
-    console.log('AAAAAAAAAAAAAAA')
     return this.usersService.findUsersByScore();
   }
 
