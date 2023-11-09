@@ -18,7 +18,8 @@ const AuthContext = createContext({
   token: null as string | null,
   signIn: async (_name: string, _password: string): Promise<void> => { },
   signout: () => { },
-  register: async (_name: string, _email: string, _password: string): Promise<void> => { }
+  register: async (_name: string, _email: string, _password: string): Promise<void> => { },
+  setUser: (_user: User) => { }
 })
 
 interface AuthContextInterface {
@@ -27,7 +28,8 @@ interface AuthContextInterface {
   token: string | null
   signIn: (name: string, password: string) => Promise<void>
   signout: () => void
-  register: (name:string, email: string, password: string) => Promise<void>
+  register: (name: string, email: string, password: string) => Promise<void>
+  setUser: (user: User) => void
 }
 export const useAuth = (): AuthContextInterface => {
   return useContext(AuthContext)
@@ -47,7 +49,7 @@ export const AuthProvider = (props: any): JSX.Element => {
         .then((user: User) => {
           setUser(user)
           setIsLoggedIn(true)
-          setToken( removeQuotes(token) )
+          setToken(removeQuotes(token))
         })
         .catch((error) => {
           console.error('Erreur lors de la récupération de l\'utilisateur:', error)
@@ -75,7 +77,7 @@ export const AuthProvider = (props: any): JSX.Element => {
     }
   }
 
-  const register = async (name:string, email: string, password: string): Promise<void> => {
+  const register = async (name: string, email: string, password: string): Promise<void> => {
     await userService.createUser(name, email, password)
   }
 
@@ -92,7 +94,8 @@ export const AuthProvider = (props: any): JSX.Element => {
     token,
     signIn,
     signout,
-    register
+    register,
+    setUser
   }
 
   return (
