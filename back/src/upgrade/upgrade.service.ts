@@ -1,4 +1,4 @@
-import {Injectable} from '@nestjs/common';
+import {Injectable, Logger} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Repository} from 'typeorm';
 import {Upgrade} from './upgrade.entity';
@@ -6,6 +6,7 @@ import {UserUpgrade} from 'src/UserUpgrade/userUpgrade.entity';
 import {BuyUpgradeDto} from './dto/buy-upgrade.dto';
 import {Unit} from "../shared/shared.model";
 import {RedisService} from 'src/redis/redis.service';
+import { log } from 'console';
 
 @Injectable()
 export class UpgradeService {
@@ -17,6 +18,8 @@ export class UpgradeService {
         private readonly redisService: RedisService,
     ) {
     }
+
+    private readonly logger: Logger = new Logger(UpgradeService.name);
 
     async create(userId: string, buyUpgradeDto: BuyUpgradeDto) {
         let userUpgrade = this.userUpgradeRepository.create({
@@ -34,6 +37,7 @@ export class UpgradeService {
 
 
   async buyUpgrade(buyUpgradeDto: BuyUpgradeDto, userId: number){
+    this.logger.log("CALL buyUpgrade");
     let userUpgrade = await this.redisService.getUpgrade(Number(userId), Number(buyUpgradeDto.upgradeId));
     if (Object.keys(userUpgrade).length === 0) {
       let upgrade = await this.upgradeRepository.findOne({ where: { id: Number(buyUpgradeDto.upgradeId) } });
@@ -55,6 +59,7 @@ export class UpgradeService {
     } else {
       
     }
+    this.logger.log("OK buyUpgrade");
   }
 
   async canCreateUpgrade(userId : number , upgrade : Upgrade): Promise<boolean>{

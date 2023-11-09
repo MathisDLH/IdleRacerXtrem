@@ -34,24 +34,33 @@ export class RedisService {
     }
 
     async getUserMoney(userId: number) {
-        return await Number(this.client.get(`${userId}:MONEY`));
+        return +await this.client.get(`${userId}:MONEY`);
     }
 
-    async getUserMoneyUnit(userId: number): Promise<Unit> {
-        const unit = await this.client.get(`${userId}:MONEY_UNIT`);
-        return Unit[unit as keyof typeof Unit];
+    async getUserMoneyUnit(userId: number): Promise<string> {
+        return await this.client.get(`${userId}:MONEY_UNIT`);
     }
 
     async pay(userId: number, amount: { value: number, unit: Unit }) : Promise<boolean> {
         let userMoney = await this.getUserMoney(+userId);
-        let userMoneyUnit = await this.getUserMoneyUnit(+userId);
+        let userMoneyUnit = +await this.getUserMoneyUnit(+userId);
+        console.log(1)
+        console.log(userMoneyUnit)
+        console.log(amount.unit)
+
         if (userMoneyUnit >= amount.unit) {
+            console.log(11)
             let differenceUnite = userMoneyUnit - amount.unit;
             let valueToDecrement = amount.value
             if (differenceUnite > 0) {
+                console.log(111)
                 valueToDecrement /= Math.pow(10, differenceUnite);
             }
+            console.log(1111)
+            console.log(userMoney)
+            console.log(amount.value)
             if (userMoney >= amount.value) {
+                console.log(5)
                 userMoney = await this.client.decrby(`${userId}:MONEY`, valueToDecrement);
                 let unityToDecrement = 0;
                 while (userMoney < 1) {
@@ -92,13 +101,26 @@ export class RedisService {
 
     public async getUserData(user: User) {
         const upgrades: IRedisUpgrade[] = [];
+        let i = 0; 
+        let end = false;
+        while(!end) {
+            i++;
+            let userUpgrade =  await this.client.hgetall(`${user.id}:${i}`);
+            if (Object.keys(userUpgrade).length === 0) {
+                end = true; 
+            }else{
+                upgrades.push(userUpgrade as unknown as IRedisUpgrade);
+            }
+        }
+
         for (const e of user.userUpgrade) {
-            upgrades.push(await this.client.hgetall(`${user.id}:${e.upgrade.id}`) as unknown as IRedisUpgrade)
+            console.log(e);
+            
         }
         const data: IRedisData = {
             userId: user.id,
             money: +await this.client.get(`${user.id}:MONEY`),
-            moneyUnit: await this.getUserMoneyUnit(user.id),
+            moneyUnit: +await this.getUserMoneyUnit(user.id),
             upgrades
         }
         return data;
