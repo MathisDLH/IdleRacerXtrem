@@ -107,7 +107,7 @@ const Game = (): JSX.Element => {
    */
   useEffect(() => {
     eventEmitter.on('skin', (event: any) => {
-      setSkin(event.path)
+      setSkin(event)
       const car = document.getElementById('car')
       const rect = car?.getBoundingClientRect()
       const carBottomPosition = rect?.bottom ?? 0

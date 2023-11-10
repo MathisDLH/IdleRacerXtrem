@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { Box, Tab, Tabs } from '@mui/material'
 
 import type UpgradeInterface from '../interfaces/upgrade.interface.ts'
-import type skinInterface from '../interfaces/skin.interface.ts'
 
 import * as UpgradeService from '../services/upgrades.service.ts'
 import * as SkinService from '../services/skin.service.ts'
@@ -20,7 +19,7 @@ export default function UpgradesList (): JSX.Element {
   const [value, setValue] = useState<number>(0)
   const { token } = useAuth()
   const [upgrades, setUpgrades] = useState<UpgradeInterface[]>([])
-  const [skins, setSkins] = useState<skinInterface[]>([])
+  const [skins, setSkins] = useState<SkinInterface[]>([])
 
   const handleChange = (_: any, newValue: number): void => {
     console.log(newValue)
@@ -58,14 +57,8 @@ export default function UpgradesList (): JSX.Element {
   useEffect(() => {
     const fetchData = async (): Promise<void> => {
       const data = await UpgradeService.getUpgrades(token ?? '')
-      let skinList = await SkinService.getSkins(token ?? '')
       setUpgrades(data)
-      skinList = skinList.map(skin => {
-        const car = cars.find(car => car.name === skin.name)
-        return {...skin, path:car?.path }
-      })
-      setSkins(skinList)
-      console.log(skinList);
+
 
       if (data.length === 0) {
         setUpgrades([
@@ -89,14 +82,17 @@ export default function UpgradesList (): JSX.Element {
    * Get skins
    */
   useEffect(() => {
-    cars.map((car, index): void => {
-      const availables = skins
-      availables.push({
-        path: car,
-        price: index * 100
+    const fetchData = async (): Promise<void> => {
+      let skinList = await SkinService.getSkins(token ?? '')
+      skinList = skinList.map(skin => {
+        const car = cars.find(car => car.name === skin.name)
+        return { ...skin, path: car?.path }
       })
-      setSkins(availables)
-    })
+      setSkins(skinList)
+    }
+
+
+    fetchData()
   }, [])
 
   return (

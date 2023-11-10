@@ -1,5 +1,5 @@
 import axios from 'axios'
-import SkinInterface from '../interfaces/skin.interface.ts';
+import type SkinInterface from '../interfaces/skin.interface.ts'
 
 const API_BASE_URL: any = import.meta.env.VITE_API_URL
 
