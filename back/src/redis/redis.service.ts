@@ -94,11 +94,10 @@ export class RedisService {
         return await this.client.get(`${userId}:MONEY_UNIT`);
     }
 
+
     // Méthode pour payer un montant spécifique
     async pay(userId: number, amount: { value: number, unit: Unit }): Promise<boolean> {
-        // Récupérer l'argent de l'utilisateur
         let userMoney = await this.getUserMoney(userId);
-        // Récupérer l'unité d'argent de l'utilisateur
         let userMoneyUnit = +await this.getUserMoneyUnit(userId);
         // Vérifier si l'unité d'argent de l'utilisateur est supérieure ou égale à l'unité du montant à payer
         if (userMoneyUnit >= amount.unit) {
@@ -113,8 +112,9 @@ export class RedisService {
                 // Décrémenter l'argent de l'utilisateur
                 userMoney = +await this.client.incrbyfloat(`${userId}:MONEY`, -valueToDecrement);
                 let unityToDecrement = 0;
+                console.log(userMoney);
                 // Si l'argent de l'utilisateur est inférieur à 1, ajuster l'unité d'argent
-                while (userMoney < 1) {
+                while (userMoney < 1 && (userMoneyUnit - unityToDecrement > 0)) {
                     userMoney = userMoney * 1000;
                     unityToDecrement += 3;
                 }

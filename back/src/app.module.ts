@@ -13,6 +13,7 @@ import {UpgradeModule} from "./upgrade/upgrade.module";
 import {SeedingService} from './seeding/seeding.service';
 import {Skin} from "./skin/skin.entity";
 import {SkinModule} from "./skin/skin.module";
+import {GameModule} from "./game/game.module";
 
 const entities = [User, Upgrade, UserUpgrade, Skin];
 
@@ -38,11 +39,12 @@ const entities = [User, Upgrade, UserUpgrade, Skin];
         UserModule,
         SkinModule,
         AuthModule,
+        GameModule,
         JwtModule,
         RedisModule,
         UpgradeModule,
     ],
-    providers: [GameGateway, SeedingService],
+    providers: [SeedingService],
 })
 export class AppModule {
 }

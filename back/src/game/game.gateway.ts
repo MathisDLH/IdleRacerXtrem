@@ -9,7 +9,7 @@ import {Server, Socket} from 'socket.io';
 import {UserService} from 'src/user/user.service';
 import {User} from 'src/user/user.entity';
 import {RedisService} from 'src/redis/redis.service';
-import {Logger} from "@nestjs/common";
+import {Logger, OnModuleInit} from "@nestjs/common";
 import {IRedisData, Unit} from "../shared/shared.model";
 import {UpgradeService} from "../upgrade/upgrade.service";
 
@@ -20,7 +20,9 @@ export interface UserSocket extends Socket {
 }
 
 @WebSocketGateway({cors: {origin: '*'}})
-export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
+export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect, OnModuleInit {
+
+
 
     @WebSocketServer()
     server: Server;
@@ -32,29 +34,17 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     constructor(private readonly userService: UserService,
                 private readonly upgradeService: UpgradeService,
                 private readonly redisService: RedisService) {
+    }
+
+    onModuleInit() {
         setInterval(async () => {
             this.socketConnected.forEach(async (client) => {
                 if (client) {
-                    let realTimeData = await this.updateMoney(client.user);
-                    console.log(realTimeData);
-                    client.emit('money',
-                    {
-                        money : (await this.redisService.getUserData(client.user)).money,
-                        unit : (await this.redisService.getUserData(client.user)).moneyUnit,
-                        moneyBySec : realTimeData.moneyData.amount,
-                        moneyBySecUnit : realTimeData.moneyData.unit
-                    });
-                    client.emit('upgrades', {
-                        upgrades : (await this.redisService.getUserData(client.user)).upgrades,
-                        realTimeData : realTimeData.upgradesData
-
-                    }
-                    );
-
+                    await this.emitMoney(client);
+                    await this.emitUpgrade(client);
                 }
             });
         }, 1000);
-
 
         setInterval(async () => {
             this.socketConnected.forEach(async (client) => {
@@ -65,17 +55,36 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         }, 10000);
     }
 
+    public async emitMoney(client: UserSocket) {
+        let realTimeData = await this.updateMoney(client.user);
+        client.emit('money',
+            {
+                money : (await this.redisService.getUserData(client.user)).money,
+                unit : (await this.redisService.getUserData(client.user)).moneyUnit,
+                moneyBySec : realTimeData.moneyData.amount,
+                moneyBySecUnit : realTimeData.moneyData.unit
+            });
+    }
+
+    public async emitUpgrade(client: UserSocket) {
+        let realTimeData = await this.updateMoney(client.user);
+        client.emit('upgrades', {
+            upgrades : (await this.redisService.getUserData(client.user)).upgrades,
+            realTimeData : realTimeData.upgradesData
+        })
+    }
+
     @SubscribeMessage('click')
     async handleClick(client: UserSocket): Promise<void> {
-        let moneyErnedByClick = await this.redisService.incrMoney(client.user.id, 1,Unit.UNIT);
+        let moneyErnedByClick = await this.redisService.incrMoney(client.user.id, 1, Unit.UNIT);
         console.log(moneyErnedByClick);
         client.emit('money',
-        {
-            money : (await this.redisService.getUserData(client.user)).money,
-            unit : (await this.redisService.getUserData(client.user)).moneyUnit,
-            moneyErnByClick : moneyErnedByClick.amount,
-            moneyErnByClickUnit : moneyErnedByClick.unit
-        });
+            {
+                money: (await this.redisService.getUserData(client.user)).money,
+                unit: (await this.redisService.getUserData(client.user)).moneyUnit,
+                moneyErnByClick: moneyErnedByClick.amount,
+                moneyErnByClickUnit: moneyErnedByClick.unit
+            });
     }
 
 
@@ -88,7 +97,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
             this.redisService.loadUserInRedis(user);
             const maintenant = new Date();
             const differenceEnSecondes = (maintenant.getTime() - user.updatedAt.getTime()) / 1000;
-            this.updateMoney(user,differenceEnSecondes);
+            this.updateMoney(user, differenceEnSecondes);
         });
     }
 
@@ -110,12 +119,12 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
                 // Si l'ID de la mise à niveau est supérieur à 1
                 if (element.id > 1) {
-                  // Trouver la mise à niveau générée
-                  let generatedUpgrade =  redisInfos.upgrades.find((upgrade) => upgrade.id == element.generationUpgradeId);
-                  // Mettre à jour le montant de la mise à niveau générée
-                  generatedUpgrade.amount =  element.amount * element.value * seconds;
-                  // Mettre à jour l'unité de montant de la mise à niveau générée
-                  generatedUpgrade.amountUnit =  element.amountUnit;
+                    // Trouver la mise à niveau générée
+                    let generatedUpgrade = redisInfos.upgrades.find((upgrade) => upgrade.id == element.generationUpgradeId);
+                    // Mettre à jour le montant de la mise à niveau générée
+                    generatedUpgrade.amount = element.amount * element.value * seconds;
+                    // Mettre à jour l'unité de montant de la mise à niveau générée
+                    generatedUpgrade.amountUnit = element.amountUnit;
                 } else { // Fan
                     // Mettre à jour l'argent de l'utilisateur
                     redisInfos.money = element.amount * element.value * seconds;
@@ -136,7 +145,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         // Récupérer les informations de l'utilisateur depuis Redis
         const redisInfos: IRedisData = await this.redisService.getUserData(user);
         // Créer un nouvel utilisateur avec les informations récupérées
-        const newUser = {id: user.id, money: redisInfos.money, money_unite: redisInfos.moneyUnit };
+        const newUser = {id: user.id, money: redisInfos.money, money_unite: redisInfos.moneyUnit};
         // Récupérer les mises à niveau de l'utilisateur
         const upgrades = redisInfos.upgrades;
         // Mettre à jour l'utilisateur dans la base de données

@@ -36,8 +36,7 @@ const Game = (): JSX.Element => {
   const { number } = useSpring({
     from: { number: 0 },
     number: money,
-    delay: 200,
-    config: { mass: 1, tension: 20, friction: 10 }
+    delay: 1
   })
 
   const toggleShop = (): void => {

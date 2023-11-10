@@ -37,12 +37,13 @@ export class UpgradeService {
       // Récupération de la mise à niveau
       let upgrade = await this.upgradeRepository.findOne({ where: { id: Number(buyUpgradeDto.upgradeId) } });
       // Si l'utilisateur peut créer cette mise à niveau
-      if (this.canCreateUpgrade(userId, upgrade)) {
+      if (await this.canCreateUpgrade(userId, upgrade)) {
         // Calcul du prix
         let value = upgrade.price * +buyUpgradeDto.quantity;
         let unit = upgrade.price_unit
         // Si l'utilisateur peut payer
         if (await this.redisService.pay(userId, { value, unit })) {
+          console.log("after pay");
           // Ajout de la mise à niveau à l'utilisateur
           await this.redisService.addUpgrade(userId, {
             id: upgrade.id,
@@ -83,6 +84,10 @@ export class UpgradeService {
 
   // Cette fonction vérifie si l'utilisateur peut créer une mise à niveau
   async canCreateUpgrade(userId: number, upgrade: Upgrade): Promise<boolean> {
+console.log(upgrade.id)
+    if(upgrade.id === 1) {
+      return true;
+    }
     // Récupération de la mise à niveau précédente
     let pastUpgrade = await this.redisService.getUpgrade(userId, upgrade.id - 1);
     // Si l'utilisateur a déjà la mise à niveau précédente
