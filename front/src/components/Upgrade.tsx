@@ -8,7 +8,7 @@ import { Units } from '../enums/units.tsx'
 export default function Upgrade (props: { token?: string, upgrade: UpgradeInterface }): JSX.Element {
   const { token, upgrade } = props
   async function click (): Promise<void> {
-    await UpgradeService.buyUpgrade(token ?? '', { upgrade_id: upgrade.id, quantity: 1 })
+    await UpgradeService.buyUpgrade(token ?? '', { upgradeId: upgrade.id, quantity: 1 })
   }
 
   useEffect(() => {

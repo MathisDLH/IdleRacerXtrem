@@ -36,7 +36,7 @@ export class User extends BaseEntity {
     password: string;
 
     @ApiProperty()
-    @Column({default: 0})
+    @Column({type: 'float', default: 0})
     money: number;
 
     @ApiProperty()

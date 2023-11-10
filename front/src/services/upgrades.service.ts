@@ -19,7 +19,7 @@ export async function getUpgrades (token: string): Promise<UpgradeInterface[]> {
   }
 }
 
-export async function buyUpgrade (token: string, body: { upgrade_id: number, quantity: number }): Promise<void> {
+export async function buyUpgrade (token: string, body: { upgradeId: number, quantity: number }): Promise<void> {
   try {
     const config = {
       headers: { Authorization: `Bearer ${token}` }
