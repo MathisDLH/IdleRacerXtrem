@@ -21,16 +21,6 @@ export class UpgradeService {
 
   private readonly logger: Logger = new Logger(UpgradeService.name);
 
-  async create(userId: string, buyUpgradeDto: BuyUpgradeDto) {
-    let userUpgrade = this.userUpgradeRepository.create({
-      userId: Number(userId),
-      upgradeId: Number(buyUpgradeDto.upgradeId),
-      amount: Number(buyUpgradeDto.quantity)
-    });
-    userUpgrade = await userUpgrade.save();
-    return userUpgrade;
-  }
-
   findAll(): Promise<Upgrade[]> {
     return this.upgradeRepository.find();
   }
@@ -91,19 +81,28 @@ export class UpgradeService {
     this.logger.log("OK buyUpgrade");
   }
 
+  // Cette fonction vérifie si l'utilisateur peut créer une mise à niveau
   async canCreateUpgrade(userId: number, upgrade: Upgrade): Promise<boolean> {
+    // Récupération de la mise à niveau précédente
     let pastUpgrade = await this.redisService.getUpgrade(userId, upgrade.id - 1);
+    // Si l'utilisateur a déjà la mise à niveau précédente
     if (Object.keys(pastUpgrade).length !== 0) {
       return true;
     }
+    // Si l'utilisateur n'a pas la mise à niveau précédente
     return false;
   }
 
+  // Cette fonction met à jour la mise à niveau par son ID
   async updateById(userId: number, upgradeId: number, amount: number, amountUnit: Unit, amountBought: number) {
+    // Log des informations de la mise à niveau
     this.logger.log("Upgrade", upgradeId, userId, amount, amountUnit, amountBought);
+    // Si la mise à niveau existe déjà pour l'utilisateur
     if (await this.userUpgradeRepository.exist({ where: { upgradeId, userId } })) {
+      // Mise à jour de la mise à niveau
       return this.userUpgradeRepository.update({ upgradeId: upgradeId, userId: userId }, { amount, amountUnit, amountBought })
     } else {
+      // Sinon, sauvegarde de la nouvelle mise à niveau
       return this.userUpgradeRepository.save({ upgradeId: upgradeId, userId: userId, amount, amountUnit, amountBought })
     }
   }
