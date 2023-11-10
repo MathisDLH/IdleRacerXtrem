@@ -7,4 +7,5 @@ export default interface UpgradeInterface {
   generationUpgradeId: number
   value: number
   imagePath: string
+  amountBought: number
 }

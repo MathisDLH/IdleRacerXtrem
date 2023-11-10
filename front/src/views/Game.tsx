@@ -89,20 +89,17 @@ const Game = (): JSX.Element => {
         console.log(reason.includes('server') ? 'Disconnected by server' : 'Disconnected by client')
       }
       const onMoney = (data: any): void => {
-
         console.log(data)
-        if(data.moneyBySec){
-          setMoneyBySec( Math.round(data.moneyBySec * 1000) / 1000);
-          setMoneyBySecUnit(data.moneyBySecUnit);
-        }else if(data.moneyErnByClick){
-          setMoneyEarnedByClick( Math.round(data.moneyErnByClick * 1000) / 1000);
-          setMoneyEarnedByClickUnit(data.moneyErnByClickUnit);
+        if (data.moneyBySec) {
+          setMoneyBySec(Math.round(data.moneyBySec * 1000) / 1000)
+          setMoneyBySecUnit(data.moneyBySecUnit)
+        } else if (data.moneyErnByClick) {
+          setMoneyEarnedByClick(Math.round(data.moneyErnByClick * 1000) / 1000)
+          setMoneyEarnedByClickUnit(data.moneyErnByClickUnit)
         }
 
-       
-        setMoney( Math.round(data.money * 1000) / 1000);
-        setMoneyUnit(data.unit);
-        
+        setMoney(Math.round(data.money * 1000) / 1000)
+        setMoneyUnit(data.unit)
       }
 
       socket.on('connect', onConnect)

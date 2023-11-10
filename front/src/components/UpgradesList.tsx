@@ -14,12 +14,15 @@ import Skin from './Skin.tsx'
 
 import '../assets/styles/UpgradesList.scss'
 import type SkinInterface from '../interfaces/skin.interface.ts'
+import { useWebSocket } from '../context/Socket.tsx'
 
 export default function UpgradesList (): JSX.Element {
   const [value, setValue] = useState<number>(0)
   const { token } = useAuth()
   const [upgrades, setUpgrades] = useState<UpgradeInterface[]>([])
   const [skins, setSkins] = useState<SkinInterface[]>([])
+  const { socket } = useWebSocket()
+  const [units, setUnits] = useState<any>([])
 
   const handleChange = (_: any, newValue: number): void => {
     console.log(newValue)
@@ -58,24 +61,15 @@ export default function UpgradesList (): JSX.Element {
     const fetchData = async (): Promise<void> => {
       const data = await UpgradeService.getUpgrades(token ?? '')
       setUpgrades(data)
-
-
-      if (data.length === 0) {
-        setUpgrades([
-          {
-            id: 0,
-            name: 'mock',
-            price: 0,
-            price_unit: 0,
-            ratio: 1,
-            generationUpgradeId: 0,
-            value: 0,
-            imagePath: 'mock-upgrade.png'
-          }
-        ])
-      }
     }
     fetchData()
+    socket.on('upgrades', (data: any) => {
+      setUnits(data)
+    })
+
+    return () => {
+      socket.off('upgrades')
+    }
   }, [])
 
   /**
@@ -90,8 +84,6 @@ export default function UpgradesList (): JSX.Element {
       })
       setSkins(skinList)
     }
-
-
     fetchData()
   }, [])
 
@@ -110,7 +102,8 @@ export default function UpgradesList (): JSX.Element {
       </Box>
       <div className={'upgrades'}>
         <TabPanel value={value} index={0}>
-          {upgrades.map((upgrade: UpgradeInterface) => {
+          {upgrades.map((upgrade: any) => {
+            upgrade.amountBought = units[upgrade.id - 1]?.amountBought ?? 0
             return <Upgrade key={upgrade.id} token={token ?? ''} upgrade={upgrade}/>
           })}
         </TabPanel>
