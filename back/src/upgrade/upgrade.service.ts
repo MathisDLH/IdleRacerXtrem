@@ -95,8 +95,6 @@ export class UpgradeService {
 
   // Cette fonction met à jour la mise à niveau par son ID
   async updateById(userId: number, upgradeId: number, amount: number, amountUnit: Unit, amountBought: number) {
-    // Log des informations de la mise à niveau
-    this.logger.log("Upgrade", upgradeId, userId, amount, amountUnit, amountBought);
     // Si la mise à niveau existe déjà pour l'utilisateur
     if (await this.userUpgradeRepository.exist({ where: { upgradeId, userId } })) {
       // Mise à jour de la mise à niveau

@@ -36,7 +36,13 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
             this.socketConnected.forEach(async (client) => {
                 if (client) {
                     await this.updateMoney(client.user);
-                    client.emit('money', await this.redisService.getUserData(client.user));
+                    client.emit('money',
+                    {
+                        money : (await this.redisService.getUserData(client.user)).money,
+                        unit : (await this.redisService.getUserData(client.user)).moneyUnit
+                    });
+                    client.emit('upgrades', (await this.redisService.getUserData(client.user)).upgrades);
+
                 }
             });
         }, 1000);
@@ -65,6 +71,12 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
             client.user = user;
             this.socketConnected.add(client);
             this.redisService.loadUserInRedis(user);
+            const maintenant = new Date();
+            const differenceEnSecondes = (maintenant.getTime() - user.updatedAt.getTime()) / 1000;
+            console.log(maintenant.getTime())
+            console.log(user.updatedAt.getTime())
+            console.log(differenceEnSecondes)
+            this.updateMoney(user,differenceEnSecondes);
         });
     }
 
@@ -76,7 +88,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 
     // Mettre à jour l'argent de l'utilisateur
-    async updateMoney(user: User): Promise<void> {
+    async updateMoney(user: User, seconds = 1 ): Promise<void> {
         // Récupérer les informations de l'utilisateur depuis Redis
         const redisInfos = await this.redisService.getUserData(user);
         // Si l'utilisateur a des mises à niveau
@@ -89,12 +101,12 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
                   // Trouver la mise à niveau générée
                   let generatedUpgrade =  redisInfos.upgrades.find((upgrade) => upgrade.id == element.generationUpgradeId);
                   // Mettre à jour le montant de la mise à niveau générée
-                  generatedUpgrade.amount =  element.amount * element.value;
+                  generatedUpgrade.amount =  element.amount * element.value * seconds;
                   // Mettre à jour l'unité de montant de la mise à niveau générée
                   generatedUpgrade.amountUnit =  element.amountUnit;
                 } else { // Fan
                     // Mettre à jour l'argent de l'utilisateur
-                    redisInfos.money = (element.amount * element.value);
+                    redisInfos.money = element.amount * element.value * seconds;
                     // Mettre à jour l'unité d'argent de l'utilisateur
                     redisInfos.moneyUnit = element.amountUnit
                 }
