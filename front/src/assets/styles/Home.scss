@@ -7,11 +7,19 @@
   background-size: cover;
   background-position: center;
   z-index: -1;
+  .btn-hover{
+    width: 15vw !important;
+  }
 }
 
 .image-above-title{
   max-width: 300px;
   animation: breathe 1500ms infinite alternate; /* Ajoute une animation de respiration */
+}
+
+.logout-exit:hover{
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 .menu-content {
@@ -49,10 +57,6 @@
   background-color: #FFA500;
   transform: scale(1.6); /* Agrandissement au survol */
   animation: breatheHover 200ms infinite alternate; /* Ajoute une animation de respiration au survol du menu */
-}
-
-.btn-hover{
-  width: 15vw !important;
 }
 
 

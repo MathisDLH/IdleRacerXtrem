@@ -16,13 +16,13 @@ const Home = (): JSX.Element => {
 
   const SignOutModal = (): JSX.Element => {
     return (
-      <div>
-        <p style={{ cursor: 'pointer' }} onClick={() => {
+      <div style={{textAlign: 'center', padding:'1em'}}>
+        <p>Are you sure you want to logout ?</p>
+        <button onClick={() => {
           signout()
           setModalSignoutVisible(false)
-        }}>
-          LOGOUT
-        </p>
+        }} className='btn-hover color-4'>Yes</button>
+        <p className='logout-exit' onClick={() => {setModalSignoutVisible(false)}}>No</p>
       </div>
     )
   }
@@ -35,10 +35,10 @@ const Home = (): JSX.Element => {
       exit={{ opacity: 0, scale: 0, rotate: 45 }}
     >
       <DraggableDialog icon={carIcon} open={modalVisible} size="big" setOpen={setModalVisible} title="Login" Content={<LoginForm setOpen={setModalVisible} />} />
-      {(user != null) && <DraggableDialog icon={carIcon} open={modalSignOutVisible} size="big" setOpen={setModalSignoutVisible} title={user.email} Content={<SignOutModal />} />}
+      {(user != null) && <DraggableDialog icon={carIcon} open={modalSignOutVisible} size="big" setOpen={setModalSignoutVisible} title={user.name} Content={<SignOutModal />} />}
       <div className='head-container' onClick={() => { if (!isLoggedIn) { setModalVisible(true) } else { setModalSignoutVisible(true) } }}>
         <img alt='car_icon' src={carIcon} className='car-icon' />
-        <p>{isLoggedIn && (user != null) ? user.email : 'Login'}</p>
+        <p>{isLoggedIn && (user != null) ? `${user.name} - Logout` : 'Login'}</p>
       </div>
       <div className="menu">
         <div className="menu-content">
