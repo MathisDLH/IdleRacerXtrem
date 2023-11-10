@@ -6,5 +6,5 @@ export interface User {
   token: string
   score: number
   money: number
-  money_unite: string
+  money_unite: number
 }

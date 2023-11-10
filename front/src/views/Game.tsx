@@ -18,6 +18,7 @@ import road from '../assets/images/game/road.png'
 import type SkinInterface from '../interfaces/skin.interface.ts'
 import { useSpring, animated } from 'react-spring'
 import { calculateUnit } from '../enums/units.tsx'
+import BackgroundMusic from '../components/BackgroundMusic.tsx'
 
 const Game = (): JSX.Element => {
   const { socket }: WebSocketContextInterface = useWebSocket()
@@ -139,10 +140,12 @@ const Game = (): JSX.Element => {
         <header>
           <div className={'left'}>
             <IconButton className="icon" size="large" onClick={goHome}>
-              <img src={back} alt={''}/>
+              <img src={back} alt={''} />
             </IconButton>
+            <div style={{ marginTop: '1em' }}>
+              <BackgroundMusic />
+            </div>
           </div>
-
           <div className='right inline'>
             <div>
               <span className="part prevent-select">
