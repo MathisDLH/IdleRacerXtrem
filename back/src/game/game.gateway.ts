@@ -35,11 +35,13 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         setInterval(async () => {
             this.socketConnected.forEach(async (client) => {
                 if (client) {
-                    await this.updateMoney(client.user);
+                    let moneyBySec = await this.updateMoney(client.user);
                     client.emit('money',
                     {
                         money : (await this.redisService.getUserData(client.user)).money,
-                        unit : (await this.redisService.getUserData(client.user)).moneyUnit
+                        unit : (await this.redisService.getUserData(client.user)).moneyUnit,
+                        moneyBySec : moneyBySec.amount,
+                        moneyBySecUnit : moneyBySec.unit
                     });
                     client.emit('upgrades', (await this.redisService.getUserData(client.user)).upgrades);
 
@@ -89,7 +91,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 
     // Mettre à jour l'argent de l'utilisateur
-    async updateMoney(user: User, seconds = 1 ): Promise<void> {
+    async updateMoney(user: User, seconds = 1 ): Promise<{amount: number; unit: Unit;}> {
         // Récupérer les informations de l'utilisateur depuis Redis
         const redisInfos = await this.redisService.getUserData(user);
         // Si l'utilisateur a des mises à niveau
@@ -115,8 +117,9 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
                 element.amount = 0;
             });
             // Mettre à jour les informations de l'utilisateur dans Redis
-            await this.redisService.updateUserData(user, redisInfos);
+            return await this.redisService.updateUserData(user, redisInfos);
         }
+        return {amount: 0, unit: Unit.UNIT};
     }
 
     // Pousser les informations de Redis vers la base de données

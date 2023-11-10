@@ -22,7 +22,6 @@
 
 
         .left,.right{
-            display: flex;
             align-items: center;
 
             margin-left: 2vw;
@@ -47,6 +46,22 @@
                 color: white;
                 text-shadow: var(--yellow) 3px 3px 1vw;
                 font-size: 2rem;
+            }
+
+            .inline {
+                display: inline;
+            }
+
+            .divBySec {
+                text-align: center;
+            }
+
+            .partBySec {
+                padding: 2vh;
+                font-family: 'Pixelify Sans', sans-serif;
+                color: white;
+                text-shadow: var(--yellow) 3px 3px 1vw;
+                font-size: 1rem;
             }
         }
     }

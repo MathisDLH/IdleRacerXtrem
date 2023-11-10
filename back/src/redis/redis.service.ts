@@ -33,11 +33,12 @@ export class RedisService {
         // Calculer la différence d'unité
         let unitDifference = moneyUnit - unit;
         // Si la différence d'unité n'est pas 0, ajuster le montant à augmenter
+        let amountIncremented = amountToIncr;
         if (unitDifference != 0) {
-             amountToIncr /=  Math.pow(10, unitDifference);
+             amountIncremented /=  Math.pow(10, unitDifference);
         }
         // Augmenter l'argent de l'utilisateur
-        let money = +await this.client.incrbyfloat(`${userId}:MONEY`, amountToIncr);
+        let money = +await this.client.incrbyfloat(`${userId}:MONEY`, amountIncremented);
         let unityToIncrement = 0;
         // Si l'argent de l'utilisateur est supérieur à 1001, ajuster l'unité d'argent
         while (money > 1001) {
@@ -51,8 +52,7 @@ export class RedisService {
             await this.client.set(`${userId}:MONEY`, money);
         }
 
-        // Retourner l'argent de l'utilisateur
-        return money;
+        return { amount: amountToIncr, unit};
     }
 
     // Méthode pour augmenter une mise à niveau
@@ -177,10 +177,11 @@ export class RedisService {
     }
 
     public async updateUserData(user: User, data: IRedisData) {
-        this.incrMoney(user.id,data.money,data.moneyUnit)
+        let amountIncremented = this.incrMoney(user.id,data.money,data.moneyUnit)
         for (const e of data.upgrades) {
             this.incrUpgrade(user.id,e.id, e.amount, e.amountUnit)
         }
+        return amountIncremented
     }
 
 }
