@@ -7,6 +7,7 @@ import carIcon from '../assets/images/auth/car_icon.png'
 import { useAuth } from '../context/Auth'
 import { IconButton } from '@mui/material'
 import { Link } from 'react-router-dom'
+import { calculateUnit } from '../enums/units'
 
 const ScoreTab = (): JSX.Element => {
   const [scores, setScores] = useState<User[]>()
@@ -50,7 +51,7 @@ const ScoreTab = (): JSX.Element => {
                 {scores.map((score, index) => (
                   <tr key={index}>
                     <td>{score.name}</td>
-                    <td>{`${score.money} ${score.money_unite}`}</td>
+                    <td>{`${score.money} ${calculateUnit(score.money_unite)}`}</td>
                   </tr>
                 ))}
               </tbody>
