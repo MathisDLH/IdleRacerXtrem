@@ -75,31 +75,50 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
 
 
+    // Mettre à jour l'argent de l'utilisateur
     async updateMoney(user: User): Promise<void> {
+        // Récupérer les informations de l'utilisateur depuis Redis
         const redisInfos = await this.redisService.getUserData(user);
+        // Si l'utilisateur a des mises à niveau
         if (redisInfos.upgrades.length > 0) {
+            // Parcourir chaque mise à niveau
             redisInfos.upgrades.forEach(element => {
 
+                // Si l'ID de la mise à niveau est supérieur à 1
                 if (element.id > 1) {
+                  // Trouver la mise à niveau générée
                   let generatedUpgrade =  redisInfos.upgrades.find((upgrade) => upgrade.id == element.generationUpgradeId);
+                  // Mettre à jour le montant de la mise à niveau générée
                   generatedUpgrade.amount =  element.amount * element.value;
+                  // Mettre à jour l'unité de montant de la mise à niveau générée
                   generatedUpgrade.amountUnit =  element.amountUnit;
                 } else { // Fan
+                    // Mettre à jour l'argent de l'utilisateur
                     redisInfos.money = (element.amount * element.value);
+                    // Mettre à jour l'unité d'argent de l'utilisateur
                     redisInfos.moneyUnit = element.amountUnit
                 }
+                // Réinitialiser le montant de la mise à niveau
                 element.amount = 0;
             });
+            // Mettre à jour les informations de l'utilisateur dans Redis
             await this.redisService.updateUserData(user, redisInfos);
         }
     }
 
+    // Pousser les informations de Redis vers la base de données
     async pushRedisToDb(user: User) {
+        // Récupérer les informations de l'utilisateur depuis Redis
         const redisInfos: IRedisData = await this.redisService.getUserData(user);
+        // Créer un nouvel utilisateur avec les informations récupérées
         const newUser = {id: user.id, money: redisInfos.money, money_unite: redisInfos.moneyUnit };
+        // Récupérer les mises à niveau de l'utilisateur
         const upgrades = redisInfos.upgrades;
+        // Mettre à jour l'utilisateur dans la base de données
         await this.userService.update(newUser as User);
+        // Pour chaque mise à niveau de l'utilisateur
         for (const upgrade of upgrades) {
+            // Mettre à jour la mise à niveau dans la base de données
             await this.upgradeService.updateById(user.id, upgrade.id, upgrade.amount, upgrade.amountUnit, upgrade.amountBought);
         }
 
