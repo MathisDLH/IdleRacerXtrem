@@ -16,12 +16,12 @@ export default function Upgrade (props: { token?: string, upgrade: UpgradeInterf
   }, [])
 
   function current (): number {
-	  let currentUnit: number = upgrade.price_unit
-	  if (upgrade.amountBought !== 0 && upgrade.amountBought >= 10) {
-		  currentUnit += Math.floor(upgrade.amountBought / 10) * 3
-	  }
-		return currentUnit
-	}
+    let currentUnit: number = upgrade.price_unit
+    if (upgrade.amountBought !== 0 && upgrade.amountBought >= 10) {
+      currentUnit += Math.floor(upgrade.amountBought / 10) * 3
+    }
+    return currentUnit
+  }
 
   return (
     <div className={'upgrade prevent-select'}>
@@ -29,7 +29,7 @@ export default function Upgrade (props: { token?: string, upgrade: UpgradeInterf
       <div>
         <button className={'btn-hover color-4'} onClick={click}>
           <span className={'price'}>{upgrade.price}</span>
-          <span className={'unit'}>{calculateUnit(current()) }</span>
+          <span className={'unit'}>{calculateUnit(current())}</span>
         </button>
       </div>
     </div>
