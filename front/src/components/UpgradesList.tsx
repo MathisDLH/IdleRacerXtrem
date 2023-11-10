@@ -96,6 +96,7 @@ export default function UpgradesList (): JSX.Element {
           variant="fullWidth"
         >
           <Tab label={'Money'}/>
+          <Tab label={'Click'}/>
           <Tab label={'Races'}/>
           <Tab label={'Skins'}/>
         </Tabs>

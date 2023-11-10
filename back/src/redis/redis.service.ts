@@ -62,12 +62,13 @@ export class RedisService {
         // Calculer la différence d'unité
         let unitDifference = upgradeUnit - unit;
         // Si la différence d'unité n'est pas 0, ajuster le montant à augmenter
+        let amountIncremented = amountToIncr;
         if (unitDifference != 0) {
-             amountToIncr /=  Math.pow(10, unitDifference);
+             amountIncremented /=  Math.pow(10, unitDifference);
         }
 
         // Augmenter la quantité de la mise à niveau
-        let amount = +await this.client.hincrbyfloat(`${userId}:${upgradeId}`, "amount", amountToIncr)
+        let amount = +await this.client.hincrbyfloat(`${userId}:${upgradeId}`, "amount", amountIncremented)
         let unityToIncrement = 0;
         // Si la quantité de la mise à niveau est supérieure à 1001, ajuster l'unité de la mise à niveau
         while (amount > 1001) {
@@ -76,13 +77,13 @@ export class RedisService {
         }
         // Si l'unité à augmenter est supérieure à 0, augmenter l'unité de la mise à niveau
         if(unityToIncrement){
-            await this.client.hincrbyfloat(`${userId}:${upgradeId}`, "amountUnity", unityToIncrement)
+            upgradeUnit = +await this.client.hincrbyfloat(`${userId}:${upgradeId}`, "amountUnity", unityToIncrement)
             // Mettre à jour la quantité de la mise à niveau
             await this.client.hset(`${userId}:${upgradeId}`, "amount", amount)
         }
        
         // Retourner la quantité de la mise à niveau
-        return amount;
+        return { amountGenerated: amountToIncr, generatedUnit : unit};
     }
 
     async getUserMoney(userId: number) {
@@ -177,11 +178,12 @@ export class RedisService {
     }
 
     public async updateUserData(user: User, data: IRedisData) {
-        let amountIncremented = this.incrMoney(user.id,data.money,data.moneyUnit)
+        let moneyData = await this.incrMoney(user.id,data.money,data.moneyUnit)
+        const upgradesData = [];
         for (const e of data.upgrades) {
-            this.incrUpgrade(user.id,e.id, e.amount, e.amountUnit)
+            upgradesData.push(await this.incrUpgrade(user.id,e.id, e.amount, e.amountUnit))
         }
-        return amountIncremented
+        return {moneyData, upgradesData};
     }
 
 }

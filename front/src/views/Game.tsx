@@ -25,7 +25,7 @@ const Game = (): JSX.Element => {
   const [moneyUnit, setMoneyUnit] = useState<number>(0)
   const [moneyBySec, setMoneyBySec] = useState<number>(0)
   const [moneyBySecUnit, setMoneyBySecUnit] = useState<number>(0)
-  const [moneyEarnedByClick, setMoneyEarnedByClick] = useState<number>(0)
+  const [moneyEarnedByClick, setMoneyEarnedByClick] = useState<number>(1)
   const [moneyEarnedByClickUnit, setMoneyEarnedByClickUnit] = useState<number>(0)
   const [shopOpen, setShopOpen] = useState<boolean>(false)
   // const { user } = useAuth()

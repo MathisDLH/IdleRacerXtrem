@@ -35,15 +35,21 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         setInterval(async () => {
             this.socketConnected.forEach(async (client) => {
                 if (client) {
-                    let moneyBySec = await this.updateMoney(client.user);
+                    let realTimeData = await this.updateMoney(client.user);
+                    console.log(realTimeData);
                     client.emit('money',
                     {
                         money : (await this.redisService.getUserData(client.user)).money,
                         unit : (await this.redisService.getUserData(client.user)).moneyUnit,
-                        moneyBySec : moneyBySec.amount,
-                        moneyBySecUnit : moneyBySec.unit
+                        moneyBySec : realTimeData.moneyData.amount,
+                        moneyBySecUnit : realTimeData.moneyData.unit
                     });
-                    client.emit('upgrades', (await this.redisService.getUserData(client.user)).upgrades);
+                    client.emit('upgrades', {
+                        upgrades : (await this.redisService.getUserData(client.user)).upgrades,
+                        realTimeData : realTimeData.upgradesData
+
+                    }
+                    );
 
                 }
             });
@@ -94,7 +100,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 
     // Mettre à jour l'argent de l'utilisateur
-    async updateMoney(user: User, seconds = 1 ): Promise<{amount: number; unit: Unit;}> {
+    async updateMoney(user: User, seconds = 1 ): Promise<{ moneyData: { amount: number; unit: Unit; }; upgradesData: any[]; }> {
         // Récupérer les informations de l'utilisateur depuis Redis
         const redisInfos = await this.redisService.getUserData(user);
         // Si l'utilisateur a des mises à niveau
@@ -122,7 +128,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
             // Mettre à jour les informations de l'utilisateur dans Redis
             return await this.redisService.updateUserData(user, redisInfos);
         }
-        return {amount: 0, unit: Unit.UNIT};
+        return {moneyData: { amount: 0, unit: Unit.UNIT }, upgradesData: [] };
     }
 
     // Pousser les informations de Redis vers la base de données
