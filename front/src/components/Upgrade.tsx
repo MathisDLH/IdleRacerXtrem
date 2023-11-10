@@ -3,6 +3,7 @@ import '../assets/styles/LuxuryButtons.scss'
 import type UpgradeInterface from '../interfaces/upgrade.interface.ts'
 import * as UpgradeService from '../services/upgrades.service.ts'
 import { useEffect } from 'react'
+import { Units } from '../enums/units.tsx'
 
 export default function Upgrade (props: { token?: string, upgrade: UpgradeInterface }): JSX.Element {
   const { token, upgrade } = props
@@ -11,34 +12,16 @@ export default function Upgrade (props: { token?: string, upgrade: UpgradeInterf
   }
 
   useEffect(() => {
+    console.log(upgrade)
   }, [])
 
-  function calculatePrice (): string {
+  function calculateUnit (): string {
+    const unit = Units[upgrade.price_unit]
     switch (upgrade.price_unit) {
-      case 'UNIT':
-        return `${upgrade.price}$`
-      case 'MILLION':
-        return `${upgrade.price} M $`
-      case 'BILLION':
-        return `${upgrade.price} B $`
-      case 'TRILLION':
-        return `${upgrade.price} T $`
-      case 'QUADRILLION':
-        return `${upgrade.price} Q $`
-      case 'QUINTILLION':
-        return `${upgrade.price} Qi $`
-      case 'SEXTILLION':
-        return `${upgrade.price} S $`
-      case 'SEPTILLION':
-        return `${upgrade.price} Sp $`
-      case 'OCTILLION':
-        return `${upgrade.price} O $`
-      case 'NONILLION':
-        return `${upgrade.price} N $`
-      case 'DECILLION':
-        return `${upgrade.price} D $`
+      case 0:
+        return '$'
       default:
-        return 'ERROR'
+        return ` ${unit} $`
     }
   }
 
@@ -46,7 +29,10 @@ export default function Upgrade (props: { token?: string, upgrade: UpgradeInterf
     <div className={'upgrade prevent-select'}>
       <span>{upgrade.name}</span>
       <div>
-        <button className={'btn-hover color-4'} onClick={click}>{calculatePrice()}</button>
+        <button className={'btn-hover color-4'} onClick={click}>
+          <span className={'price'}>{upgrade.price}</span>
+          <span className={'unit'}>{calculateUnit()}</span>
+        </button>
       </div>
     </div>
   )

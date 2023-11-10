@@ -3,9 +3,24 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+
+    .btn-hover{
+        width: 100px;
+        overflow: hidden;
+        white-space: nowrap;
+
+        .price{
+            font-size: 1rem;
+            font-weight: 600;
+            margin-right: 0.1rem;
+        }
+
+        .unit{
+            font-size: 0.8rem;
+            text-overflow: ellipsis;
+        }
+    }
 }
 
-.btn-hover{
-    width: 100px;
-}
+
 
