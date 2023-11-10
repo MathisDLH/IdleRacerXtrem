@@ -45,11 +45,11 @@ const Home = (): JSX.Element => {
           <img src={flags} alt="race_flag" className="image-above-title" />
           <h1 className="game-title">Idle Racer</h1>
           <Link to="/game">
-            <button className={(user != null) ? 'start-button' : 'start-button-desactived'}>START</button>
+            <button className={(user != null) ? 'btn-hover color-4' : 'start-button-desactived'}>START</button>
           </Link>
           <div style={{ marginTop: '1em' }}>
             <Link to="/scores">
-            <button className={(user != null) ? 'start-button' : 'start-button-desactived'}>SCORES</button>
+            <button className={(user != null) ? 'btn-hover color-4' : 'start-button-desactived'}>SCORES</button>
             </Link>
           </div>
         </div>

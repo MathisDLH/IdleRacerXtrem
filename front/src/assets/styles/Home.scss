@@ -32,27 +32,16 @@
   animation: breathe 2000ms infinite alternate; /* Ajoute une animation de respiration */
 }
 
-/* Styles pour le bouton START (sans animation) */
-.start-button {
-  background-color: #FFD700;
-  color: #000;
-  font-size: 24px;
-  padding: 10px 20px;
-  border: none;
-  cursor: pointer;
-  text-transform: uppercase;
-  transition: transform 0.2s ease, background-color 0.2s ease; /* Transition pour l'agrandissement et la couleur de fond */
-  animation: breathe 500ms infinite alternate; /* Ajoute une animation de respiration au survol du menu */
-
-}
 
 .start-button-desactived {
   background-color: #d3dddd;
+  font-family: 'Pixelify Sans', sans-serif;
   color: #bccbcc;
   font-size: 24px;
   padding: 10px 20px;
   border: none;
   cursor: not-allowed;
+  border-radius: 30px;
   text-transform: uppercase;
 }
 
@@ -62,18 +51,13 @@
   animation: breatheHover 200ms infinite alternate; /* Ajoute une animation de respiration au survol du menu */
 }
 
-/* Ajoutez ces styles pour les champs d'entrée */
-.form-group {
-  margin-bottom: 20px;
+.btn-hover{
+  width: 15vw !important;
 }
 
-.form-group label {
-  font-size: 18px;
-  color: #fff;
-  margin-bottom: 8px;
-}
 
 .form-input {
+  font-family: 'Pixelify Sans', sans-serif;
   padding: 10px;
   border: 1px solid #fff;
   background-color: transparent;
@@ -86,8 +70,9 @@
 
 .form-input:focus {
   outline: none;
-  border-color: #FFD700; /* Couleur de bordure lorsque le champ est en focus */
-  animation: breatheHover 200ms infinite alternate; /* Ajoute une animation de respiration au survol du menu */
+  border: solid 2px;
+  border-color: var(--yellow);
+  animation: breatheHover 200ms infinite alternate;
 }
 
 .head-container{
@@ -123,10 +108,10 @@
 
 @keyframes breatheHover {
   0% {
-    transform: scale(1.6);
+    transform: scale(1.1);
   }
   100% {
-    transform: scale(1.65); /* Agrandissement à 1.05 fois la taille d'origine */
+    transform: scale(1.12); /* Agrandissement à 1.05 fois la taille d'origine */
   }
 }
 

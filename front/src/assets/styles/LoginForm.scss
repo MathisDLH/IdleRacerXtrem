@@ -13,6 +13,10 @@
   margin: 0 auto;
 }
 
+.page-title{
+  text-shadow: black 3px 0 10px;
+}
+
 /* Style for the heading */
 .login-heading {
   font-size: 24px;
@@ -26,10 +30,20 @@
   margin-bottom: 10px;
 }
 
+
+
 /* Style for form groups (e.g., Email and Password) */
 .form-group {
   margin-bottom: 15px;
 }
+
+.form-container{
+  padding: 2em;
+  border: solid 2px black;
+  min-width: 25vw;
+  backdrop-filter: blur(10px);
+}
+
 
 /* Style for labels (e.g., Email and Password) */
 .form-label {
@@ -53,11 +67,6 @@ input:focus {
 .form-login-input[type=text]
 {
   font-family: 'Pixelify Sans', sans-serif;
-}
-
-.form-input:focus {
-  border-color: #007bff;
-  /* Highlight the input on focus */
 }
 
 .btn-hover{
