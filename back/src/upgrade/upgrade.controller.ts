@@ -1,9 +1,10 @@
-import {Body, Controller, Get, Post, Request, UseGuards} from '@nestjs/common';
+import {Body, Controller, Get, Post, Request, UseFilters, UseGuards} from '@nestjs/common';
 import {JwtAuthGuard} from 'src/auth/jwt-auth.guard';
 import {UpgradeService} from './upgrade.service';
 import {ApiBearerAuth, ApiResponse, ApiTags} from "@nestjs/swagger";
 import {Upgrade} from "./upgrade.entity";
 import {BuyUpgradeDto} from './dto/buy-upgrade.dto';
+import {EffectiveExceptionFilter} from "../filters/EffectiveException.filter";
 
 @ApiBearerAuth()
 @ApiTags("Upgrade")
@@ -25,6 +26,7 @@ export class UpgradeController {
     }
 
   @UseGuards(JwtAuthGuard)
+  @UseFilters(new EffectiveExceptionFilter())
   @Post("/buyUpgrade")
   async buyUpgrade(@Body() buyUpgradeDto : BuyUpgradeDto, @Request() req) {
     return this.upgradeService.buyUpgrade(buyUpgradeDto, req.user.userId);

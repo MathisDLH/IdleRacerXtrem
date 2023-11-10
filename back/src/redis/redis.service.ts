@@ -2,15 +2,15 @@ import { Inject, Injectable } from '@nestjs/common';
 import { RedisClient } from "./redis.provider";
 import { IRedisData, IRedisUpgrade, Unit } from "../shared/shared.model";
 import { User } from "../user/user.entity";
-import { PropertyMetadata } from '@nestjs/core/injector/instance-wrapper';
+import {PurchaseError} from "../exceptions/PurchaseError";
+
 
 @Injectable()
 export class RedisService {
     public constructor(
         @Inject('REDIS_CLIENT')
         private readonly client: RedisClient,
-    ) {
-    }
+    ) {}
 
 
     async getUpgrade(userId: number, upgradeId: number): Promise<IRedisUpgrade> {
@@ -128,6 +128,7 @@ export class RedisService {
             }
         }
         // Retourner faux si le paiement a échoué
+        throw new PurchaseError(userMoney.toString(), amount.value.toString());
         return false;
     }
 
