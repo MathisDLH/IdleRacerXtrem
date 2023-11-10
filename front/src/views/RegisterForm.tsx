@@ -29,7 +29,9 @@ const RegisterForm = (): JSX.Element => {
   return (
     <motion.div
       className="menu"
-      style={{ backgroundImage: `url(${backgroundImage})` }}
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+      }}
       initial={{ opacity: 0, scale: 0, rotate: 45 }}
       animate={{ opacity: 1, scale: 1, rotate: 0 }}
       exit={{ opacity: 0, scale: 0, rotate: 45 }}
@@ -37,9 +39,11 @@ const RegisterForm = (): JSX.Element => {
       <div className="menu-content">
         <img src={flags} alt="race_flag" className="image-above-title" />
         <h1 className="game-title">Idle Racer</h1>
-        <h1 className="page-title">Inscription</h1>
-        <form onSubmit={handleSignup}>
+        <h1 className="page-title">Sign Up</h1>
+        <div className='form-container'>
+        <form onSubmit={handleSignup} className="form">
         <div className="form-group">
+          <label htmlFor="login">Login name</label>
             <input
               type="text"
               value={name}
@@ -48,6 +52,7 @@ const RegisterForm = (): JSX.Element => {
             />
           </div>
           <div className="form-group">
+            <label htmlFor="Email">Email</label>
             <input
               type="email"
               value={email}
@@ -56,6 +61,7 @@ const RegisterForm = (): JSX.Element => {
             />
           </div>
           <div className="form-group">
+          <label htmlFor="password">Password</label>
             <input
               type="password"
               value={password}
@@ -63,10 +69,11 @@ const RegisterForm = (): JSX.Element => {
               className="form-input"
             />
           </div>
-          <button type="submit" className="start-button">
+          <button type="submit" className="btn-hover color-4">
             Register
           </button>
         </form>
+        </div>
         <Link to='/' style={{ cursor: 'pointer', color: 'black', textDecoration: 'underline' }}><p>EXIT</p></Link>
       </div>
     </motion.div>
