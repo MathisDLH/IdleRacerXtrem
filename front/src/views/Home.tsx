@@ -8,24 +8,12 @@ import { useAuth } from '../context/Auth'
 import { useState } from 'react'
 import LoginForm from '../components/LoginForm'
 import DraggableDialog from '../components/DraggableDialog'
+import SignOutModal from '../components/SignOutModal'
 
 const Home = (): JSX.Element => {
-  const { user, isLoggedIn, signout } = useAuth()
+  const { user, isLoggedIn } = useAuth()
   const [modalVisible, setModalVisible] = useState(false)
   const [modalSignOutVisible, setModalSignoutVisible] = useState(false)
-
-  const SignOutModal = (): JSX.Element => {
-    return (
-      <div style={{textAlign: 'center', padding:'1em'}}>
-        <p>Are you sure you want to logout ?</p>
-        <button onClick={() => {
-          signout()
-          setModalSignoutVisible(false)
-        }} className='btn-hover color-4'>Yes</button>
-        <p className='logout-exit' onClick={() => {setModalSignoutVisible(false)}}>No</p>
-      </div>
-    )
-  }
 
   return (
     <motion.div style={{ backgroundImage: `url(${backgroundImage})` }}
@@ -35,7 +23,7 @@ const Home = (): JSX.Element => {
       exit={{ opacity: 0, scale: 0, rotate: 45 }}
     >
       <DraggableDialog icon={carIcon} open={modalVisible} size="big" setOpen={setModalVisible} title="Login" Content={<LoginForm setOpen={setModalVisible} />} />
-      {(user != null) && <DraggableDialog icon={carIcon} open={modalSignOutVisible} size="big" setOpen={setModalSignoutVisible} title={user.name} Content={<SignOutModal />} />}
+      {(user != null) && <DraggableDialog icon={carIcon} open={modalSignOutVisible} size="big" setOpen={setModalSignoutVisible} title={user.name} Content={<SignOutModal setModalVisible={setModalSignoutVisible} />} />}
       <div className='head-container' onClick={() => { if (!isLoggedIn) { setModalVisible(true) } else { setModalSignoutVisible(true) } }}>
         <img alt='car_icon' src={carIcon} className='car-icon' />
         <p>{isLoggedIn && (user != null) ? `${user.name} - Logout` : 'Login'}</p>
