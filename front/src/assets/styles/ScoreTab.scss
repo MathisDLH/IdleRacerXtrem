@@ -13,6 +13,21 @@
     border-radius: 1vw;
     width: 20vw;
   }
+
+  .left{
+    margin-left: 1em;
+    margin-top: 1em;
+    .icon {
+      background-color: rgba(255, 255, 255, 0.8);
+      z-index: 100;
+      &:hover{
+      }
+
+      img {
+          height: 3vh;
+      }
+  }
+}
   
   
   .score-table {
