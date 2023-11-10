@@ -13,21 +13,67 @@ import car_12 from '../assets/images/game/cars/12.png'
 import car_13 from '../assets/images/game/cars/13.png'
 import car_14 from '../assets/images/game/cars/14.png'
 import car_15 from '../assets/images/game/cars/15.png'
+import type SkinInterface from '../interfaces/skin.interface.ts'
 
-export const cars = [
-  car_1,
-  car_2,
-  car_3,
-  car_4,
-  car_5,
-  car_6,
-  car_7,
-  car_8,
-  car_9,
-  car_10,
-  car_11,
-  car_12,
-  car_13,
-  car_14,
-  car_15
+export const cars: SkinInterface[] = [
+  {
+    path: car_1,
+    name: 'LAMBORGHINI'
+  },
+  {
+    path: car_2,
+    name: 'DELUXO'
+  },
+  {
+    path: car_3,
+    name: 'COCCINELLE'
+  },
+  {
+    path: car_4,
+    name: 'FUSEE'
+  },
+  {
+    path: car_5,
+    name: 'COURSE'
+  },
+  {
+    path: car_6,
+    name: 'RALLY'
+  },
+  {
+    path: car_7,
+    name: 'POLICE'
+  },
+  {
+    path: car_8,
+    name: 'BATMAN'
+  },
+  {
+    path: car_9,
+    name: 'TRANSFORMER'
+  },
+  {
+    path: car_10,
+    name: 'OLD'
+  },
+  {
+    path: car_11,
+    name: 'OLD2'
+  },
+  {
+    path: car_12,
+    name: 'OLD3'
+  },
+  {
+    path: car_13,
+    name: '911'
+  },
+  {
+    path: car_14,
+    name: 'OLD4'
+  },
+  {
+    path: car_15,
+    name: 'OLD5'
+  }
 ]

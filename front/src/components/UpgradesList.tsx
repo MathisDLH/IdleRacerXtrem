@@ -5,6 +5,7 @@ import type UpgradeInterface from '../interfaces/upgrade.interface.ts'
 import type skinInterface from '../interfaces/skin.interface.ts'
 
 import * as UpgradeService from '../services/upgrades.service.ts'
+import * as SkinService from '../services/skin.service.ts'
 
 import { cars } from '../utils/cars.utils.ts'
 
@@ -13,6 +14,7 @@ import Upgrade from './Upgrade.tsx'
 import Skin from './Skin.tsx'
 
 import '../assets/styles/UpgradesList.scss'
+import type SkinInterface from '../interfaces/skin.interface.ts'
 
 export default function UpgradesList (): JSX.Element {
   const [value, setValue] = useState<number>(0)
@@ -56,14 +58,22 @@ export default function UpgradesList (): JSX.Element {
   useEffect(() => {
     const fetchData = async (): Promise<void> => {
       const data = await UpgradeService.getUpgrades(token ?? '')
+      let skinList = await SkinService.getSkins(token ?? '')
       setUpgrades(data)
+      skinList = skinList.map(skin => {
+        const car = cars.find(car => car.name === skin.name)
+        return {...skin, path:car?.path }
+      })
+      setSkins(skinList)
+      console.log(skinList);
+
       if (data.length === 0) {
         setUpgrades([
           {
             id: 0,
             name: 'mock',
             price: 0,
-            price_unit: 'UNIT',
+            price_unit: 0,
             ratio: 1,
             generationUpgradeId: 0,
             value: 0,
@@ -109,7 +119,7 @@ export default function UpgradesList (): JSX.Element {
           })}
         </TabPanel>
         <TabPanel value={value} index={2}>
-          {skins.map((skin: skinInterface, index) => {
+          {skins.map((skin: SkinInterface, index) => {
             return <Skin key={index} skin={skin}/>
           })}
         </TabPanel>

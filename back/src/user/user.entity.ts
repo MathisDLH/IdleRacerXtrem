@@ -40,8 +40,8 @@ export class User extends BaseEntity {
     money: number;
 
     @ApiProperty()
-    @Column({default: 0})
-    currentSkin: number;
+    @Column({default: "LAMBORGHINI"})
+    currentSkin: string;
 
     @ApiProperty()
     @Column({type: 'simple-array'})

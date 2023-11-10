@@ -1,9 +1,9 @@
 // seeding.service.ts
-import { Injectable, OnModuleInit } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Upgrade } from 'src/upgrade/upgrade.entity';
-import { Unit } from 'src/shared/shared.model';
+import {Injectable, OnModuleInit} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
+import {Repository} from 'typeorm';
+import {Upgrade} from 'src/upgrade/upgrade.entity';
+import {Unit} from 'src/shared/shared.model';
 import {Skin} from "../skin/skin.entity";
 
 @Injectable()
@@ -13,7 +13,8 @@ export class SeedingService implements OnModuleInit {
         private readonly upgradeRepository: Repository<Upgrade>,
         @InjectRepository(Skin)
         private readonly skinRepository: Repository<Skin>,
-    ) { }
+    ) {
+    }
 
     async onModuleInit() {
         await this.seedUpgrades();
@@ -26,32 +27,32 @@ export class SeedingService implements OnModuleInit {
 
         if (count == 0) {
             const data = [
-                { id: 1, name: 'Fan', price: 10, price_unit: Unit.UNIT, ratio: 1, generationUpgradeId: 0, value: 1.0, imagePath: 'test.png' },
-                { id: 2, name: 'Daron', price: 10, price_unit: Unit.K, ratio: 1, generationUpgradeId: 1, value: 0.1, imagePath: 'test.png' },
-                { id: 3, name: 'Pub', price: 10, price_unit: Unit.MILLION, ratio: 1, generationUpgradeId: 2, value: 0.1, imagePath: 'test.png' },
-                { id: 4, name: 'Emission', price: 10, price_unit: Unit.BILLION, ratio: 1, generationUpgradeId: 3, value: 0.1, imagePath: 'test.png' },
-                { id: 5, name: 'Marque', price: 10, price_unit: Unit.TRILLION, ratio: 1, generationUpgradeId: 4, value: 0.1, imagePath: 'test.png' },
-                { id: 6, name: 'Ecurie', price: 10, price_unit: Unit.QUADRILLION, ratio: 1, generationUpgradeId: 5, value: 0.1, imagePath: 'test.png' },
-                { id: 7, name: 'Sponsors', price: 10, price_unit: Unit.QUINTILLION, ratio: 1, generationUpgradeId: 6, value: 0.1, imagePath: 'test.png' },
-                { id: 8, name: 'Circuits', price: 10, price_unit: Unit.SEXTILLION, ratio: 1, generationUpgradeId: 7, value: 0.1, imagePath: 'test.png' },
-                { id: 9, name: 'Trophés', price: 10, price_unit: Unit.SEPTILLION, ratio: 1, generationUpgradeId: 8, value: 0.1, imagePath: 'test.png' },
-                { id: 10, name: 'GP Terrestre', price: 10, price_unit: Unit.OCTILLION, ratio: 1, generationUpgradeId: 9, value: 0.1, imagePath: 'test.png' },
-                { id: 11, name: 'Réacteurs', price: 10, price_unit: Unit.NONILLION, ratio: 1, generationUpgradeId: 10, value: 0.1, imagePath: 'test.png' },
-                { id: 12, name: 'GP Lunaire', price: 10, price_unit: Unit.DECILLION, ratio: 1, generationUpgradeId: 11, value: 0.1, imagePath: 'test.png' },
-                { id: 13, name: 'Générateur Oxygène', price: 10, price_unit: Unit.UNDECILLION, ratio: 1, generationUpgradeId: 12, value: 0.1, imagePath: 'test.png' },
-                { id: 14, name: 'GP Marsien', price: 10, price_unit: Unit.DUODECILLION, ratio: 1, generationUpgradeId: 13, value: 0.1, imagePath: 'test.png' },
-                { id: 15, name: 'Bouclier Thermique', price: 10, price_unit: Unit.TREDECILLION, ratio: 1, generationUpgradeId: 14, value: 0.1, imagePath: 'test.png' },
-                { id: 16, name: 'GP Solaire', price: 10, price_unit: Unit.QUATTUORDECILLION, ratio: 1, generationUpgradeId: 15, value: 0.1, imagePath: 'test.png' },
-                { id: 17, name: 'Générateur de Distortions', price: 10, price_unit: Unit.QUINDECILLION, ratio: 1, generationUpgradeId: 16, value: 0.1, imagePath: 'test.png' },
-                { id: 18, name: 'GP Trou Noir', price: 10, price_unit: Unit.SEXDECILLION, ratio: 1, generationUpgradeId: 17, value: 0.1, imagePath: 'test.png' },
-                { id: 19, name: 'Moteur Subliminique', price: 10, price_unit: Unit.SEPTENDECILLION, ratio: 1, generationUpgradeId: 18, value: 0.1, imagePath: 'test.png' },
-                { id: 20, name: 'GP Voie Lactée', price: 10, price_unit: Unit.OCTODECILLION, ratio: 1, generationUpgradeId: 19, value: 0.1, imagePath: 'test.png' },
-                { id: 21, name: 'Moteur Hyperspatial', price: 10, price_unit: Unit.NOVEMDECILLION, ratio: 1, generationUpgradeId: 20, value: 0.1, imagePath: 'test.png' },
-                { id: 22, name: 'GP Galactique', price: 10, price_unit: Unit.VIGINTILLION, ratio: 1, generationUpgradeId: 21, value: 0.1, imagePath: 'test.png' },
-                { id: 23, name: 'Téléporteur', price: 10, price_unit: Unit.UNVIGINTILLION, ratio: 1, generationUpgradeId: 22, value: 0.1, imagePath: 'test.png' },
-                { id: 24, name: 'GP Universel', price: 10, price_unit: Unit.DUOVIGINTILLION, ratio: 1, generationUpgradeId: 23, value: 0.1, imagePath: 'test.png' },
-                { id: 25, name: 'Distrotion Spatiale', price: 10, price_unit: Unit.TRESVIGINTILLION, ratio: 1, generationUpgradeId: 24, value: 0.1, imagePath: 'test.png' },
-                { id: 26, name: 'GP Dimentionnel', price: 10, price_unit: Unit.QUATTUORVIGINTILLION, ratio: 1, generationUpgradeId: 25, value: 0.1, imagePath: 'test.png' },
+                {id: 1, name: 'Fan', price: 10, price_unit: Unit.UNIT, ratio: 1, generationUpgradeId: 0, value: 1.0, imagePath: 'test.png'},
+                {id: 2, name: 'Daron', price: 10, price_unit: Unit.K, ratio: 1, generationUpgradeId: 1, value: 0.1, imagePath: 'test.png'},
+                {id: 3, name: 'Pub', price: 10, price_unit: Unit.MILLION, ratio: 1, generationUpgradeId: 2, value: 0.1, imagePath: 'test.png'},
+                {id: 4, name: 'Emission', price: 10, price_unit: Unit.BILLION, ratio: 1, generationUpgradeId: 3, value: 0.1, imagePath: 'test.png'},
+                {id: 5, name: 'Marque', price: 10, price_unit: Unit.TRILLION, ratio: 1, generationUpgradeId: 4, value: 0.1, imagePath: 'test.png'},
+                {id: 6, name: 'Ecurie', price: 10, price_unit: Unit.QUADRILLION, ratio: 1, generationUpgradeId: 5, value: 0.1, imagePath: 'test.png'},
+                {id: 7, name: 'Sponsors', price: 10, price_unit: Unit.QUINTILLION, ratio: 1, generationUpgradeId: 6, value: 0.1, imagePath: 'test.png'},
+                {id: 8, name: 'Circuits', price: 10, price_unit: Unit.SEXTILLION, ratio: 1, generationUpgradeId: 7, value: 0.1, imagePath: 'test.png'},
+                {id: 9, name: 'Trophés', price: 10, price_unit: Unit.SEPTILLION, ratio: 1, generationUpgradeId: 8, value: 0.1, imagePath: 'test.png'},
+                {id: 10, name: 'GP Terrestre', price: 10, price_unit: Unit.OCTILLION, ratio: 1, generationUpgradeId: 9, value: 0.1, imagePath: 'test.png'},
+                {id: 11, name: 'Réacteurs', price: 10, price_unit: Unit.NONILLION, ratio: 1, generationUpgradeId: 10, value: 0.1, imagePath: 'test.png'},
+                {id: 12, name: 'GP Lunaire', price: 10, price_unit: Unit.DECILLION, ratio: 1, generationUpgradeId: 11, value: 0.1, imagePath: 'test.png'},
+                {id: 13, name: 'Générateur Oxygène', price: 10, price_unit: Unit.UNDECILLION, ratio: 1, generationUpgradeId: 12, value: 0.1, imagePath: 'test.png'},
+                {id: 14, name: 'GP Marsien', price: 10, price_unit: Unit.DUODECILLION, ratio: 1, generationUpgradeId: 13, value: 0.1, imagePath: 'test.png'},
+                {id: 15, name: 'Bouclier Thermique', price: 10, price_unit: Unit.TREDECILLION, ratio: 1, generationUpgradeId: 14, value: 0.1, imagePath: 'test.png'},
+                {id: 16, name: 'GP Solaire', price: 10, price_unit: Unit.QUATTUORDECILLION, ratio: 1, generationUpgradeId: 15, value: 0.1, imagePath: 'test.png'},
+                {id: 17, name: 'Générateur de Distortions', price: 10, price_unit: Unit.QUINDECILLION, ratio: 1, generationUpgradeId: 16, value: 0.1, imagePath: 'test.png'},
+                {id: 18, name: 'GP Trou Noir', price: 10, price_unit: Unit.SEXDECILLION, ratio: 1, generationUpgradeId: 17, value: 0.1, imagePath: 'test.png'},
+                {id: 19, name: 'Moteur Subliminique', price: 10, price_unit: Unit.SEPTENDECILLION, ratio: 1, generationUpgradeId: 18, value: 0.1, imagePath: 'test.png'},
+                {id: 20, name: 'GP Voie Lactée', price: 10, price_unit: Unit.OCTODECILLION, ratio: 1, generationUpgradeId: 19, value: 0.1, imagePath: 'test.png'},
+                {id: 21, name: 'Moteur Hyperspatial', price: 10, price_unit: Unit.NOVEMDECILLION, ratio: 1, generationUpgradeId: 20, value: 0.1, imagePath: 'test.png'},
+                {id: 22, name: 'GP Galactique', price: 10, price_unit: Unit.VIGINTILLION, ratio: 1, generationUpgradeId: 21, value: 0.1, imagePath: 'test.png'},
+                {id: 23, name: 'Téléporteur', price: 10, price_unit: Unit.UNVIGINTILLION, ratio: 1, generationUpgradeId: 22, value: 0.1, imagePath: 'test.png'},
+                {id: 24, name: 'GP Universel', price: 10, price_unit: Unit.DUOVIGINTILLION, ratio: 1, generationUpgradeId: 23, value: 0.1, imagePath: 'test.png'},
+                {id: 25, name: 'Distrotion Spatiale', price: 10, price_unit: Unit.TRESVIGINTILLION, ratio: 1, generationUpgradeId: 24, value: 0.1, imagePath: 'test.png'},
+                {id: 26, name: 'GP Dimentionnel', price: 10, price_unit: Unit.QUATTUORVIGINTILLION, ratio: 1, generationUpgradeId: 25, value: 0.1, imagePath: 'test.png'},
             ];
             await this.upgradeRepository.save(data);
         }
@@ -63,21 +64,21 @@ export class SeedingService implements OnModuleInit {
 
         if (count == 0) {
             const data = [
-                {price: 1000},
-                {price: 2000},
-                {price: 3000},
-                {price: 4000},
-                {price: 5000},
-                {price: 6000},
-                {price: 7000},
-                {price: 8000},
-                {price: 9000},
-                {price: 10000},
-                {price: 11000},
-                {price: 12000},
-                {price: 13000},
-                {price: 14000},
-                {price: 15000}
+                {name: 'LAMBORGHINI', price: 1000},
+                {name: 'DELUXO', price: 2000},
+                {name: 'COCCINELLE', price: 3000},
+                {name: 'FUSEE', price: 4000},
+                {name: 'COURSE', price: 5000},
+                {name: 'RALLY', price: 6000},
+                {name: 'POLICE', price: 7000},
+                {name: 'BATMAN', price: 8000},
+                {name: 'TRANSFORMER', price: 9000},
+                {name: 'OLD', price: 10000},
+                {name: 'OLD2', price: 11000},
+                {name: 'OLD3', price: 12000},
+                {name: '911', price: 13000},
+                {name: 'OLD4', price: 14000},
+                {name: 'OLD5', price: 15000}
             ];
             await this.skinRepository.save(data);
         }

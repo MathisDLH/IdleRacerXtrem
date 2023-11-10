@@ -15,6 +15,7 @@ import { cars } from '../utils/cars.utils.ts'
 import { eventEmitter } from '../utils/event-emitter.ts'
 import background from '../assets/images/game/background.png'
 import road from '../assets/images/game/road.png'
+import type SkinInterface from '../interfaces/skin.interface.ts'
 
 const Game = (): JSX.Element => {
   const { socket }: WebSocketContextInterface = useWebSocket()
@@ -22,8 +23,8 @@ const Game = (): JSX.Element => {
   const [oldMoney, setOldMoney] = useState<number>(0)
   const [difference, setDifference] = useState<number>(0)
   const [shopOpen, setShopOpen] = useState<boolean>(false)
-  //  const { user } = useAuth()
-  const [skin, setSkin] = useState<string>(cars[0])
+  // const { user } = useAuth()
+  const [skin, setSkin] = useState<SkinInterface>(cars[0])
   // const [carPosition, setCarPosition] = useState<number>(0)
 
   const toggleShop = (): void => {
@@ -144,7 +145,7 @@ const Game = (): JSX.Element => {
         <div id="down" style={{ backgroundImage: `url(${road})` }} onClick={click}>
           <div id="road-line"></div>
           <div id="car-shadow"></div>
-          <img id="car" src={skin ?? cars[0]} alt="" />
+          <img id="car" src={skin.path ?? cars[0].path} alt="" />
         </div>
       </section>
     </motion.div>

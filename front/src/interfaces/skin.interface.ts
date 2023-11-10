@@ -1,4 +1,5 @@
-export default interface skinInterface {
+export default interface SkinInterface {
   path: string
-  price: number
+  name: string
+  price?: number
 }

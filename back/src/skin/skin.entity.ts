@@ -12,4 +12,8 @@ export class Skin extends BaseEntity {
     @ApiProperty()
     @Column()
     price: number;
+
+    @ApiProperty()
+    @Column()
+    name: string;
 }
