@@ -1,5 +1,3 @@
-import UpgradeInterface from "../interfaces/upgrade.interface"
-
 export const Units: Record<number, string> = {
   0: '',
   3: 'K',
