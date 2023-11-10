@@ -6,10 +6,10 @@ interface Props {
   playerName: string
 }
 
-const Car = ({ skinId, playerName }: Props): JSX.Element => {
+const Car = ({ playerName }: Props): JSX.Element => {
   return (
     <div className="car-container">
-        <img id="car" src={cars[skinId]} alt={playerName} />
+        <img id="car" src={cars[0].path} alt={playerName} />
         <p>{playerName}</p>
     </div>
   )
