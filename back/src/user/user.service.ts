@@ -20,6 +20,7 @@ export class UserService {
     }
 
     async update(user: User) {
+        user.updatedAt = new Date();
         await this.userRepository.save(user);
     }
 
