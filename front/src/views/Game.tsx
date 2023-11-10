@@ -17,7 +17,7 @@ import background from '../assets/images/game/background.png'
 import road from '../assets/images/game/road.png'
 import type SkinInterface from '../interfaces/skin.interface.ts'
 import { useSpring, animated } from 'react-spring'
-import { Units, calculateUnit } from '../enums/units.tsx'
+import { calculateUnit } from '../enums/units.tsx'
 
 const Game = (): JSX.Element => {
   const { socket }: WebSocketContextInterface = useWebSocket()
@@ -140,11 +140,12 @@ const Game = (): JSX.Element => {
             </IconButton>
           </div>
 
-          <div className='right inline' >
+          <div className='right inline'>
             <div>
               <span className="part prevent-select">
-                  <animated.div className="part prevent-select">{number.to((n) => n.toFixed(2))}</animated.div>
-                  {money + calculateUnit(moneyUnit)}</span>
+                <animated.span>{number.to((n) => n.toFixed(2))}</animated.span>
+                {calculateUnit(moneyUnit)}
+              </span>
               <IconButton className="icon" aria-label="shop" size="large" onClick={toggleShop}>
                 <img src={shop} alt={''} />
               </IconButton>
