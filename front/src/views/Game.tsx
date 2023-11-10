@@ -25,8 +25,8 @@ const Game = (): JSX.Element => {
   const [moneyUnit, setMoneyUnit] = useState<number>(0)
   const [moneyBySec, setMoneyBySec] = useState<number>(0)
   const [moneyBySecUnit, setMoneyBySecUnit] = useState<number>(0)
-  const [oldMoney, setOldMoney] = useState<number>(0)
-  const [difference, setDifference] = useState<number>(0)
+  const [moneyEarnedByClick, setMoneyEarnedByClick] = useState<number>(0)
+  const [moneyEarnedByClickUnit, setMoneyEarnedByClickUnit] = useState<number>(0)
   const [shopOpen, setShopOpen] = useState<boolean>(false)
   // const { user } = useAuth()
   const [skin, setSkin] = useState<SkinInterface>(cars[0])
@@ -45,9 +45,7 @@ const Game = (): JSX.Element => {
 
   const click = (event: any): void => {
     if (socket) {
-      setOldMoney(money)
       socket.emit('click')
-      setDifference(money - oldMoney)
       createClickEffect(event)
     } else {
       console.log('Socket is null')
@@ -63,7 +61,7 @@ const Game = (): JSX.Element => {
     const randomDirectionY = Math.floor(Math.random() * 2) + 1 === 1 ? '-' : '+'
     const x = randomDirectionX === '-' ? event.clientX - randomX : event.clientX + randomX
     const y = randomDirectionY === '-' ? event.clientY - randomY : event.clientY + randomY
-    clickEffect.textContent = `+${difference}$`
+    clickEffect.textContent = `+${moneyEarnedByClick} ${calculateUnit(moneyEarnedByClickUnit)}`
     clickEffect.className = 'click_effect'
     clickEffect.style.top = `${y}px`
     clickEffect.style.left = `${x}px`
@@ -91,12 +89,20 @@ const Game = (): JSX.Element => {
         console.log(reason.includes('server') ? 'Disconnected by server' : 'Disconnected by client')
       }
       const onMoney = (data: any): void => {
-        console.log(data)
-        setMoneyBySec(Math.round(data.moneyBySec * 1000) / 1000)
-        setMoneyBySecUnit(data.moneyBySecUnit)
 
-        setMoney(Math.round(data.money * 1000) / 1000)
-        setMoneyUnit(data.unit)
+        console.log(data)
+        if(data.moneyBySec){
+          setMoneyBySec( Math.round(data.moneyBySec * 1000) / 1000);
+          setMoneyBySecUnit(data.moneyBySecUnit);
+        }else if(data.moneyErnByClick){
+          setMoneyEarnedByClick( Math.round(data.moneyErnByClick * 1000) / 1000);
+          setMoneyEarnedByClickUnit(data.moneyErnByClickUnit);
+        }
+
+       
+        setMoney( Math.round(data.money * 1000) / 1000);
+        setMoneyUnit(data.unit);
+        
       }
 
       socket.on('connect', onConnect)
