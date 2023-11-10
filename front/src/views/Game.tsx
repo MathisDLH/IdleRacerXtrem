@@ -16,12 +16,13 @@ import { eventEmitter } from '../utils/event-emitter.ts'
 import background from '../assets/images/game/background.png'
 import road from '../assets/images/game/road.png'
 import type SkinInterface from '../interfaces/skin.interface.ts'
+import { useSpring, animated } from 'react-spring'
 import { Units, calculateUnit } from '../enums/units.tsx'
 
 const Game = (): JSX.Element => {
   const { socket }: WebSocketContextInterface = useWebSocket()
   const [money, setMoney] = useState<number>(0)
-  const [moneyUnit, setMoneyUnit] = useState<number>(0);
+  const [moneyUnit, setMoneyUnit] = useState<number>(0)
   const [moneyBySec, setMoneyBySec] = useState<number>(0)
   const [moneyBySecUnit, setMoneyBySecUnit] = useState<number>(0)
   const [oldMoney, setOldMoney] = useState<number>(0)
@@ -30,6 +31,13 @@ const Game = (): JSX.Element => {
   // const { user } = useAuth()
   const [skin, setSkin] = useState<SkinInterface>(cars[0])
   // const [carPosition, setCarPosition] = useState<number>(0)
+
+  const { number } = useSpring({
+    from: { number: 0 },
+    number: money,
+    delay: 200,
+    config: { mass: 1, tension: 20, friction: 10 }
+  })
 
   const toggleShop = (): void => {
     setShopOpen(!shopOpen)
@@ -84,12 +92,11 @@ const Game = (): JSX.Element => {
       }
       const onMoney = (data: any): void => {
         console.log(data)
-        setMoneyBySec( Math.round(data.moneyBySec * 1000) / 1000);
-        setMoneyBySecUnit(data.moneyBySecUnit);
-       
-        setMoney( Math.round(data.money * 1000) / 1000);
-        setMoneyUnit(data.unit);
-        
+        setMoneyBySec(Math.round(data.moneyBySec * 1000) / 1000)
+        setMoneyBySecUnit(data.moneyBySecUnit)
+
+        setMoney(Math.round(data.money * 1000) / 1000)
+        setMoneyUnit(data.unit)
       }
 
       socket.on('connect', onConnect)
@@ -132,19 +139,20 @@ const Game = (): JSX.Element => {
               <img src={back} alt={''}/>
             </IconButton>
           </div>
-          
+
           <div className='right inline' >
             <div>
-              <span className="part prevent-select">{money + calculateUnit(moneyUnit)}</span>
+              <span className="part prevent-select">
+                  <animated.div className="part prevent-select">{number.to((n) => n.toFixed(2))}</animated.div>
+                  {money + calculateUnit(moneyUnit)}</span>
               <IconButton className="icon" aria-label="shop" size="large" onClick={toggleShop}>
                 <img src={shop} alt={''} />
               </IconButton>
             </div>
             <div className='divBySec'>
-              <label className="partBySec prevent-select">{moneyBySec + calculateUnit(moneyBySecUnit) + " /s"}</label>
-            </div> 
+              <label className="partBySec prevent-select">{moneyBySec + calculateUnit(moneyBySecUnit) + ' /s'}</label>
+            </div>
           </div>
-     
         </header>
 
         <DraggableDialog open={shopOpen} title={'Upgrades'} icon={shop} size="small" setOpen={setShopOpen} Content={<UpgradesList />} />
