@@ -78,8 +78,14 @@ const Game = (): JSX.Element => {
         console.log(reason.includes('server') ? 'Disconnected by server' : 'Disconnected by client')
       }
       const onMoney = (data: any): void => {
-        const currentMoney: number = data.money
-        setMoney(currentMoney)
+        let result = data.money
+        for (let i = 0; i < data.moneyUnit; i++) {
+          result = result * 10
+        }
+        setMoney(result)
+
+        console.log(money)
+        console.log(data.upgrades)
       }
 
       socket.on('connect', onConnect)
