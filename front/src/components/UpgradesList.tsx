@@ -15,6 +15,7 @@ import Skin from './Skin.tsx'
 import '../assets/styles/UpgradesList.scss'
 import type SkinInterface from '../interfaces/skin.interface.ts'
 import { useWebSocket } from '../context/Socket.tsx'
+import ClickUpgrade from './ClickUpgrade.tsx'
 
 export default function UpgradesList (): JSX.Element {
   const [value, setValue] = useState<number>(0)
@@ -107,6 +108,9 @@ export default function UpgradesList (): JSX.Element {
             upgrade.amountBought = units[upgrade.id - 1]?.amountBought ?? 0
             return <Upgrade key={upgrade.id} token={token ?? ''} upgrade={upgrade}/>
           })}
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          <ClickUpgrade/>
         </TabPanel>
         <TabPanel value={value} index={3}>
           {skins.map((skin: SkinInterface, index) => {
