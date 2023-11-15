@@ -17,7 +17,7 @@ const ScoreTab = (): JSX.Element => {
     setScores(scoreFetched)
   }
 
-  const { user } = useAuth();
+  const { user } = useAuth()
 
   useEffect(() => {
     fetchScores()
@@ -35,7 +35,7 @@ const ScoreTab = (): JSX.Element => {
       <div className="score-tab">
         <div className='head-container'>
           <img alt='car_icon' src={carIcon} className='car-icon' />
-          {user && <p>{user!.name}</p>}
+          {user && <p>{user.name}</p>}
         </div>
         <h1 className="drag">Score Tab</h1>
         {scores && scores.length > 0
@@ -56,10 +56,10 @@ const ScoreTab = (): JSX.Element => {
                 ))}
               </tbody>
             </table>
-          )
+            )
           : (
             <p>No scores available.</p>
-          )}
+            )}
       </div>
     </div>
   )

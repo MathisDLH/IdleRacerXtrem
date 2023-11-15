@@ -1,14 +1,13 @@
-import { useAuth } from "../context/Auth"
+import { useAuth } from '../context/Auth'
 
-interface props{
-    setModalVisible: (isVisible: boolean) => void;
+interface props {
+  setModalVisible: (isVisible: boolean) => void
 }
 
-const SignOutModal = ({setModalVisible}: props): JSX.Element => {
+const SignOutModal = ({ setModalVisible }: props): JSX.Element => {
+  const { signout } = useAuth()
 
-    const { signout } = useAuth()
-
-    return (
+  return (
       <div style={{ textAlign: 'center', padding: '1em' }}>
         <p>Are you sure you want to logout ?</p>
         <button onClick={() => {
@@ -17,7 +16,7 @@ const SignOutModal = ({setModalVisible}: props): JSX.Element => {
         }} className='btn-hover color-4'>Yes</button>
         <p className='logout-exit' onClick={() => { setModalVisible(false) }}>No</p>
       </div>
-    )
-  }
+  )
+}
 
-  export default SignOutModal;
+export default SignOutModal

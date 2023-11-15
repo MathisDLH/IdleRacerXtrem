@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import shop from '../assets/images/game/icons/shop.png'
 import back from '../assets/images/game/icons/back.png'
 import '../assets/styles/Game.scss'
@@ -29,10 +29,8 @@ const Game = (): JSX.Element => {
   const [moneyEarnedByClick, setMoneyEarnedByClick] = useState<number>(1)
   const [moneyEarnedByClickUnit, setMoneyEarnedByClickUnit] = useState<number>(0)
   const [shopOpen, setShopOpen] = useState<boolean>(false)
-  // const { user } = useAuth()
   const [skin, setSkin] = useState<SkinInterface>(cars[0])
-  // const [carPosition, setCarPosition] = useState<number>(0)
-
+  const carRef = useRef(null)
   const { number } = useSpring({
     from: { number: 0 },
     number: money,
@@ -120,11 +118,9 @@ const Game = (): JSX.Element => {
    */
   useEffect(() => {
     eventEmitter.on('skin', (event: any) => {
+      console.log('skin event', event)
       setSkin(event)
-      const car = document.getElementById('car')
-      const rect = car?.getBoundingClientRect()
-      const carBottomPosition = rect?.bottom ?? 0
-      console.log(carBottomPosition)
+      console.log(carRef?.current?.getBoundingClientRect())
     })
   }, [])
 
@@ -168,8 +164,8 @@ const Game = (): JSX.Element => {
         </div>
         <div id="down" style={{ backgroundImage: `url(${road})` }} onClick={click}>
           <div id="road-line"></div>
-          <div id="car-shadow"></div>
-          <img id="car" src={skin.path ?? cars[0].path} alt="" />
+          <div id="car-shadow" style={{ width: carRef?.current?.width - 25 ?? 0, top: carRef?.current?.getBoundingClientRect()?.height }}></div>
+          <img id="car" ref={carRef} src={skin.path ?? cars[0].path} alt="" />
         </div>
       </section>
     </motion.div>

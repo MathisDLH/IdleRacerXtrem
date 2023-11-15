@@ -10,7 +10,7 @@ const Skin = (props: { skin: skinInterface }): JSX.Element => {
   }, [])
 
   function click (): void {
-	  eventEmitter.emit('skin', skin)
+    eventEmitter.emit('skin', skin)
   }
 
   return (

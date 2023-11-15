@@ -39,9 +39,9 @@ export const Units: Record<number, string> = {
   111: 'Sxtg'
 }
 
-export function calculateUnit (price_unit: number): string {
-  const unit = Units[price_unit]
-  switch (price_unit) {
+export function calculateUnit (priceUnit: number): string {
+  const unit = Units[priceUnit]
+  switch (priceUnit) {
     case 0:
       return '$'
     default:

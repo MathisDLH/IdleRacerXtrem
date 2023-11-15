@@ -103,10 +103,9 @@
         --car-top : 2vh;
         --car-width : 27rem;
         img#car {
-            -webkit-transform: scaleX(-1);
             position: absolute;
             animation: shake linear 250ms infinite;
-            width: var(--car-width);
+            height: 19vh;
             &:hover {
                 cursor: pointer;
                 scale: 1.005;
@@ -116,12 +115,9 @@
 
         #car-shadow{
             position: absolute;
-            top: 15vh;
             height: 10%;
-            width: calc(var(--car-width)*0.9 );
             border-radius: 20%;
-
-            opacity: 0.5;
+            opacity: 0.7;
             background-color: black;
             box-shadow: 0 0 1vw 1vw black;
         }

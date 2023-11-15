@@ -108,7 +108,7 @@ export default function UpgradesList (): JSX.Element {
             return <Upgrade key={upgrade.id} token={token ?? ''} upgrade={upgrade}/>
           })}
         </TabPanel>
-        <TabPanel value={value} index={2}>
+        <TabPanel value={value} index={3}>
           {skins.map((skin: SkinInterface, index) => {
             return <Skin key={index} skin={skin}/>
           })}
