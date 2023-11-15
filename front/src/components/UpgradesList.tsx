@@ -17,13 +17,20 @@ import type SkinInterface from '../interfaces/skin.interface.ts'
 import { useWebSocket } from '../context/Socket.tsx'
 import ClickUpgrade from './ClickUpgrade.tsx'
 
+export interface UpgradeEvent {
+  realTimeData: any
+  upgrades: UpgradeInterface[]
+}
+
+
 export default function UpgradesList (): JSX.Element {
   const [value, setValue] = useState<number>(0)
   const { token } = useAuth()
+  const [upgradeEvent, setUpgradeEvent] = useState<UpgradeEvent>()
   const [upgrades, setUpgrades] = useState<UpgradeInterface[]>([])
+  const [allUpgradeFromDb, setAllUpgradeFromDb] = useState<UpgradeInterface[]>([])
   const [skins, setSkins] = useState<SkinInterface[]>([])
   const { socket } = useWebSocket()
-  const [units, setUnits] = useState<any>([])
 
   const handleChange = (_: any, newValue: number): void => {
     console.log(newValue)
@@ -59,19 +66,38 @@ export default function UpgradesList (): JSX.Element {
    * Fetch upgrades from API
    */
   useEffect(() => {
-    const fetchData = async (): Promise<void> => {
-      const data = await UpgradeService.getUpgrades(token ?? '')
-      setUpgrades(data)
+    const fetchData = async () => {
+      const allUpgrades = await UpgradeService.getUpgrades(token ?? '')
+      setAllUpgradeFromDb(allUpgrades)
     }
+
     fetchData()
-    socket.on('upgrades', (data: any) => {
-      setUnits(data)
+    socket.on('upgrades', (event: UpgradeEvent) => {
+      setUpgradeEvent(event)
     })
 
     return () => {
       socket.off('upgrades')
     }
   }, [])
+
+
+  useEffect(() => {
+    const ownedUpgrade = upgradeEvent?.upgrades ?? []
+
+    const d = allUpgradeFromDb.filter(upgrade => ownedUpgrade.some(u => +u.id === upgrade.id) || ownedUpgrade.some(u => +u.id + 1 === upgrade.id))
+    const dub = d.map(d => {
+      const own: UpgradeInterface | undefined = ownedUpgrade.find(o => +o.id === d.id)
+      if (own) {
+        return { ...d, ...own }
+      } else {
+        return d
+      }
+    })
+
+    // const d = ownedUpgrade.filter(ownedUpgrade => allUpgradesId.includes(+ownedUpgrade.id) || allUpgradesId.includes(+ownedUpgrade.id+1))
+    setUpgrades(dub)
+  }, [upgradeEvent])
 
   /**
    * Get skins
@@ -104,10 +130,9 @@ export default function UpgradesList (): JSX.Element {
       </Box>
       <div className={'upgrades'}>
         <TabPanel value={value} index={0}>
-          {upgrades.map((upgrade: any) => {
-            upgrade.amountBought = units[upgrade.id - 1]?.amountBought ?? 0
-            return <Upgrade key={upgrade.id} token={token ?? ''} upgrade={upgrade}/>
-          })}
+          {upgrades.map((upgrade: any) =>
+             <Upgrade key={upgrade.id} token={token ?? ''} upgrade={upgrade}/>
+          )}
         </TabPanel>
         <TabPanel value={value} index={1}>
           <ClickUpgrade/>

@@ -8,4 +8,6 @@ export default interface UpgradeInterface {
   value: number
   imagePath: string
   amountBought: number
+  amount: number
+  amountUnit: number
 }
