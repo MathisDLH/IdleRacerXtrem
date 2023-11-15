@@ -30,7 +30,7 @@ const Game = (): JSX.Element => {
   const [moneyEarnedByClickUnit, setMoneyEarnedByClickUnit] = useState<number>(0)
   const [shopOpen, setShopOpen] = useState<boolean>(false)
   const [skin, setSkin] = useState<SkinInterface>(cars[0])
-  const carRef = useRef(null)
+  const carRef = useRef<any>(null)
   const { number } = useSpring({
     from: { number: 0 },
     number: money,
@@ -120,11 +120,10 @@ const Game = (): JSX.Element => {
     eventEmitter.on('skin', (event: any) => {
       console.log('skin event', event)
       setSkin(event)
-      console.log(carRef?.current?.getBoundingClientRect())
     })
   }, [])
 
-
+  
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0, rotate: 45 }}
