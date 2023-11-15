@@ -40,8 +40,10 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect, On
         setInterval(async () => {
             this.socketConnected.forEach(async (client) => {
                 if (client) {
-                    await this.emitMoney(client);
-                    await this.emitUpgrade(client);
+                    let realTimeData = await this.updateMoney(client.user);
+
+                    await this.emitMoney(client, realTimeData);
+                    await this.emitUpgrade(client, realTimeData);
                 }
             });
         }, 1000);
@@ -55,19 +57,26 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect, On
         }, 10000);
     }
 
-    public async emitMoney(client: UserSocket) {
-        let realTimeData = await this.updateMoney(client.user);
-        client.emit('money',
+    public async emitMoney(client: UserSocket, realTimeData = null) {
+        if(realTimeData == null) {
+            client.emit('money',
+            {
+                money : (await this.redisService.getUserData(client.user)).money,
+                unit : (await this.redisService.getUserData(client.user)).moneyUnit,
+            });
+        }else{
+            client.emit('money',
             {
                 money : (await this.redisService.getUserData(client.user)).money,
                 unit : (await this.redisService.getUserData(client.user)).moneyUnit,
                 moneyBySec : realTimeData.moneyData.amount,
                 moneyBySecUnit : realTimeData.moneyData.unit
             });
+        }
+       
     }
 
-    public async emitUpgrade(client: UserSocket) {
-        let realTimeData = await this.updateMoney(client.user);
+    public async emitUpgrade(client: UserSocket, realTimeData: { moneyData: { amount: number; unit: Unit; }; upgradesData: any[]; }) {
         client.emit('upgrades', {
             upgrades : (await this.redisService.getUserData(client.user)).upgrades,
             realTimeData : realTimeData.upgradesData
@@ -125,6 +134,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect, On
                     generatedUpgrade.amount = element.amount * element.value * seconds;
                     // Mettre à jour l'unité de montant de la mise à niveau générée
                     generatedUpgrade.amountUnit = element.amountUnit;
+
                 } else { // Fan
                     // Mettre à jour l'argent de l'utilisateur
                     redisInfos.money = element.amount * element.value * seconds;

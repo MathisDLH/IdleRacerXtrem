@@ -58,7 +58,7 @@ export class RedisService {
     // Méthode pour augmenter une mise à niveau
     async incrUpgrade(userId: number, upgradeId: number, amountToIncr: number, unit: Unit) {
         // Récupérer l'unité de la mise à niveau
-        let upgradeUnit = +await this.client.hget(`${userId}:${upgradeId}`, "amountUnity")
+        let upgradeUnit = +await this.client.hget(`${userId}:${upgradeId}`, "amountUnit")
         // Calculer la différence d'unité
         let unitDifference = upgradeUnit - unit;
         // Si la différence d'unité n'est pas 0, ajuster le montant à augmenter
@@ -77,7 +77,7 @@ export class RedisService {
         }
         // Si l'unité à augmenter est supérieure à 0, augmenter l'unité de la mise à niveau
         if(unityToIncrement){
-            upgradeUnit = +await this.client.hincrbyfloat(`${userId}:${upgradeId}`, "amountUnity", unityToIncrement)
+            upgradeUnit = +await this.client.hincrbyfloat(`${userId}:${upgradeId}`, "amountUnit", unityToIncrement)
             // Mettre à jour la quantité de la mise à niveau
             await this.client.hset(`${userId}:${upgradeId}`, "amount", amount)
         }
@@ -181,7 +181,13 @@ export class RedisService {
         let moneyData = await this.incrMoney(user.id,data.money,data.moneyUnit)
         const upgradesData = [];
         for (const e of data.upgrades) {
-            upgradesData.push(await this.incrUpgrade(user.id,e.id, e.amount, e.amountUnit))
+            let realTimeData = await this.incrUpgrade(user.id,e.id, e.amount, e.amountUnit);
+
+            upgradesData.push({
+                upgrade : await this.getUpgrade(user.id, e.id),
+                amountGenerated : realTimeData.amountGenerated,
+                generatedUnit : realTimeData.generatedUnit,
+            })
         }
         return {moneyData, upgradesData};
     }
