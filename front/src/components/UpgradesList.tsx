@@ -85,7 +85,7 @@ export default function UpgradesList (): JSX.Element {
   useEffect(() => {
     const ownedUpgrade = upgradeEvent?.upgrades ?? []
 
-    const d = allUpgradeFromDb.filter(upgrade => ownedUpgrade.some(u => +u.id === upgrade.id) || ownedUpgrade.some(u => +u.id + 1 === upgrade.id))
+    const d = allUpgradeFromDb.filter(upgrade => (ownedUpgrade.some(u => +u.id === upgrade.id) || ownedUpgrade.some(u => +u.id + 1 === upgrade.id) || upgrade.id === 1))
     const dub = d.map(d => {
       const own: UpgradeInterface | undefined = ownedUpgrade.find(o => +o.id === d.id)
       if (own) {

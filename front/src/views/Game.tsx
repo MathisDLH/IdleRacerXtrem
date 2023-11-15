@@ -123,7 +123,7 @@ const Game = (): JSX.Element => {
     })
   }, [])
 
-  
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0, rotate: 45 }}
