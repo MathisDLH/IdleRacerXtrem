@@ -1,4 +1,4 @@
-import axios, {AxiosResponse } from 'axios'
+import axios from 'axios'
 import type SkinInterface from '../interfaces/skin.interface.ts'
 
 const API_BASE_URL: any = import.meta.env.VITE_API_URL
@@ -18,12 +18,15 @@ export async function getSkins (token: string): Promise<SkinInterface[]> {
   }
 }
 
-export async function buyUpgrade (token: string, name: string): Promise<AxiosResponse<any, any>> {
-  const config = {
-    headers: {Authorization: `Bearer ${token}` }
-  }
-  return await axios.get(
-      `${API_BASE_URL}/skin/${name}/purchase`,
+export async function buyUpgrade (token: string, skinId: number): Promise<void> {
+  try {
+    const config = {
+      headers: { Authorization: `Bearer ${token}` }
+    }
+    await axios.post(
+      `${API_BASE_URL}/skin/${skinId}`,
       config
-  )
+    )
+  } catch (error) {
+  }
 }

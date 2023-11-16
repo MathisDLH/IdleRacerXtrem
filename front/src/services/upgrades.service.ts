@@ -34,7 +34,7 @@ export async function buyUpgrade (token: string, body: { upgradeId: number, quan
   }
 }
 
-export async function buyClick (token: string, body: { amount: number, unit: number }): Promise<void> {
+export async function buyClick (token: string, body: { amount: number, unit: number }): Promise<{ amount: number, unit: number }> {
   try {
     const config = {
       headers: { Authorization: `Bearer ${token}` }
@@ -44,8 +44,8 @@ export async function buyClick (token: string, body: { amount: number, unit: num
       body,
       config
     )
-    console.log(response.data)
+    return (response.data)
   } catch (error) {
-    console.log(error)
+    return { amount: 0, unit: 0 }
   }
 }

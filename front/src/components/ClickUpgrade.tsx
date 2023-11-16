@@ -9,11 +9,13 @@ import { eventEmitter } from '../utils/event-emitter.ts'
 
 
 const ClickUpgrade = (): JSX.Element => {
+    const { user } = useAuth()
     const [inputValue, setInputValue] = useState<number>(1)
     const [inputUnit, setInputUnit] = useState<number>(0)
     const [clickEarned, setClickEarned] = useState<number>(1)
     const [clickEarnedUnit, setClickEarnedUnit] = useState<number>(0)
-
+    const [actualClickValue, setActualClickValue] = useState<number>(user?.click ?? 0)
+    const [actualClickUnit, setActualClickUnit] = useState<number>(user?.click_unite ?? 0)
 
     const { token } = useAuth()
 
@@ -49,7 +51,11 @@ const ClickUpgrade = (): JSX.Element => {
     }
 
     async function click (): Promise<void> {
-        await UpgradeService.buyClick(token ?? '', { amount: inputValue, unit: inputUnit })
+        const responseData = await UpgradeService.buyClick(token ?? '', { amount: inputValue, unit: inputUnit })
+        if (responseData.amount !== 0) {
+            setActualClickValue(responseData.amount)
+            setActualClickUnit(responseData.unit)
+        }
         eventEmitter.emit('buyUpgrade', { inputValue, inputUnit })
       }
 

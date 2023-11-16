@@ -17,7 +17,6 @@ export default function UpgradesList (): JSX.Element {
   const [skins, setSkins] = useState<SkinInterface[]>([])
 
   const handleChange = (_: any, newValue: number): void => {
-    console.log(newValue)
     setValue(newValue)
   }
 

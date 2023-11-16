@@ -55,7 +55,7 @@ export class RedisService {
         return { amount: amountToIncr, unit};
     }
 
-    async incrClick(userId: number, amountToIncr: number, unit: Unit) {
+    async incrClick(userId: number, amountToIncr: number, unit: Unit): Promise<{ amount: number; unit: number; }> {
         // Récupérer l'unité d'argent de l'utilisateur
         let clickUnit = +await this.getUserClickUnit(userId);
         // Calculer la différence d'unité
@@ -75,12 +75,12 @@ export class RedisService {
         }
         // Si l'unité à augmenter est supérieure à 0, augmenter l'unité d'argent de l'utilisateur
         if (unityToIncrement > 0) {
-            await this.client.incrbyfloat(`${userId}:CLICK_UNIT`, unityToIncrement);
+            clickUnit = +await this.client.incrbyfloat(`${userId}:CLICK_UNIT`, unityToIncrement);
             // Mettre à jour l'argent de l'utilisateur
             await this.client.set(`${userId}:CLICK`, click);
         }
-
-        return { amount: amountToIncr, unit};
+        console.log(click, clickUnit)
+        return { amount: click, unit: clickUnit};
     }
 
     // Méthode pour augmenter une mise à niveau
