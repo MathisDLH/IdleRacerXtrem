@@ -99,9 +99,10 @@ const Game = (): JSX.Element => {
           setMoneyEarnedByClick(Math.round(data.moneyErnByClick * 1000) / 1000)
           setMoneyEarnedByClickUnit(data.moneyErnByClickUnit)
         }
-
         setMoney(Math.round(data.money * 1000) / 1000)
         setMoneyUnit(data.unit)
+
+        eventEmitter.emit('money', { money: data.money, unit: data.unit })
       }
 
       socket.on('connect', onConnect)
@@ -122,7 +123,7 @@ const Game = (): JSX.Element => {
    */
   useEffect(() => {
     eventEmitter.on('skin', (event: any) => {
-      console.log('skin event', event)
+      // console.log('skin event', event)
       setSkin(event)
     })
 
@@ -136,7 +137,7 @@ const Game = (): JSX.Element => {
    */
   useEffect(() => {
     eventEmitter.on('buyUpgrade', (data: any) => {
-      console.log('buyUpgrade event', data)
+      // console.log('buyUpgrade event', data)
       const price = data.price
       const priceUnit = data.priceUnit
       const unit = calculateUnit(priceUnit)

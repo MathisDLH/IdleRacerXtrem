@@ -34,3 +34,8 @@
         box-shadow: 0 4px 15px 0 rgba(252, 104, 110, 0.75);
     }
 }
+
+.disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
