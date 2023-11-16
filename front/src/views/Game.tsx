@@ -194,7 +194,7 @@ const Game = (): JSX.Element => {
 
         <DraggableDialog open={shopOpen} title={'Upgrades'} icon={shop} size="small" setOpen={setShopOpen} Content={<UpgradesList />} />
 
-        <img src={background} id={'up'} alt=""/>
+        <img src={background} id={'up'} alt="" onClick={click}/>
         <div id="down" style={{ backgroundImage: `url(${road})` }} onClick={click}>
           <div id="road-line"></div>
           <div id="car-shadow" style={{ width: carRef?.current?.width - 25 ?? 0, top: carRef?.current?.getBoundingClientRect()?.height }}></div>
