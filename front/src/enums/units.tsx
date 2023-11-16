@@ -48,3 +48,23 @@ export function calculateUnit (priceUnit: number): string {
       return ` ${unit} $`
   }
 }
+
+export function calculateUnitBySec (priceUnit: number): string {
+  const unit = Units[priceUnit]
+  switch (priceUnit) {
+    case 0:
+      return '$'
+    default:
+      return ` ${unit} /s`
+  }
+}
+
+export function calculateUnitWithoutDollar (priceUnit: number): string {
+  const unit = Units[priceUnit]
+  switch (priceUnit) {
+    case 0:
+      return '$'
+    default:
+      return ` ${unit}`
+  }
+}

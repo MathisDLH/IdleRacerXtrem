@@ -12,10 +12,10 @@ export class UserUpgrade extends BaseEntity {
     @PrimaryColumn({ select: false })
     public upgradeId: number
 
-    @Column()
+    @Column({type: 'float', default: 0})
     amount: number;
 
-    @Column()
+    @Column({type: 'float', default: 0})
     amountBought: number;
 
     @ApiProperty()

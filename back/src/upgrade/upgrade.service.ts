@@ -61,11 +61,14 @@ export class UpgradeService {
       // Récupération de la mise à niveau
       let upgrade = await this.upgradeRepository.findOne({ where: { id: Number(buyUpgradeDto.upgradeId) } });
       let unit = upgrade.price_unit
+      let price = upgrade.price;
 
-      // Si l'utilisateur a acheté plus de 10 de cette mise à niveau
-      if (userUpgrade.amountBought >= 10) {
-        // Augmentation de l'unité de prix
-        unit += Math.floor(userUpgrade.amountBought / 10) * 3;
+      const multiplier = userUpgrade.amountBought >= 10 ? Math.floor(userUpgrade.amountBought / 10) * 2 : 0;
+      price *= Math.pow(10, multiplier);
+
+      while (price > 1001) {
+        price /= 1000;
+        unit += 3;
       }
 
       // Calcul du prix

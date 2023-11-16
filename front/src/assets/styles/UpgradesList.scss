@@ -1,23 +1,4 @@
 .upgrades-container {
     width: 400px;
     font-family: 'Pixelify Sans', sans-serif;
-
-    >button{
-        background-color: white;
-        font-family: 'Pixelify Sans', sans-serif !important;
-        color: black !important;
-        border-bottom: 2px solid white;
-
-        &.Mui-selected{
-            color: var(--yellow) !important;
-            border-bottom: 2px solid var(--yellow) !important;
-        }
-    }
-
-    .upgrades{
-        height: 30vh;
-        overflow-y: scroll;
-        overflow-x: hidden;
-    }
-
 }

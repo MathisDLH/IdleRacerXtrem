@@ -76,11 +76,18 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect, On
        
     }
 
-    public async emitUpgrade(client: UserSocket, realTimeData: { moneyData: { amount: number; unit: Unit; }; upgradesData: any[]; }) {
-        client.emit('upgrades', {
-            upgrades : (await this.redisService.getUserData(client.user)).upgrades,
-            realTimeData : realTimeData.upgradesData
-        })
+    public async emitUpgrade(client: UserSocket, realTimeData = null) {
+        if(realTimeData == null) {
+            client.emit('upgrades', {
+                upgrades : (await this.redisService.getUserData(client.user)).upgrades,
+            })
+        }else{
+            client.emit('upgrades', {
+                upgrades : (await this.redisService.getUserData(client.user)).upgrades,
+                realTimeData : realTimeData.upgradesData
+            })
+        }
+       
     }
 
     @SubscribeMessage('click')

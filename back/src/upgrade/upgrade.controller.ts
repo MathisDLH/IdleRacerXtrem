@@ -34,5 +34,6 @@ export class UpgradeController {
         await this.upgradeService.buyUpgrade(buyUpgradeDto, req.user.userId);
         const userSocket = Array.from(this.game.socketConnected).find(us => us.userId === req.user.userId)
         await this.game.emitMoney(userSocket);
+        await this.game.emitUpgrade(userSocket);
     }
 }
