@@ -21,6 +21,9 @@ export default function UpgradeButton (props: { token?: string, price: number, u
         setDisabled(true)
       }
     })
+    return () => {
+      eventEmitter.off('money')
+    }
   }, [])
 
   useEffect(() => {
