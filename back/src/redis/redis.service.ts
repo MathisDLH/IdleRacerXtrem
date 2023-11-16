@@ -130,7 +130,6 @@ export class RedisService {
         }
         // Retourner faux si le paiement a échoué
         throw new PurchaseError(userMoney.toString(), amount.value.toString());
-        return false;
     }
 
     public async loadUserInRedis(user: User) {

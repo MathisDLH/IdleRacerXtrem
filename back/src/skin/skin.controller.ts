@@ -1,9 +1,10 @@
-import {Controller, Get, Param, Request, UseGuards} from '@nestjs/common';
+import {Controller, Get, Param, Request, UseFilters, UseGuards} from '@nestjs/common';
 
 import {SkinService} from './skin.service';
 import {ApiResponse, ApiTags} from "@nestjs/swagger";
 import {JwtAuthGuard} from "../auth/jwt-auth.guard";
 import {Skin} from "./skin.entity";
+import {EffectiveExceptionFilter} from "../filters/EffectiveException.filter";
 
 @ApiTags("Skin")
 @Controller('skin')
@@ -25,13 +26,14 @@ export class SkinController {
     }
 
     @UseGuards(JwtAuthGuard)
+    @UseFilters(new EffectiveExceptionFilter())
     @Get(':name/purchase')
     @ApiResponse({
         status: 200,
         description: 'purchase a skin'
     })
     async purchase(@Param('name') name: string, @Request() request) {
-        this.skinService.purchase(name, request.user.userId);
+        await this.skinService.purchase(name, request.user.userId);
     }
 
 

@@ -17,8 +17,10 @@ const Skin = (props: { skin: skinInterface }): JSX.Element => {
     if (isOwned()) {
       eventEmitter.emit('skin', skin)
     } else {
-      SkinService.buyUpgrade(token ?? '', skin.name).then(() => {
-        eventEmitter.emit('skin', skin)
+      SkinService.buyUpgrade(token ?? '', skin.name).then((response) => {
+        if(response.status === 200) {
+          eventEmitter.emit('skin', skin)
+        }
         if (user) {
           user.ownedSkins = [...user.ownedSkins, skin.name]
         }

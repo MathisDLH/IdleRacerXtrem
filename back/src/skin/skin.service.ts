@@ -27,8 +27,6 @@ export class SkinService {
             ownedSkins.add(skin.name);
             user.ownedSkins = Array.from(ownedSkins.values());
             return user.save();
-        } else {
-            throw new Error("Cannot purchase skin")
         }
 
     }
