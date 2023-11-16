@@ -65,7 +65,8 @@ const ClickUpgrade = (): JSX.Element => {
                 <img src={steeringWheel} />
             </div>
             <div>
-                <span>Upgrade your Click Power !</span>
+                <span>Upgrade your Click Power !</span><br />
+                <span>Actual Click Power : {actualClickValue.toFixed(2)} {calculateUnit(actualClickUnit)}</span>
                 <div>
                     <input defaultValue={1} type='number' min={1} max={999} onChange={handleChangeAmount} />
                     <select defaultValue={0} onChange={handleChangeUnit}>
