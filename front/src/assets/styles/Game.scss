@@ -69,20 +69,7 @@
     #up{
         height: 70%;
         width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        background-size: cover;
-
-        #sun {
-            margin-top: 10vw;
-            height: var(--size);
-            width: var(--size);
-            background-color: var(--yellow);
-            border-radius: 50%;
-            box-shadow: 0 0 5vw 5vw #fdd349;
-        }
+        min-width: 800px;
     }
 
     #down{
