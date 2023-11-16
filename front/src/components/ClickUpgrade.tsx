@@ -59,7 +59,7 @@ const ClickUpgrade = (): JSX.Element => {
                 <img src={steeringWheel} />
             </div>
             <div>
-                <span>Actual click value :</span>
+                <span>Upgrade your Click Power !</span>
                 <div>
                     <input defaultValue={1} type='number' min={1} max={999} onChange={handleChangeAmount} />
                     <select defaultValue={0} onChange={handleChangeUnit}>
@@ -69,9 +69,11 @@ const ClickUpgrade = (): JSX.Element => {
                             </option>
                         ))}
                     </select>
-                    <button onClick={click} className={'btn-hover color-4'}>{ }$</button>
+                    <span>$</span>
                 </div>
-                <span>Next click value : {clickEarned} {calculateUnit(clickEarnedUnit)}</span>
+                <span>Added click value : {clickEarned} {calculateUnit(clickEarnedUnit)}</span>
+                <button onClick={click} className={'btn-hover color-4 buy_btn'}>Buy !</button>
+
             </div>
         </div>
     )

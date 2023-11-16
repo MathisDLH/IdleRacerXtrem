@@ -1,5 +1,25 @@
 .wrapper{
     text-align: center;
+
+    input{
+        font-family: 'Pixelify Sans', sans-serif;
+        width: 50px;
+        text-align: left;
+        font-size: 1rem;
+        margin: 1rem;
+    }
+
+    select{
+        font-family: 'Pixelify Sans', sans-serif;
+        width: 50px;
+        text-align: left;
+        font-size: 1rem;
+        margin: 1rem;
+    }
+
+    .buy_btn{
+        width: 20vw;
+    }
 }
 .steering-wheel{
     img{
