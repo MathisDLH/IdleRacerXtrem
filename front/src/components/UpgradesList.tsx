@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Box, Tab, Tabs } from '@mui/material'
+import { Box, Tab } from '@mui/material'
 import { TabContext, TabList, TabPanel } from '@mui/lab'
 import * as SkinService from '../services/skin.service.ts'
 import { cars } from '../utils/cars.utils.ts'
@@ -20,34 +20,7 @@ export default function UpgradesList (): JSX.Element {
     console.log(newValue)
     setValue(newValue)
   }
-
-  interface TabPanelProps {
-    children?: React.ReactNode
-    index: number
-    value: number
-  }
-
-  function TabPanelCustom (props: TabPanelProps): JSX.Element {
-    const { children, value, index, ...other } = props
-
-
-    useEffect(() => { console.log('JE REFRESH LE TAB PANEL') }, [])
-    return (
-      <div
-        role="tabpanel"
-        hidden={value !== index}
-        id={`full-width-tabpanel-${index}`}
-        aria-labelledby={`full-width-tab-${index}`}
-        {...other}
-      >
-        {value === index && (
-          <Box sx={{ p: 3 }}>
-            {children}
-          </Box>
-        )}
-      </div>
-    )
-  }
+  
 
   /**
    * Get skins
