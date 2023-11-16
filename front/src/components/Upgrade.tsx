@@ -14,7 +14,7 @@ export default function Upgrade (props: { token?: string, upgrade: UpgradeInterf
       <span>{upgrade.name}</span>
       <UpgradeCount amount={upgrade.amount} unit={upgrade.amountUnit} />
       <div>
-        <UpgradeButton token={token} basicPrice={upgrade.price} unit={upgrade.price_unit} upgradeId={upgrade.id} amountBought={upgrade.amountBought}/>
+        <UpgradeButton token={token} price={upgrade.price} unit={upgrade.price_unit} upgradeId={upgrade.id}/>
       </div>
     </div>
   )

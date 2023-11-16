@@ -36,7 +36,10 @@ const Game = (): JSX.Element => {
   const { number } = useSpring({
     from: { number: 0 },
     number: money,
-    delay: 1
+    delay: 1,
+    tension: 100,
+    friction: 100,
+    config: { duration: 1000 }
   })
 
   const toggleShop = (): void => {
@@ -89,7 +92,6 @@ const Game = (): JSX.Element => {
         console.log(reason.includes('server') ? 'Disconnected by server' : 'Disconnected by client')
       }
       const onMoney = (data: any): void => {
-        console.log(data)
         if (data.moneyBySec) {
           setMoneyBySec(Math.round(data.moneyBySec * 1000) / 1000)
           setMoneyBySecUnit(data.moneyBySecUnit)

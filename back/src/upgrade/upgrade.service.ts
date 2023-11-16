@@ -72,7 +72,7 @@ export class UpgradeService {
       }
 
       // Calcul du prix
-      let value = upgrade.price * +buyUpgradeDto.quantity;
+      let value = price * +buyUpgradeDto.quantity;
       // Si l'utilisateur peut payer
       if (await this.redisService.pay(userId, { value, unit })) {
         // Augmentation de la quantité de la mise à niveau

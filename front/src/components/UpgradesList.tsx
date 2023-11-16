@@ -20,7 +20,6 @@ export default function UpgradesList (): JSX.Element {
     console.log(newValue)
     setValue(newValue)
   }
-  
 
   /**
    * Get skins

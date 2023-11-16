@@ -19,13 +19,12 @@ export default function UpgradeTab (): JSX.Element {
   const { token } = useAuth()
 
   useEffect(() => {
-    console.log('refresh')
     const fetchData = async (): Promise<void> => {
       const allUpgrades = await UpgradeService.getUpgrades(token ?? '')
       setAllUpgradeFromDb(allUpgrades)
     }
 
-    fetchData()
+    void fetchData()
     socket.on('upgrades', (event: UpgradeEvent) => {
       setUpgradeEvent(event)
     })
@@ -39,9 +38,18 @@ export default function UpgradeTab (): JSX.Element {
     const ownedUpgrade = upgradeEvent?.upgrades ?? []
     const d = allUpgradeFromDb.filter(upgrade => (ownedUpgrade.some(u => +u.id === upgrade.id) || ownedUpgrade.some(u => +u.id + 1 === upgrade.id) || upgrade.id === 1))
     const dub = d.map(d => {
-      const own: UpgradeInterface | undefined = ownedUpgrade.find(o => +o.id === d.id)
+      let own: UpgradeInterface | undefined = ownedUpgrade.find(o => +o.id === d.id)
       if (own) {
-        return { ...d, ...own }
+        own = { ...d, ...own }
+        let currentUnit: number = own.price_unit
+        let currentPrice = own.price
+        const multiplier = own.amountBought >= 10 ? Math.floor(own.amountBought / 10) * 2 : 0
+        currentPrice *= Math.pow(10, multiplier)
+        while (currentPrice >= 1000) {
+          currentPrice /= 1000
+          currentUnit += 3
+        }
+        return { ...d, ...own, price: currentPrice, price_unit: currentUnit }
       } else {
         return d
       }
