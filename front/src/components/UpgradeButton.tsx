@@ -15,7 +15,10 @@ export default function UpgradeButton (props: { token?: string, price: number, u
 
   useEffect(() => {
     eventEmitter.on('money', (data: any) => {
-      if (data.unit >= unit && data.money >= price) {
+      console.log(data.money, data.unit, price, unit)
+      if (data.unit > unit) {
+        setDisabled(false)
+      } else if (data.unit === unit && data.money >= price) {
         setDisabled(false)
       } else {
         setDisabled(true)

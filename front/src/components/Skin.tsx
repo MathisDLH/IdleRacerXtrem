@@ -15,7 +15,9 @@ const Skin = (props: { skin: skinInterface }): JSX.Element => {
   useEffect(() => {
     eventEmitter.on('money', (data: any) => {
       if (skin.priceUnit && skin.price) {
-        if (data.unit >= skin.priceUnit && data.money >= skin.price) {
+        if (data.unit > skin.priceUnit) {
+          setDisabled(false)
+        } else if (data.unit === skin.priceUnit && data.money >= skin.price) {
           setDisabled(false)
         } else {
           setDisabled(true)

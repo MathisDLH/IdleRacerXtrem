@@ -56,7 +56,7 @@ const ClickUpgrade = (): JSX.Element => {
             setActualClickValue(responseData.amount)
             setActualClickUnit(responseData.unit)
         }
-        eventEmitter.emit('buyUpgrade', { inputValue, inputUnit })
+        eventEmitter.emit('buyUpgrade', { price: inputValue, unit: inputUnit })
       }
 
     return (
