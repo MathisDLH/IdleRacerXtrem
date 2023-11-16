@@ -139,7 +139,7 @@ const Game = (): JSX.Element => {
     eventEmitter.on('buyUpgrade', (data: any) => {
       // console.log('buyUpgrade event', data)
       const price = data.price
-      const priceUnit = data.priceUnit
+      const priceUnit = data.unit
       const unit = calculateUnit(priceUnit)
 
       const buyEffect = document.createElement('div')
