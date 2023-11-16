@@ -26,8 +26,7 @@ interface DraggableProps {
   Content: any
 }
 export default function DraggableDialog ({ open, setOpen, title, icon, Content, size }: DraggableProps): JSX.Element {
-  const handleClose = (event: any, reason: any): void => {
-    console.log(event)
+  const handleClose = (_: any, reason: any): void => {
     if (!(reason !== null && reason === 'backdropClick')) {
       setOpen(false)
     }

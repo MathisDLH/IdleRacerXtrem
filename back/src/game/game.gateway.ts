@@ -92,8 +92,9 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect, On
 
     @SubscribeMessage('click')
     async handleClick(client: UserSocket): Promise<void> {
-        let moneyErnedByClick = await this.redisService.incrMoney(client.user.id, 1, Unit.UNIT);
-        console.log(moneyErnedByClick);
+        let click = await this.redisService.getUserClick(client.user.id);
+        let clickUnit = +await this.redisService.getUserClickUnit(client.user.id);
+        let moneyErnedByClick = await this.redisService.incrMoney(client.user.id, click, clickUnit);
         client.emit('money',
             {
                 money: (await this.redisService.getUserData(client.user)).money,
@@ -162,7 +163,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect, On
         // Récupérer les informations de l'utilisateur depuis Redis
         const redisInfos: IRedisData = await this.redisService.getUserData(user);
         // Créer un nouvel utilisateur avec les informations récupérées
-        const newUser = {id: user.id, money: redisInfos.money, money_unite: redisInfos.moneyUnit};
+        const newUser = {id: user.id, money: redisInfos.money, money_unite: redisInfos.moneyUnit, click: redisInfos.click, click_unite: redisInfos.clickUnit};
         // Récupérer les mises à niveau de l'utilisateur
         const upgrades = redisInfos.upgrades;
         // Mettre à jour l'utilisateur dans la base de données

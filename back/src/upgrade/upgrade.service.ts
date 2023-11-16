@@ -43,7 +43,6 @@ export class UpgradeService {
         let unit = upgrade.price_unit
         // Si l'utilisateur peut payer
         if (await this.redisService.pay(userId, { value, unit })) {
-          console.log("after pay");
           // Ajout de la mise à niveau à l'utilisateur
           await this.redisService.addUpgrade(userId, {
             id: upgrade.id,
@@ -85,9 +84,20 @@ export class UpgradeService {
     this.logger.log("OK buyUpgrade");
   }
 
+  async buyClick(amountPay: number, amountPayUnit: Unit, userId: number) {
+    if(this.redisService.pay(userId, { value: amountPay, unit: amountPayUnit })){
+      let amountOfClick = amountPay / 100;
+      let unitOfClick = amountPayUnit;
+      if (amountOfClick < 1) {
+        amountOfClick *= 1000;
+        unitOfClick -= 3;
+      }
+      this.redisService.incrClick(userId, amountOfClick, unitOfClick);
+    }
+  }
+
   // Cette fonction vérifie si l'utilisateur peut créer une mise à niveau
   async canCreateUpgrade(userId: number, upgrade: Upgrade): Promise<boolean> {
-console.log(upgrade.id)
     if(upgrade.id === 1) {
       return true;
     }

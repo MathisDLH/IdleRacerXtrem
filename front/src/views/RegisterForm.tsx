@@ -18,11 +18,9 @@ const RegisterForm = (): JSX.Element => {
     e.preventDefault()
 
     try {
-      const [userData] = await Promise.all([register(name, email, password)])
+      await Promise.all([register(name, email, password)])
       navigate('/')
-      console.log('Utilisateur inscrit avec succès:', userData)
-    } catch (error) {
-      console.error('Erreur lors de l\'inscription', error)
+    } catch (_) {
     }
   }
 

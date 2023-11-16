@@ -8,4 +8,6 @@ export interface User {
   score: number
   money: number
   money_unite: number
+  click: number
+  click_unite: number
 }

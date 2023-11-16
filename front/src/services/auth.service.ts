@@ -21,6 +21,5 @@ export async function loginUser (name: string, password: string): Promise<any> {
 
 export async function getUser (id: string): Promise<User> {
   const response = await axios.get(`${API_BASE_URL}/user/${id}`)
-  console.log(response.data)
   return response.data
 }

@@ -55,6 +55,34 @@ export class RedisService {
         return { amount: amountToIncr, unit};
     }
 
+    async incrClick(userId: number, amountToIncr: number, unit: Unit) {
+        // Récupérer l'unité d'argent de l'utilisateur
+        let clickUnit = +await this.getUserClickUnit(userId);
+        // Calculer la différence d'unité
+        let unitDifference = clickUnit - unit;
+        // Si la différence d'unité n'est pas 0, ajuster le montant à augmenter
+        let amountIncremented = amountToIncr;
+        if (unitDifference != 0) {
+             amountIncremented /=  Math.pow(10, unitDifference);
+        }
+        // Augmenter l'argent de l'utilisateur
+        let click = +await this.client.incrbyfloat(`${userId}:CLICK`, amountIncremented);
+        let unityToIncrement = 0;
+        // Si l'argent de l'utilisateur est supérieur à 1001, ajuster l'unité d'argent
+        while (click > 1001) {
+            click /= 1000;
+            unityToIncrement += 3;
+        }
+        // Si l'unité à augmenter est supérieure à 0, augmenter l'unité d'argent de l'utilisateur
+        if (unityToIncrement > 0) {
+            await this.client.incrbyfloat(`${userId}:CLICK_UNIT`, unityToIncrement);
+            // Mettre à jour l'argent de l'utilisateur
+            await this.client.set(`${userId}:CLICK`, click);
+        }
+
+        return { amount: amountToIncr, unit};
+    }
+
     // Méthode pour augmenter une mise à niveau
     async incrUpgrade(userId: number, upgradeId: number, amountToIncr: number, unit: Unit) {
         // Récupérer l'unité de la mise à niveau
@@ -94,6 +122,14 @@ export class RedisService {
         return await this.client.get(`${userId}:MONEY_UNIT`);
     }
 
+    async getUserClick(userId: number) {
+        return +await this.client.get(`${userId}:CLICK`);
+    }
+
+    async getUserClickUnit(userId: number): Promise<string> {
+        return await this.client.get(`${userId}:CLICK_UNIT`);
+    }
+
 
     // Méthode pour payer un montant spécifique
     async pay(userId: number, amount: { value: number, unit: Unit }): Promise<boolean> {
@@ -112,7 +148,6 @@ export class RedisService {
                 // Décrémenter l'argent de l'utilisateur
                 userMoney = +await this.client.incrbyfloat(`${userId}:MONEY`, -valueToDecrement);
                 let unityToDecrement = 0;
-                console.log(userMoney);
                 // Si l'argent de l'utilisateur est inférieur à 1, ajuster l'unité d'argent
                 while (userMoney < 1 && (userMoneyUnit - unityToDecrement > 0)) {
                     userMoney = userMoney * 1000;
@@ -140,6 +175,8 @@ export class RedisService {
             = this.client.multi()
                 .set(`${user.id}:MONEY`, user.money, "EX", 3600)
                 .set(`${user.id}:MONEY_UNIT`, user.money_unite, "EX", 3600)
+                .set(`${user.id}:CLICK`, user.click, "EX", 3600)
+                .set(`${user.id}:CLICK_UNIT`, user.click_unite, "EX", 3600)
         for (const e of user.userUpgrade) {
             // TODO: Faire une méthode typée pour l'enregistrment redis des upgrades
             this.addUpgrade(user.id, {
@@ -171,6 +208,8 @@ export class RedisService {
             userId: user.id,
             money: +await this.client.get(`${user.id}:MONEY`),
             moneyUnit: +await this.getUserMoneyUnit(user.id),
+            click: +await this.client.get(`${user.id}:CLICK`),
+            clickUnit:  +await this.getUserClickUnit(user.id),
             upgrades
         }
         return data;

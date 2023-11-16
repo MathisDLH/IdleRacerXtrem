@@ -19,15 +19,17 @@ import type SkinInterface from '../interfaces/skin.interface.ts'
 import { useSpring, animated } from 'react-spring'
 import { calculateUnit } from '../enums/units.tsx'
 import BackgroundMusic from '../components/BackgroundMusic.tsx'
+import { useAuth } from '../context/Auth.tsx'
 
 const Game = (): JSX.Element => {
+  const { user } = useAuth()
   const { socket }: WebSocketContextInterface = useWebSocket()
   const [money, setMoney] = useState<number>(0)
   const [moneyUnit, setMoneyUnit] = useState<number>(0)
   const [moneyBySec, setMoneyBySec] = useState<number>(0)
   const [moneyBySecUnit, setMoneyBySecUnit] = useState<number>(0)
-  const [moneyEarnedByClick, setMoneyEarnedByClick] = useState<number>(1)
-  const [moneyEarnedByClickUnit, setMoneyEarnedByClickUnit] = useState<number>(0)
+  const [moneyEarnedByClick, setMoneyEarnedByClick] = useState<number>(user?.click ?? 0)
+  const [moneyEarnedByClickUnit, setMoneyEarnedByClickUnit] = useState<number>(user?.click_unite ?? 0)
   const [shopOpen, setShopOpen] = useState<boolean>(false)
   const [skin, setSkin] = useState<SkinInterface>(cars[0])
   const carRef = useRef<any>(null)
@@ -50,8 +52,6 @@ const Game = (): JSX.Element => {
     if (socket) {
       socket.emit('click')
       createClickEffect(event)
-    } else {
-      console.log('Socket is null')
     }
   }
 
@@ -88,9 +88,6 @@ const Game = (): JSX.Element => {
   useEffect(() => {
     if (socket) {
       const onConnect = (): void => {}
-      const onDisconnect = (reason: string): void => {
-        console.log(reason.includes('server') ? 'Disconnected by server' : 'Disconnected by client')
-      }
       const onMoney = (data: any): void => {
         if (data.moneyBySec) {
           setMoneyBySec(Math.round(data.moneyBySec * 1000) / 1000)
@@ -106,13 +103,11 @@ const Game = (): JSX.Element => {
       }
 
       socket.on('connect', onConnect)
-      socket.on('disconnect', onDisconnect)
       socket.on('money', onMoney)
 
       return () => {
         // Clean up event listeners when the component unmounts.
         socket.off('connect', onConnect)
-        socket.off('disconnect', onDisconnect)
         socket.off('money', onMoney)
       }
     }
@@ -123,7 +118,6 @@ const Game = (): JSX.Element => {
    */
   useEffect(() => {
     eventEmitter.on('skin', (event: any) => {
-      // console.log('skin event', event)
       setSkin(event)
     })
 
@@ -137,7 +131,6 @@ const Game = (): JSX.Element => {
    */
   useEffect(() => {
     eventEmitter.on('buyUpgrade', (data: any) => {
-      // console.log('buyUpgrade event', data)
       const price = data.price
       const priceUnit = data.unit
       const unit = calculateUnit(priceUnit)

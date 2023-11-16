@@ -36,4 +36,14 @@ export class UpgradeController {
         await this.game.emitMoney(userSocket);
         await this.game.emitUpgrade(userSocket);
     }
+
+    @UseGuards(JwtAuthGuard)
+    @UseFilters(new EffectiveExceptionFilter())
+    @Post("/buyClick")
+    async buyClick(@Body() data: {amount: number, unit: number}, @Request() req) {
+        await this.upgradeService.buyClick(data.amount, data.unit, req.user.userId);
+        const userSocket = Array.from(this.game.socketConnected).find(us => us.userId === req.user.userId)
+        await this.game.emitMoney(userSocket);
+        await this.game.emitUpgrade(userSocket);
+    }
 }

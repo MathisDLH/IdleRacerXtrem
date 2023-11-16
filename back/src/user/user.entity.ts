@@ -51,6 +51,14 @@ export class User extends BaseEntity {
     @Column({type: "enum", enum: Unit, default: Unit.UNIT})
     money_unite: Unit;
 
+    @ApiProperty()
+    @Column({type: 'float', default: 1})
+    click: number;
+
+    @ApiProperty()
+    @Column({type: "enum", enum: Unit, default: Unit.UNIT})
+    click_unite: Unit;
+
     @Column()
     @CreateDateColumn()
     @ApiProperty()

@@ -47,6 +47,8 @@ export interface IRedisData {
     userId: number;
     money: number;
     moneyUnit: Unit;
+    click: number;
+    clickUnit: Unit;
     upgrades: IRedisUpgrade[];
 }
 
