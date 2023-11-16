@@ -31,6 +31,8 @@ const Game = (): JSX.Element => {
   const [shopOpen, setShopOpen] = useState<boolean>(false)
   const [skin, setSkin] = useState<SkinInterface>(cars[0])
   const carRef = useRef<any>(null)
+  const headerRef = useRef<any>(null)
+
   const { number } = useSpring({
     from: { number: 0 },
     number: money,
@@ -121,8 +123,39 @@ const Game = (): JSX.Element => {
       console.log('skin event', event)
       setSkin(event)
     })
+
+    return () => {
+      eventEmitter.off('skin')
+    }
   }, [])
 
+  /**
+    * Buy upgrade event
+   */
+  useEffect(() => {
+    eventEmitter.on('buyUpgrade', (data: any) => {
+      console.log('buyUpgrade event', data)
+      const price = data.price
+      const priceUnit = data.priceUnit
+      const unit = calculateUnit(priceUnit)
+
+      const buyEffect = document.createElement('div')
+      buyEffect.textContent = `-${price} ${unit}`
+      buyEffect.className = 'buy_effect'
+
+      headerRef?.current?.prepend(buyEffect)
+
+      setTimeout(() => {
+        buyEffect.className = 'buy_effect removed'
+        setTimeout(() => {
+          buyEffect.remove()
+        }, 1000)
+      }, 500)
+    })
+    return () => {
+      eventEmitter.off('buyUpgrade')
+    }
+  }, [])
 
   return (
     <motion.div
@@ -140,8 +173,8 @@ const Game = (): JSX.Element => {
               <BackgroundMusic />
             </div>
           </div>
-          <div className='right inline'>
-            <div>
+          <div className='right inline' >
+            <div ref={headerRef}>
               <span className="part prevent-select">
                 <animated.span>{number.to((n) => n.toFixed(2))}</animated.span>
                 {calculateUnit(moneyUnit)}

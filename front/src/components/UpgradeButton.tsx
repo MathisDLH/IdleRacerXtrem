@@ -1,6 +1,7 @@
 import * as UpgradeService from '../services/upgrades.service.ts'
 import { calculateUnit } from '../enums/units.tsx'
 import { useEffect, useState } from 'react'
+import { eventEmitter } from '../utils/event-emitter.ts'
 
 export default function UpgradeButton (props: { token?: string, basicPrice: number, unit: number, upgradeId: number, amountBought: number }): JSX.Element {
   const { token, basicPrice, unit, upgradeId, amountBought } = props
@@ -23,6 +24,7 @@ export default function UpgradeButton (props: { token?: string, basicPrice: numb
 
   async function click (): Promise<void> {
     await UpgradeService.buyUpgrade(token ?? '', { upgradeId, quantity: 1 })
+    eventEmitter.emit('buyUpgrade', { price, priceUnit })
   }
 
   return (

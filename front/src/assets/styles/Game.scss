@@ -154,6 +154,18 @@
     text-shadow: var(--yellow) 3px 3px 1vw;
     transition: opacity 0.5s;
 }
+
+.buy_effect {
+    position: absolute;
+    pointer-events: none;
+    font-family: 'Pixelify Sans', sans-serif;
+    color: white;
+    font-size: 2rem;
+    text-shadow: var(--red) 3px 3px 1vw;
+    transition: opacity 0.5s;
+    right: 30vw;
+}
+
 .removed {
     opacity: 0;
 }
