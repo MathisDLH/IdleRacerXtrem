@@ -18,13 +18,13 @@ export async function getSkins (token: string): Promise<SkinInterface[]> {
   }
 }
 
-export async function buyUpgrade (token: string, skinId: number): Promise<void> {
+export async function buyUpgrade (token: string, name: string): Promise<void> {
   try {
     const config = {
       headers: { Authorization: `Bearer ${token}` }
     }
-    await axios.post(
-      `${API_BASE_URL}/skin/${skinId}`,
+    await axios.get(
+      `${API_BASE_URL}/skin/${name}/purchase`,
       config
     )
   } catch (error) {

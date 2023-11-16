@@ -32,7 +32,7 @@ export class AuthService {
                 name: payload.name,
                 email: payload.email,
                 password: payload.password,
-                ownedSkins: []
+                ownedSkins: ["FIRST"]
             }
         );
         user = await user.save();

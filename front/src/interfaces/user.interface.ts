@@ -3,6 +3,7 @@ export interface User {
   password: string
   name: string
   skin_id: number
+  ownedSkins: string[]
   token: string
   score: number
   money: number

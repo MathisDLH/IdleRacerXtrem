@@ -64,8 +64,8 @@ export class SeedingService implements OnModuleInit {
 
         if (count == 0) {
             const data = [
-                {name: 'FIRST', price: 1000},
-                {name: 'SECOND', price: 2000}
+                {name: 'FIRST', price: 1, priceUnit: Unit.K},
+                {name: 'SECOND', price: 2, priceUnit: Unit.K}
             ];
             await this.skinRepository.save(data);
         }

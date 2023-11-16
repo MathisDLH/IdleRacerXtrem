@@ -1,6 +1,6 @@
-import {BaseEntity, Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn,} from 'typeorm';
+import {BaseEntity, Column, Entity, PrimaryGeneratedColumn,} from 'typeorm';
 import {ApiProperty} from "@nestjs/swagger";
-import {User} from "../user/user.entity";
+import {Unit} from "../shared/shared.model";
 
 
 @Entity()
@@ -10,8 +10,12 @@ export class Skin extends BaseEntity {
     id: number;
 
     @ApiProperty()
-    @Column()
+    @Column({type: 'float', default: 0})
     price: number;
+
+    @ApiProperty()
+    @Column({type: "enum", enum: Unit, default: Unit.UNIT})
+    priceUnit: Unit;
 
     @ApiProperty()
     @Column()

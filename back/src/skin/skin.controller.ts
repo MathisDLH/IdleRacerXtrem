@@ -25,13 +25,13 @@ export class SkinController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Get(':id/purchase')
+    @Get(':name/purchase')
     @ApiResponse({
         status: 200,
         description: 'purchase a skin'
     })
-    async purchase(@Param('id') id: number, @Request() request) {
-        this.skinService.purchase(id, request.user.userId);
+    async purchase(@Param('name') name: string, @Request() request) {
+        this.skinService.purchase(name, request.user.userId);
     }
 
 
