@@ -64,7 +64,7 @@ const Game = (): JSX.Element => {
     const randomDirectionY = Math.floor(Math.random() * 2) + 1 === 1 ? '-' : '+'
     const x = randomDirectionX === '-' ? event.clientX - randomX : event.clientX + randomX
     const y = randomDirectionY === '-' ? event.clientY - randomY : event.clientY + randomY
-    clickEffect.textContent = `+${moneyEarnedByClick} ${calculateUnit(moneyEarnedByClickUnit)}`
+    clickEffect.textContent = `+${moneyEarnedByClick.toFixed(2)} ${calculateUnit(moneyEarnedByClickUnit)}`
     clickEffect.className = 'click_effect'
     clickEffect.style.top = `${y}px`
     clickEffect.style.left = `${x}px`
