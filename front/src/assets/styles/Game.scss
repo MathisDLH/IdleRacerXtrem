@@ -140,6 +140,9 @@
     font-size: 2rem;
     text-shadow: var(--yellow) 3px 3px 1vw;
     transition: opacity 0.5s;
+    overflow: hidden;
+    text-overflow: clip;
+    white-space: nowrap;
 }
 
 .buy_effect {
