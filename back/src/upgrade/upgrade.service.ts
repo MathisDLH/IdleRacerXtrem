@@ -85,16 +85,20 @@ export class UpgradeService {
   }
 
   async buyClick(amountPay: number, amountPayUnit: Unit, userId: number): Promise<{ amount: number; unit: Unit; }> {
-    if(await this.redisService.pay(userId, { value: amountPay, unit: amountPayUnit })){
-      let amountOfClick = amountPay / 100;
-      let unitOfClick = amountPayUnit;
-      if (amountOfClick < 1) {
-        amountOfClick *= 1000;
-        unitOfClick -= 3;
+    if(amountPay > 0) {
+      if(await this.redisService.pay(userId, { value: amountPay, unit: amountPayUnit })){
+        let amountOfClick = amountPay / 100;
+        let unitOfClick = amountPayUnit;
+        if (amountOfClick < 1) {
+          amountOfClick *= 1000;
+          unitOfClick -= 3;
+        }
+        return await this.redisService.incrClick(userId, amountOfClick, unitOfClick);
       }
-      return await this.redisService.incrClick(userId, amountOfClick, unitOfClick);
+      return { amount: 0, unit: 0 }
     }
-   return { amount: 0, unit: 0 }
+    return { amount: 0, unit: 0 }
+
   }
 
   // Cette fonction vérifie si l'utilisateur peut créer une mise à niveau
