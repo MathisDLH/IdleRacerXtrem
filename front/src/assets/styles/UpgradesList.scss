@@ -1,4 +1,11 @@
-.upgrades-container {
+.container{
     width: 400px;
+    height: 400px;
     font-family: 'Pixelify Sans', sans-serif;
+
+    .panel{
+        height: 75%;
+        overflow: scroll;
+    }
 }
+

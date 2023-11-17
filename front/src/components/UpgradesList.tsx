@@ -38,20 +38,20 @@ export default function UpgradesList (): JSX.Element {
 
   return (
   <TabContext value={value.toString()}>
-    <div className='upgrades-container'>
-    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-    <TabList variant="fullWidth" className='upgrades-container' onChange={handleChange}>
-      <Tab label="Money" value="0" />
-      <Tab label="Click" value="1" />
-      <Tab label="Skins" value="2" />
-    </TabList>
-  </Box>
-  <TabPanel value="0"><UpgradeTab/></TabPanel>
-  <TabPanel value="1"><ClickUpgrade/></TabPanel>
-  <TabPanel value="2">      {skins.map((skin: SkinInterface, index) => {
-    return <Skin key={index} skin={skin}/>
-  })}</TabPanel>
-  </div>
-</TabContext>
+    <div className={'container'}>
+      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+      <TabList variant="fullWidth" onChange={handleChange}>
+        <Tab label="Money" value="0" />
+        <Tab label="Click" value="1" />
+        <Tab label="Skins" value="2" />
+      </TabList>
+      </Box>
+      <TabPanel className={'panel'} value="0"><UpgradeTab/></TabPanel>
+      <TabPanel className={'panel'} value="1"><ClickUpgrade/></TabPanel>
+      <TabPanel className={'panel'} value="2">      {skins.map((skin: SkinInterface, index) => {
+        return <Skin key={index} skin={skin}/>
+      })}</TabPanel>
+    </div>
+  </TabContext>
   )
 }

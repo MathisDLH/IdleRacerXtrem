@@ -33,6 +33,11 @@
         background-image: linear-gradient(to right, var(--red), var(--yellow), var(--yellow), var(--red));
         box-shadow: 0 4px 15px 0 rgba(252, 104, 110, 0.75);
     }
+
+    &:active {
+        transition: transform 0.1s ease;
+        transform: scale(0.95);
+    }
 }
 
 .disabled {
