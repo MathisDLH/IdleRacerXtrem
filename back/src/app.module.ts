@@ -25,8 +25,7 @@ const entities = [User, Upgrade, UserUpgrade, Skin];
         }),
         TypeOrmModule.forRoot({
             type: 'mysql',
-            host: process.env.DATABASE_HOST,
-            port: parseInt(process.env.DATABASE_PORT),
+            socketPath: process.env.INSTANCE_UNIX_SOCKET,
             username: process.env.DATABASE_USER,
             password: process.env.DATABASE_PASSWORD,
             database: process.env.DATABASE_NAME,

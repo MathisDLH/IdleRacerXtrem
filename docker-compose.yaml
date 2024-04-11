@@ -5,7 +5,6 @@ services:
     ports:
       - "7001:6379"
   db:
-    platform: linux/x86_64
     image: "mysql:5.7"
     restart: always
     environment:
@@ -18,3 +17,17 @@ services:
       MYSQL_ROOT_PASSWORD: 'password'
     ports:
       - '3306:3306'
+  front:
+    build:
+      context: ./front
+      dockerfile: Dockerfile
+    environment:
+      VITE_API_URL: http://localhost:3000
+    ports:
+      - '80:80'
+  back:
+    build:
+      context: ./back
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
