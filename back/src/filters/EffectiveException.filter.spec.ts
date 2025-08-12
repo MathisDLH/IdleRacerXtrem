@@ -1,5 +1,6 @@
 import { EffectiveExceptionFilter } from './EffectiveException.filter';
 import { PurchaseError } from '../exceptions/PurchaseError';
+import { Logger } from '@nestjs/common';
 
 // mock ArgumentsHost
 const createArgumentsHost = () => {
@@ -19,6 +20,18 @@ const createArgumentsHost = () => {
 };
 
 describe('EffectiveExceptionFilter', () => {
+  let loggerErrorSpy: jest.SpyInstance;
+
+  beforeEach(() => {
+    loggerErrorSpy = jest
+      .spyOn(Logger.prototype, 'error')
+      .mockImplementation(() => undefined);
+  });
+
+  afterEach(() => {
+    loggerErrorSpy.mockRestore();
+  });
+
   it('formats PurchaseError response', () => {
     const filter = new EffectiveExceptionFilter();
     const error = new PurchaseError('1', '2');
