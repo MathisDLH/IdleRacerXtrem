@@ -9,7 +9,7 @@ import {RedisService} from "../redis/redis.service";
 import {redisProvider} from "../redis/redis.provider";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User]), TypeOrmModule.forFeature([UserUpgrade])],
+  imports: [TypeOrmModule.forFeature([User, UserUpgrade])],
   controllers: [UsersController],
   providers: [UserService,redisProvider,RedisService],
   exports: [UserService]

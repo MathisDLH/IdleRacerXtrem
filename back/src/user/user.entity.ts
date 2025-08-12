@@ -13,6 +13,7 @@ import {
 } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import {Unit} from "../shared/shared.model";
+import { IsEmail, IsEnum, IsNotEmpty, IsString, MinLength, IsArray } from 'class-validator';
 import {UserUpgrade} from "../UserUpgrade/userUpgrade.entity";
 import {ApiProperty} from "@nestjs/swagger";
 import {Skin} from "../skin/skin.entity";
@@ -26,13 +27,18 @@ export class User extends BaseEntity {
 
     @ApiProperty()
     @Column({unique: true})
+    @IsEmail()
     email: string;
 
     @ApiProperty()
     @Column({unique: true})
+    @IsString()
+    @MinLength(3)
     name: string;
 
     @Column({select: false})
+    @IsString()
+    @MinLength(6)
     password: string;
 
     @ApiProperty()
@@ -41,14 +47,17 @@ export class User extends BaseEntity {
 
     @ApiProperty()
     @Column({default: "LAMBORGHINI"})
+    @IsString()
     currentSkin: string;
 
     @ApiProperty()
     @Column({type: 'simple-array'})
+    @IsArray()
     ownedSkins: string[];
 
     @ApiProperty()
     @Column({type: "enum", enum: Unit, default: Unit.UNIT})
+    @IsEnum(Unit)
     money_unite: Unit;
 
     @ApiProperty()
@@ -57,6 +66,7 @@ export class User extends BaseEntity {
 
     @ApiProperty()
     @Column({type: "enum", enum: Unit, default: Unit.UNIT})
+    @IsEnum(Unit)
     click_unite: Unit;
 
     @Column()

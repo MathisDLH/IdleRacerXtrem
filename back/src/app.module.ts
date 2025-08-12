@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user/user.entity';
 import { Upgrade } from './upgrade/upgrade.entity';
@@ -12,6 +12,7 @@ import { RedisModule } from './redis/redis.module';
 import { UpgradeModule } from './upgrade/upgrade.module';
 import { SkinModule } from './skin/skin.module';
 import { SeedingService } from './seeding/seeding.service';
+import { getTypeOrmModuleOptions } from './config/typeorm.config';
 
 const entities = [User, Upgrade, UserUpgrade, Skin];
 
@@ -22,20 +23,14 @@ const entities = [User, Upgrade, UserUpgrade, Skin];
             isGlobal: true,
         }),
 
-        TypeOrmModule.forRoot({
-            type: 'mysql',
-            host: process.env.DATABASE_HOST || 'localhost',
-            port: parseInt(process.env.DATABASE_PORT ?? '3306', 10),
-            username: process.env.DATABASE_USER,
-            password: process.env.DATABASE_PASSWORD,
-            database: process.env.DATABASE_NAME,
-            entities,
-            synchronize: true,
+        TypeOrmModule.forRootAsync({
+            imports: [ConfigModule],
+            inject: [ConfigService],
+            useFactory: (configService: ConfigService) =>
+                getTypeOrmModuleOptions(configService),
         }),
-
-        TypeOrmModule.forFeature([User]),
-        TypeOrmModule.forFeature([Upgrade]),
-        TypeOrmModule.forFeature([Skin]),
+        // Required for repositories injected in SeedingService
+        TypeOrmModule.forFeature([Upgrade, Skin]),
         UserModule,
         SkinModule,
         AuthModule,

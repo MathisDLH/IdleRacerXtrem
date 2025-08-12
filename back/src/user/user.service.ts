@@ -4,7 +4,7 @@ import {User} from './user.entity';
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {UserUpgrade} from "../UserUpgrade/userUpgrade.entity";
-import {use} from "passport";
+import { CreateUserDto } from '../dto/user/create-user.dto';
 
 @Injectable()
 export class UserService {
@@ -15,6 +15,20 @@ export class UserService {
     async findById(id: number): Promise<User> {
         const t = await this.userRepository.find({ where: { id: id }, relations: { userUpgrade: true } });
         return t[0];
+    }
+
+    async findByName(name: string): Promise<User | null> {
+        return this.userRepository.findOne({ where: { name } });
+    }
+
+    async create(createUserDto: CreateUserDto): Promise<User> {
+        const user = this.userRepository.create({
+            email: createUserDto.email,
+            name: createUserDto.name,
+            password: createUserDto.password,
+            ownedSkins: ["FIRST"],
+        });
+        return user.save();
     }
 
     async update(user: User) {

@@ -10,7 +10,7 @@ import {redisProvider} from "../redis/redis.provider";
 import {GameModule} from "../game/game.module";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Upgrade]), TypeOrmModule.forFeature([UserUpgrade]), GameModule],
+  imports: [TypeOrmModule.forFeature([Upgrade, UserUpgrade]), GameModule],
   controllers: [UpgradeController],
   providers: [UpgradeService,redisProvider, RedisService],
   exports: [UpgradeService]

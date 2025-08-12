@@ -8,7 +8,7 @@ import {User} from "../user/user.entity";
 import {RedisModule} from "../redis/redis.module";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User]), TypeOrmModule.forFeature([Skin]), RedisModule],
+  imports: [TypeOrmModule.forFeature([User, Skin]), RedisModule],
   controllers: [SkinController],
   providers: [SkinService],
   exports: [SkinService]

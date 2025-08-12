@@ -2,7 +2,6 @@ import {IoAdapter} from "@nestjs/platform-socket.io";
 import {INestApplicationContext, Logger} from "@nestjs/common";
 import {JwtService} from "@nestjs/jwt";
 import {Server} from "socket.io";
-import process from "process";
 import {UserSocket} from "../game/game.gateway";
 import {ConfigService} from "@nestjs/config";
 
@@ -23,7 +22,15 @@ export class CustomIoAdapter extends IoAdapter {
 
         server.use((socket: UserSocket, next) => {
             try {
-                const token = socket.handshake.headers.authorization.split(' ')[1];
+                const authHeader = socket.handshake.headers?.authorization as string | undefined;
+                if (!authHeader) {
+                    throw new Error('Missing Authorization header');
+                }
+                const parts = authHeader.split(' ');
+                if (parts.length !== 2 || parts[0] !== 'Bearer') {
+                    throw new Error('Invalid Authorization header format');
+                }
+                const token = parts[1];
                 const payload = jwtService.verify(token, {
                     secret: jwtsecret,
                 });
