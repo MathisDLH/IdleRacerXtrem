@@ -29,7 +29,7 @@ export class UsersController {
     description: "Retrieve user data",
     type: User,
   })
-  find(@Param("id") id: string): Promise<User> {
+  find(@Param("id") id: string): Promise<User | null> {
     return this.usersService.findById(+id);
   }
 

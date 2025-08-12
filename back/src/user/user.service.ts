@@ -14,12 +14,11 @@ export class UserService {
     private readonly userUpgradeRepository: Repository<UserUpgrade>,
   ) {}
 
-  async findById(id: number): Promise<User> {
-    const t = await this.userRepository.find({
-      where: { id: id },
+  async findById(id: number): Promise<User | null> {
+    return this.userRepository.findOne({
+      where: { id },
       relations: { userUpgrade: true },
     });
-    return t[0];
   }
 
   async findByName(name: string): Promise<User | null> {
