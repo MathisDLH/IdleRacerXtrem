@@ -4,25 +4,41 @@ import { JwtService } from "@nestjs/jwt";
 import { User } from "src/user/user.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { AccessToken, JWTContent, Login, Register } from "./auth.model";
+import { AccessToken, JWTContent, Login, Register, Tokens } from "./auth.model";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     private jwtService: JwtService,
+    private configService: ConfigService,
   ) {}
 
-  async login(login: Login): Promise<AccessToken> {
+  async login(login: Login): Promise<Tokens> {
     const user = await this.validateUser(login);
 
     const jwtContent: JWTContent = {
       userId: user.id,
     };
 
-    return {
-      access_token: this.jwtService.sign(jwtContent),
-    };
+    const access_token = this.jwtService.sign(jwtContent);
+    const refresh_token = this.jwtService.sign(jwtContent, {
+      expiresIn: this.configService.get<string>("JWT_REFRESH_EXPIRES_IN", "7d"),
+    });
+    return { access_token, refresh_token };
+  }
+
+  async refresh(oldRefreshToken: string): Promise<AccessToken> {
+    try {
+      const payload = this.jwtService.verify(oldRefreshToken, {
+        secret: this.configService.get<string>("JWT_SECRET"),
+      });
+      const jwtContent: JWTContent = { userId: payload.userId };
+      return { access_token: this.jwtService.sign(jwtContent) };
+    } catch (e) {
+      throw new HttpException("Invalid refresh token", HttpStatus.UNAUTHORIZED);
+    }
   }
 
   async register(payload: Register): Promise<User> {

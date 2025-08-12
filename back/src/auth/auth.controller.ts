@@ -7,9 +7,9 @@ import {
   UsePipes,
   ValidationPipe,
 } from "@nestjs/common";
-import { AccessToken, Login, Register } from "./auth.model";
-import { LoginDto } from "../dto/auth/login.dto";
-import { RegisterDto } from "../dto/auth/register.dto";
+import { AccessToken, Login, Register, Tokens } from "./auth.model";
+import { LoginDto } from "src/dto/auth/login.dto";
+import { RegisterDto } from "src/dto/auth/register.dto";
 import { AuthService } from "./auth.service";
 import { User } from "../user/user.entity";
 import { TypeormExceptionFilter } from "../filters/typeormException.filter";
@@ -29,11 +29,22 @@ export class AuthController {
     description: "access token generated",
     type: AccessToken,
   })
-  async login(@Body() payload: LoginDto): Promise<AccessToken> {
+  async login(@Body() payload: LoginDto): Promise<Tokens> {
     this.logger.log(`CALL login with name: ${payload.name}`);
-    const accessToken: AccessToken = await this.service.login(payload);
+    const tokens: Tokens = await this.service.login(payload);
     this.logger.log(`OK login`);
-    return accessToken;
+    return tokens;
+  }
+
+  @Post("/refresh")
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  @ApiResponse({
+    status: 200,
+    description: "access token refreshed",
+    type: AccessToken,
+  })
+  async refresh(@Body() body: { refresh_token: string }): Promise<AccessToken> {
+    return this.service.refresh(body.refresh_token);
   }
 
   @Post("/register")

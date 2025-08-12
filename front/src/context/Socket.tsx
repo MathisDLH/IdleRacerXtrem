@@ -27,6 +27,24 @@ const WebSocketProvider = (props: any): JSX.Element => {
         token: `Bearer ${token}`
       }
     })
+    s.on('connect_error', async (err) => {
+      if (err?.message === 'TOKEN_EXPIRED') {
+        try {
+          const raw = localStorage.getItem('refresh_token')
+          if (raw) {
+            const refresh = raw.startsWith('"') ? JSON.parse(raw) : raw
+            const { access_token } = await import('../services/auth.service').then(m => m.refreshToken(refresh))
+            localStorage.setItem('access_token', JSON.stringify(access_token))
+            // recreate socket with new token
+            s.auth = { token: `Bearer ${access_token}` }
+            s.connect()
+          }
+        } catch (e) {
+          // eslint-disable-next-line no-console
+          console.warn('Unable to refresh token, please login again')
+        }
+      }
+    })
     setSocket(s)
     return () => {
       s.disconnect()

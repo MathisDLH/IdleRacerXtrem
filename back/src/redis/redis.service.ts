@@ -17,6 +17,18 @@ export class RedisService {
     )) as unknown as IRedisUpgrade;
   }
 
+  async clearUserData(userId: number): Promise<void> {
+    const keys = await this.client.keys(`${userId}:*`);
+    if (keys.length > 0) {
+      await this.client.del(...keys);
+    }
+  }
+
+  async resetUserInRedis(user: User): Promise<void> {
+    await this.clearUserData(user.id);
+    await this.loadUserInRedis(user);
+  }
+
   async addUpgrade(userId: number, upgrade: IRedisUpgrade) {
     await this.client.hset(`${userId}:${upgrade.id}`, upgrade);
   }
@@ -35,15 +47,12 @@ export class RedisService {
 
   async incrMoney(userId: number, amountToIncr: number, unit: Unit) {
     let moneyUnit = +(await this.getUserMoneyUnit(userId));
-    let unitDifference = moneyUnit - unit;
+    const unitDifference = moneyUnit - unit;
     let amountIncremented = amountToIncr;
-    if (unitDifference != 0) {
+    if (unitDifference !== 0) {
       amountIncremented /= Math.pow(10, unitDifference);
     }
-    let money = +(await this.client.incrbyfloat(
-      `${userId}:MONEY`,
-      amountIncremented,
-    ));
+    let money = +(await this.client.incrbyfloat(`${userId}:MONEY`, amountIncremented));
     let unityToIncrement = 0;
     while (money > 1001) {
       money /= 1000;
@@ -54,6 +63,7 @@ export class RedisService {
       await this.client.set(`${userId}:MONEY`, money);
     }
 
+    // Preserve original behavior: return the amount earned by this operation, not the new balance
     return { amount: amountToIncr, unit };
   }
 
@@ -84,7 +94,6 @@ export class RedisService {
       ));
       await this.client.set(`${userId}:CLICK`, click);
     }
-    console.log(click, clickUnit);
     return { amount: click, unit: clickUnit };
   }
 
@@ -100,7 +109,7 @@ export class RedisService {
     ));
     let unitDifference = upgradeUnit - unit;
     let amountIncremented = amountToIncr;
-    if (unitDifference != 0) {
+    if (unitDifference !== 0) {
       amountIncremented /= Math.pow(10, unitDifference);
     }
 

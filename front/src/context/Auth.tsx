@@ -41,33 +41,41 @@ export const AuthProvider = (props: any): JSX.Element => {
   const [token, setToken] = useState<string | null>(null)
 
   useEffect(() => {
-    const token = localStorage.getItem('access_token')
-    if (token != null) {
-      const decoded: any = jwt_decode(token)
-      if (decoded.userId === undefined) throw new Error('Token d\'accès non valide.')
-      userService.getUser(decoded.userId)
-        .then((user: User) => {
-          setUser(user)
-          setIsLoggedIn(true)
-          setToken(removeQuotes(token))
-        })
-        .catch((error) => {
-          console.error('Erreur lors de la récupération de l\'utilisateur:', error)
-        })
+    const raw = localStorage.getItem('access_token')
+    if (raw != null) {
+      const token = removeQuotes(raw)
+      try {
+        const decoded: any = jwt_decode(token)
+        if (decoded.userId === undefined) throw new Error('Token d\'accès non valide.')
+        userService.getUser(decoded.userId)
+          .then((user: User) => {
+            setUser(user)
+            setIsLoggedIn(true)
+            setToken(token)
+          })
+          .catch((error) => {
+            console.error('Erreur lors de la récupération de l\'utilisateur:', error)
+          })
+      } catch {
+        // token invalide/expiré en cache → nettoyage
+        localStorage.removeItem('access_token')
+      }
     }
   }, [])
 
   const signIn = async (name: string, password: string): Promise<void> => {
     try {
-      const promiseToken = await userService.loginUser(name, password)
-      const token = promiseToken.access_token
-      if (token != null) {
-        const decoded: any = jwt_decode(token)
+      const tokens = await userService.loginUser(name, password)
+      const accessToken = tokens.access_token
+      const refreshToken = tokens.refresh_token
+      if (accessToken != null) {
+        const decoded: any = jwt_decode(accessToken)
         if (decoded.userId === undefined) throw new Error('Token d\'accès non valide.')
         const user: User = await userService.getUser(decoded.userId)
         setUser(user)
         setIsLoggedIn(true)
-        localStorage.setItem('access_token', JSON.stringify(token))
+        localStorage.setItem('access_token', JSON.stringify(accessToken))
+        if (refreshToken) localStorage.setItem('refresh_token', JSON.stringify(refreshToken))
         window.location.reload()
       } else {
         console.error('Token d\'accès non valide.')
@@ -86,6 +94,21 @@ export const AuthProvider = (props: any): JSX.Element => {
     setIsLoggedIn(false)
     setToken(null)
     localStorage.removeItem('access_token')
+  }
+
+  // Option: fonction de refresh à appeler si le socket remonte TOKEN_EXPIRED
+  const tryRefresh = async (): Promise<boolean> => {
+    const refresh = localStorage.getItem('refresh_token')
+    if (!refresh) return false
+    try {
+      const { access_token } = await userService.refreshToken(removeQuotes(refresh))
+      localStorage.setItem('access_token', JSON.stringify(access_token))
+      setToken(access_token)
+      return true
+    } catch {
+      signout()
+      return false
+    }
   }
 
   const value: AuthContextInterface = {

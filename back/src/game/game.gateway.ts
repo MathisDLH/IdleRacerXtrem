@@ -9,7 +9,7 @@ import { Server, Socket } from "socket.io";
 import { UserService } from "src/user/user.service";
 import { User } from "src/user/user.entity";
 import { RedisService } from "src/redis/redis.service";
-import { Logger, OnModuleInit } from "@nestjs/common";
+import { Logger, OnModuleDestroy, OnModuleInit } from "@nestjs/common";
 import { IRedisData, Unit } from "../shared/shared.model";
 import { UpgradeService } from "../upgrade/upgrade.service";
 
@@ -20,7 +20,7 @@ export interface UserSocket extends Socket {
 
 @WebSocketGateway({ cors: { origin: "*" } })
 export class GameGateway
-  implements OnGatewayConnection, OnGatewayDisconnect, OnModuleInit
+  implements OnGatewayConnection, OnGatewayDisconnect, OnModuleInit, OnModuleDestroy
 {
   @WebSocketServer()
   server: Server;
@@ -35,54 +35,60 @@ export class GameGateway
     private readonly redisService: RedisService,
   ) {}
 
-  onModuleInit() {
-    setInterval(async () => {
-      this.socketConnected.forEach(async (client) => {
-        if (client) {
-          let realTimeData = await this.updateMoney(client.user);
+  private tickHandle: NodeJS.Timeout | null = null;
+  private persistHandle: NodeJS.Timeout | null = null;
 
+  onModuleInit() {
+    this.tickHandle = setInterval(async () => {
+      for (const client of Array.from(this.socketConnected)) {
+        try {
+          if (!client?.user) continue;
+          const realTimeData = await this.updateMoney(client.user);
           await this.emitMoney(client, realTimeData);
           await this.emitUpgrade(client, realTimeData);
+        } catch (err) {
+          this.logger.error(`tick error for user ${client?.user?.id}: ${err}`);
         }
-      });
+      }
     }, 1000);
 
-    setInterval(async () => {
-      this.socketConnected.forEach(async (client) => {
-        if (client) {
-          this.pushRedisToDb(client.user);
+    this.persistHandle = setInterval(async () => {
+      for (const client of Array.from(this.socketConnected)) {
+        try {
+          if (!client?.user) continue;
+          await this.pushRedisToDb(client.user);
+        } catch (err) {
+          this.logger.error(`persist error for user ${client?.user?.id}: ${err}`);
         }
-      });
+      }
     }, 10000);
   }
 
-  public async emitMoney(client: UserSocket, realTimeData = null) {
-    if (realTimeData == null) {
-      client.emit("money", {
-        money: (await this.redisService.getUserData(client.user)).money,
-        unit: (await this.redisService.getUserData(client.user)).moneyUnit,
-      });
-    } else {
-      client.emit("money", {
-        money: (await this.redisService.getUserData(client.user)).money,
-        unit: (await this.redisService.getUserData(client.user)).moneyUnit,
-        moneyBySec: realTimeData.moneyData.amount,
-        moneyBySecUnit: realTimeData.moneyData.unit,
-      });
-    }
+  onModuleDestroy() {
+    if (this.tickHandle) clearInterval(this.tickHandle);
+    if (this.persistHandle) clearInterval(this.persistHandle);
   }
 
-  public async emitUpgrade(client: UserSocket, realTimeData = null) {
-    if (realTimeData == null) {
-      client.emit("upgrades", {
-        upgrades: (await this.redisService.getUserData(client.user)).upgrades,
-      });
-    } else {
-      client.emit("upgrades", {
-        upgrades: (await this.redisService.getUserData(client.user)).upgrades,
-        realTimeData: realTimeData.upgradesData,
-      });
+  public async emitMoney(client: UserSocket, realTimeData: any = null) {
+    const userData = await this.redisService.getUserData(client.user);
+    const payload: any = {
+      money: userData.money,
+      unit: userData.moneyUnit,
+    };
+    if (realTimeData) {
+      payload.moneyBySec = realTimeData.moneyData.amount;
+      payload.moneyBySecUnit = realTimeData.moneyData.unit;
     }
+    client.emit("money", payload);
+  }
+
+  public async emitUpgrade(client: UserSocket, realTimeData: any = null) {
+    const userData = await this.redisService.getUserData(client.user);
+    const payload: any = { upgrades: userData.upgrades };
+    if (realTimeData) {
+      payload.realTimeData = realTimeData.upgradesData;
+    }
+    client.emit("upgrades", payload);
   }
 
   @SubscribeMessage("click")
@@ -103,17 +109,25 @@ export class GameGateway
   }
 
   async handleConnection(client: UserSocket) {
-    //CHECK HERE IS USERID ALREADY EXIST ?
     this.logger.log(`${client.userId} connected`);
-    this.userService.findById(+client.userId).then((user) => {
+    try {
+      const user = await this.userService.findById(+client.userId);
+      if (!user) {
+        this.logger.warn(`User ${client.userId} not found. Disconnecting.`);
+        client.disconnect(true);
+        return;
+      }
       client.user = user;
       this.socketConnected.add(client);
-      this.redisService.loadUserInRedis(user);
-      const maintenant = new Date();
-      const differenceEnSecondes =
-        (maintenant.getTime() - user.updatedAt.getTime()) / 1000;
-      this.updateMoney(user, differenceEnSecondes);
-    });
+      // reset Redis state to DB snapshot on first connection to avoid stale/huge balances
+      await this.redisService.resetUserInRedis(user);
+      const now = new Date();
+      const secondsSinceLastUpdate = (now.getTime() - user.updatedAt.getTime()) / 1000;
+      await this.updateMoney(user, secondsSinceLastUpdate);
+    } catch (err) {
+      this.logger.error(`handleConnection error for ${client.userId}: ${err}`);
+      client.disconnect(true);
+    }
   }
 
   handleDisconnect(client: UserSocket) {
@@ -133,11 +147,13 @@ export class GameGateway
     if (redisInfos.upgrades.length > 0) {
       redisInfos.upgrades.forEach((element) => {
         if (element.id > 1) {
-          let generatedUpgrade = redisInfos.upgrades.find(
+          const generatedUpgrade = redisInfos.upgrades.find(
             (upgrade) => upgrade.id == element.generationUpgradeId,
           );
-          generatedUpgrade.amount = element.amount * element.value * seconds;
-          generatedUpgrade.amountUnit = element.amountUnit;
+          if (generatedUpgrade) {
+            generatedUpgrade.amount = element.amount * element.value * seconds;
+            generatedUpgrade.amountUnit = element.amountUnit;
+          }
         } else {
           // Fan
           redisInfos.money = element.amount * element.value * seconds;

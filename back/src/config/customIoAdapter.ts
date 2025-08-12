@@ -43,9 +43,13 @@ export class CustomIoAdapter extends IoAdapter {
         });
         socket.userId = payload.userId;
         next();
-      } catch (e) {
+      } catch (e: any) {
         logger.error(e);
-        next(new Error());
+        if (e?.name === 'TokenExpiredError') {
+          next(new Error('TOKEN_EXPIRED'));
+        } else {
+          next(new Error('UNAUTHORIZED'));
+        }
       }
     });
     return server;

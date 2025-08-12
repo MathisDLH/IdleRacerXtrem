@@ -31,6 +31,16 @@ export class AccessToken {
   access_token: string;
 }
 
+export class Tokens {
+    @ApiProperty()
+    @IsNotEmpty()
+    access_token: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    refresh_token: string;
+}
+
 export interface JWTContent {
   userId: number;
 }

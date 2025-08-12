@@ -19,6 +19,13 @@ export async function loginUser (name: string, password: string): Promise<any> {
   return response.data
 }
 
+export async function refreshToken (refreshToken: string): Promise<{ access_token: string }> {
+  const response = await axios.post(`${API_BASE_URL}/auth/refresh`, {
+    refresh_token: refreshToken
+  })
+  return response.data
+}
+
 export async function getUser (id: string): Promise<User> {
   const response = await axios.get(`${API_BASE_URL}/user/${id}`)
   return response.data
