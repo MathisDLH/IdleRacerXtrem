@@ -4,11 +4,11 @@ import {
   Entity,
   OneToMany,
   PrimaryGeneratedColumn,
-} from 'typeorm';
+} from "typeorm";
 import { User } from "../user/user.entity";
 import { Unit } from "../shared/shared.model";
 import { UserUpgrade } from "../UserUpgrade/userUpgrade.entity";
-import {ApiProperty, ApiResponse} from "@nestjs/swagger";
+import { ApiProperty, ApiResponse } from "@nestjs/swagger";
 
 @Entity()
 export class Upgrade extends BaseEntity {
@@ -37,7 +37,7 @@ export class Upgrade extends BaseEntity {
   generationUpgradeId: number;
 
   @ApiProperty()
-  @Column('float', { comment: "Nombre de type généré" })
+  @Column("float", { comment: "Nombre de type généré" })
   value: number;
 
   @ApiProperty()
@@ -45,6 +45,6 @@ export class Upgrade extends BaseEntity {
   imagePath: string;
 
   @ApiProperty()
-  @OneToMany(() => UserUpgrade, userUpgrade => userUpgrade.upgrade)
+  @OneToMany(() => UserUpgrade, (userUpgrade) => userUpgrade.upgrade)
   public userUpgrade: User[];
 }

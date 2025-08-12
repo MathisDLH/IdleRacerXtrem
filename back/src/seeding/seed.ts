@@ -1,6 +1,6 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from '../app.module';
-import { SeedingService } from './seeding.service';
+import { NestFactory } from "@nestjs/core";
+import { AppModule } from "../app.module";
+import { SeedingService } from "./seeding.service";
 
 async function bootstrap() {
   const app = await NestFactory.createApplicationContext(AppModule);
@@ -11,8 +11,6 @@ async function bootstrap() {
 
 bootstrap().catch((err) => {
   // eslint-disable-next-line no-consoles
-  console.error('Seeding failed', err);
+  console.error("Seeding failed", err);
   process.exit(1);
 });
-
-

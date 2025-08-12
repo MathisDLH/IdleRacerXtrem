@@ -1,5 +1,5 @@
-import { IsEmail, IsNotEmpty } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { IsEmail, IsNotEmpty } from "class-validator";
+import { ApiProperty } from "@nestjs/swagger";
 
 export class BuyUpgradeDto {
   @ApiProperty()
@@ -9,5 +9,4 @@ export class BuyUpgradeDto {
   @ApiProperty()
   @IsNotEmpty()
   quantity: string;
-  
 }

@@ -1,5 +1,5 @@
-import { createContext, useContext, useEffect } from 'react'
-import io from 'socket.io-client'
+import { createContext, useContext, useEffect, useState } from 'react'
+import io, { Socket } from 'socket.io-client'
 import { useAuth } from './Auth.tsx'
 
 const WS_URL = import.meta.env.VITE_WS_URL
@@ -14,29 +14,34 @@ const WebSocketContext = createContext({
 
 const WebSocketProvider = (props: any): JSX.Element => {
   const { token } = useAuth()
-
   const url = WS_URL
-
-  const socket = io(url, {
-    extraHeaders: {
-      Authorization: `Bearer ${token}`
-    }
-  })
+  const [socket, setSocket] = useState<Socket | null>(null)
 
   useEffect(() => {
-    return () => {
-      socket.disconnect()
+    if (!url || !token) {
+      // no connection without a token
+      return
     }
-  }, [socket])
+    const s = io(url, {
+      auth: {
+        token: `Bearer ${token}`
+      }
+    })
+    setSocket(s)
+    return () => {
+      s.disconnect()
+      setSocket(null)
+    }
+  }, [url, token])
 
   const value: WebSocketContextInterface = {
     socket
   }
 
   return (
-        <WebSocketContext.Provider value={value}>
-            {props.children}
-        </WebSocketContext.Provider>
+    <WebSocketContext.Provider value={value}>
+      {props.children}
+    </WebSocketContext.Provider>
   )
 }
 

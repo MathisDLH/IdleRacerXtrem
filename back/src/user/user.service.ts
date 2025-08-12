@@ -1,56 +1,63 @@
-import {Injectable} from '@nestjs/common';
+import { Injectable } from "@nestjs/common";
 
-import {User} from './user.entity';
-import {InjectRepository} from "@nestjs/typeorm";
-import {Repository} from "typeorm";
-import {UserUpgrade} from "../UserUpgrade/userUpgrade.entity";
-import { CreateUserDto } from '../dto/user/create-user.dto';
+import { User } from "./user.entity";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { UserUpgrade } from "../UserUpgrade/userUpgrade.entity";
+import { CreateUserDto } from "../dto/user/create-user.dto";
 
 @Injectable()
 export class UserService {
-    constructor(@InjectRepository(User) private readonly userRepository: Repository<User>,
-                @InjectRepository(UserUpgrade) private readonly userUpgradeRepository: Repository<UserUpgrade>) { }
+  constructor(
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @InjectRepository(UserUpgrade)
+    private readonly userUpgradeRepository: Repository<UserUpgrade>,
+  ) {}
 
+  async findById(id: number): Promise<User> {
+    const t = await this.userRepository.find({
+      where: { id: id },
+      relations: { userUpgrade: true },
+    });
+    return t[0];
+  }
 
-    async findById(id: number): Promise<User> {
-        const t = await this.userRepository.find({ where: { id: id }, relations: { userUpgrade: true } });
-        return t[0];
-    }
+  async findByName(name: string): Promise<User | null> {
+    return this.userRepository.findOne({ where: { name } });
+  }
 
-    async findByName(name: string): Promise<User | null> {
-        return this.userRepository.findOne({ where: { name } });
-    }
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    const user = this.userRepository.create({
+      email: createUserDto.email,
+      name: createUserDto.name,
+      password: createUserDto.password,
+      ownedSkins: ["FIRST"],
+    });
+    return user.save();
+  }
 
-    async create(createUserDto: CreateUserDto): Promise<User> {
-        const user = this.userRepository.create({
-            email: createUserDto.email,
-            name: createUserDto.name,
-            password: createUserDto.password,
-            ownedSkins: ["FIRST"],
-        });
-        return user.save();
-    }
+  async update(user: User) {
+    user.updatedAt = new Date();
+    await this.userRepository.save(user);
+  }
 
-    async update(user: User) {
-        user.updatedAt = new Date();
-        await this.userRepository.save(user);
-    }
-
-    async findUsersByScore(): Promise<User[]> {
-        try {
-            const users = await this.userRepository.find({});
-            users.sort((a, b) => {
-                const uniteA = a.money_unite;
-                const uniteB = b.money_unite;
-                if (uniteA === uniteB) {          
-                    return b.money - a.money;
-                } else {
-                    return uniteB - uniteA;
-                }
-            });
-            return users;
-        } catch (error) {
-            throw new Error('Erreur lors de la récupération des utilisateurs triés par score.');
+  async findUsersByScore(): Promise<User[]> {
+    try {
+      const users = await this.userRepository.find({});
+      users.sort((a, b) => {
+        const uniteA = a.money_unite;
+        const uniteB = b.money_unite;
+        if (uniteA === uniteB) {
+          return b.money - a.money;
+        } else {
+          return uniteB - uniteA;
         }
+      });
+      return users;
+    } catch (error) {
+      throw new Error(
+        "Erreur lors de la récupération des utilisateurs triés par score.",
+      );
     }
+  }
 }

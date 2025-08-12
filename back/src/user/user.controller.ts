@@ -1,28 +1,35 @@
-import { Body, Controller, Get, Param, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  UsePipes,
+  ValidationPipe,
+} from "@nestjs/common";
 
-import { UserService } from './user.service';
+import { UserService } from "./user.service";
 import { User } from "./user.entity";
-import { RedisService } from "../redis/redis.service";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
+import { CreateUserDto } from "../dto/user/create-user.dto";
 
 @ApiTags("User")
-@Controller(['user','users'])
+@Controller(["user", "users"])
 export class UsersController {
-  constructor(private readonly usersService: UserService,
-    private readonly redisService: RedisService) { }
+  constructor(private readonly usersService: UserService) {}
 
-  @Get('/scores')
+  @Get("/scores")
   findScoreTab(): Promise<User[]> {
     return this.usersService.findUsersByScore();
   }
 
-  @Get(':id')
+  @Get(":id")
   @ApiResponse({
     status: 200,
-    description: 'Retrieve user data',
+    description: "Retrieve user data",
     type: User,
   })
-  find(@Param('id') id: string): Promise<User> {
+  find(@Param("id") id: string): Promise<User> {
     return this.usersService.findById(+id);
   }
 
@@ -30,11 +37,10 @@ export class UsersController {
   @UsePipes(new ValidationPipe({ whitelist: true }))
   @ApiResponse({
     status: 201,
-    description: 'Create a new user',
+    description: "Create a new user",
     type: User,
   })
-  create(@Body() dto: import('../dto/user/create-user.dto').CreateUserDto): Promise<User> {
+  create(@Body() dto: CreateUserDto): Promise<User> {
     return this.usersService.create(dto);
   }
-
 }
