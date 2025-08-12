@@ -13,10 +13,8 @@ export class UserService {
 
 
     async findById(id: number): Promise<User> {
-        //FIXME: FIX THIS
         const t = await this.userRepository.find({ where: { id: id }, relations: { userUpgrade: true } });
         return t[0];
-        //return await this.userRepository.findOne({where: {id:id}, relations: { userUpgrade:true }});
     }
 
     async update(user: User) {
