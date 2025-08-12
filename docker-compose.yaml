@@ -1,33 +1,16 @@
 services:
   redis:
-    image: "redis:latest"
-    restart: always
+    image: redis:latest
     ports:
       - "7001:6379"
+
   db:
-    image: "mysql:5.7"
+    image: mysql:latest
     restart: always
     environment:
-      MYSQL_DATABASE: 'db'
-      # So you don't have to use root, but you can if you like
-      MYSQL_USER: 'user'
-      # You can use whatever password you like
-      MYSQL_PASSWORD: 'password'
-      # Password for root access
-      MYSQL_ROOT_PASSWORD: 'password'
+      MYSQL_DATABASE: db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
     ports:
-      - '3306:3306'
-  front:
-    build:
-      context: ./front
-      dockerfile: Dockerfile
-    environment:
-      VITE_API_URL: http://localhost:3000
-    ports:
-      - '80:80'
-  back:
-    build:
-      context: ./back
-      dockerfile: Dockerfile
-    ports:
-      - '3000:3000'
+      - "3306:3306"

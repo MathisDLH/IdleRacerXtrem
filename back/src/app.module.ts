@@ -1,19 +1,17 @@
-import {Module} from '@nestjs/common';
-import {ConfigModule} from '@nestjs/config';
-import {TypeOrmModule} from '@nestjs/typeorm';
-import {UserModule} from './user/user.module';
-import {AuthModule} from './auth/auth.module';
-import {User} from './user/user.entity';
-import {GameGateway} from './game/game.gateway';
-import {JwtModule} from '@nestjs/jwt';
-import {Upgrade} from "./upgrade/upgrade.entity";
-import {UserUpgrade} from "./UserUpgrade/userUpgrade.entity";
-import {RedisModule} from "./redis/redis.module";
-import {UpgradeModule} from "./upgrade/upgrade.module";
-import {SeedingService} from './seeding/seeding.service';
-import {Skin} from "./skin/skin.entity";
-import {SkinModule} from "./skin/skin.module";
-import {GameModule} from "./game/game.module";
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './user/user.entity';
+import { Upgrade } from './upgrade/upgrade.entity';
+import { UserUpgrade } from './UserUpgrade/userUpgrade.entity';
+import { Skin } from './skin/skin.entity';
+import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
+import { GameModule } from './game/game.module';
+import { RedisModule } from './redis/redis.module';
+import { UpgradeModule } from './upgrade/upgrade.module';
+import { SkinModule } from './skin/skin.module';
+import { SeedingService } from './seeding/seeding.service';
 
 const entities = [User, Upgrade, UserUpgrade, Skin];
 
@@ -23,15 +21,18 @@ const entities = [User, Upgrade, UserUpgrade, Skin];
             envFilePath: ['.env'],
             isGlobal: true,
         }),
+
         TypeOrmModule.forRoot({
             type: 'mysql',
-            socketPath: process.env.INSTANCE_UNIX_SOCKET,
+            host: process.env.DATABASE_HOST || 'localhost',
+            port: parseInt(process.env.DATABASE_PORT ?? '3306', 10),
             username: process.env.DATABASE_USER,
             password: process.env.DATABASE_PASSWORD,
             database: process.env.DATABASE_NAME,
-            entities: entities,
+            entities,
             synchronize: true,
         }),
+
         TypeOrmModule.forFeature([User]),
         TypeOrmModule.forFeature([Upgrade]),
         TypeOrmModule.forFeature([Skin]),
@@ -39,11 +40,9 @@ const entities = [User, Upgrade, UserUpgrade, Skin];
         SkinModule,
         AuthModule,
         GameModule,
-        JwtModule,
         RedisModule,
         UpgradeModule,
     ],
     providers: [SeedingService],
 })
-export class AppModule {
-}
+export class AppModule {}
