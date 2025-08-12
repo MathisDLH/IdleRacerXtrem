@@ -1,5 +1,6 @@
 import { TypeormExceptionFilter } from './typeormException.filter';
 import { QueryFailedError } from 'typeorm';
+import { Logger } from '@nestjs/common';
 
 const createArgumentsHost = () => {
   const mockResponse = {
@@ -17,6 +18,18 @@ const createArgumentsHost = () => {
 };
 
 describe('TypeormExceptionFilter', () => {
+  let loggerErrorSpy: jest.SpyInstance;
+
+  beforeEach(() => {
+    loggerErrorSpy = jest
+      .spyOn(Logger.prototype, 'error')
+      .mockImplementation(() => undefined);
+  });
+
+  afterEach(() => {
+    loggerErrorSpy.mockRestore();
+  });
+
   it('formats ER_DUP_ENTRY errors', () => {
     const filter = new TypeormExceptionFilter();
     const error = new QueryFailedError('query', [], { code: 'ER_DUP_ENTRY' } as any);
