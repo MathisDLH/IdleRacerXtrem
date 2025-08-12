@@ -145,5 +145,42 @@ describe('RedisService', () => {
     const money = await service.getUserMoney(user.id);
     expect(money).toBe(100);
   });
+
+  it('handles money overflow and unit conversion', async () => {
+    await service.loadUserInRedis(user);
+    await service.incrMoney(user.id, 2000, Unit.UNIT);
+    expect(await service.getUserMoneyUnit(user.id)).toBe(Unit.K);
+    expect(await service.getUserMoney(user.id)).toBeCloseTo(2.1);
+    await service.incrMoney(user.id, 1500, Unit.UNIT);
+    expect(await service.getUserMoney(user.id)).toBeCloseTo(3.6);
+  });
+
+  it('handles click overflow and unit conversion', async () => {
+    await service.loadUserInRedis(user);
+    let result = await service.incrClick(user.id, 2000, Unit.UNIT);
+    expect(result.unit).toBe(Unit.K);
+    expect(result.amount).toBeCloseTo(2.001);
+    result = await service.incrClick(user.id, 1500, Unit.UNIT);
+    expect(result.unit).toBe(Unit.K);
+    expect(result.amount).toBeCloseTo(3.501);
+  });
+
+  it('handles upgrade overflow and unit conversion', async () => {
+    await service.loadUserInRedis(user);
+    await service.incrUpgrade(user.id, 1, 2000, Unit.UNIT);
+    await service.incrUpgrade(user.id, 1, 1500, Unit.UNIT);
+    const upgrade = await service.getUpgrade(user.id, 1);
+    expect(upgrade.amountUnit).toBe(Unit.K);
+    expect(upgrade.amount).toBeCloseTo(3.5);
+  });
+
+  it('decrements unit when paying leaves less than one', async () => {
+    const richUser: User = { ...user, money: 1, money_unite: Unit.K } as User;
+    await service.loadUserInRedis(richUser);
+    const paid = await service.pay(richUser.id, { value: 0.5, unit: Unit.K });
+    expect(paid).toBe(true);
+    expect(await service.getUserMoneyUnit(richUser.id)).toBe(Unit.UNIT);
+    expect(await service.getUserMoney(richUser.id)).toBeCloseTo(500);
+  });
 });
 
