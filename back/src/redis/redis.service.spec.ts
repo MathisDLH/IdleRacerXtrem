@@ -145,5 +145,45 @@ describe('RedisService', () => {
     const money = await service.getUserMoney(user.id);
     expect(money).toBe(100);
   });
+
+  it('increments money across threshold and updates unit', async () => {
+    const richUser: User = { ...user, money: 999 } as any;
+    await service.loadUserInRedis(richUser);
+    const result = await service.incrMoney(richUser.id, 5, Unit.UNIT);
+    expect(result).toEqual({ amount: 5, unit: Unit.UNIT });
+    expect(await service.getUserMoney(richUser.id)).toBeCloseTo(1.004);
+    expect(+await service.getUserMoneyUnit(richUser.id)).toBe(Unit.K);
+  });
+
+  it('converts units when incrementing money', async () => {
+    const highUnitUser: User = { ...user, money: 1, money_unite: Unit.K } as any;
+    await service.loadUserInRedis(highUnitUser);
+    const result = await service.incrMoney(highUnitUser.id, 500, Unit.UNIT);
+    expect(result).toEqual({ amount: 500, unit: Unit.UNIT });
+    expect(await service.getUserMoney(highUnitUser.id)).toBeCloseTo(1.5);
+    expect(+await service.getUserMoneyUnit(highUnitUser.id)).toBe(Unit.K);
+  });
+
+  it('increments click across threshold and updates unit', async () => {
+    const clickUser: User = { ...user, click: 999 } as any;
+    await service.loadUserInRedis(clickUser);
+    const result = await service.incrClick(clickUser.id, 5, Unit.UNIT);
+    expect(result.amount).toBeCloseTo(1.004);
+    expect(result.unit).toBe(Unit.K);
+    expect(await service.getUserClick(clickUser.id)).toBeCloseTo(1.004);
+    expect(+await service.getUserClickUnit(clickUser.id)).toBe(Unit.K);
+  });
+
+  it('handles unit conversion in pay and throws PurchaseError when insufficient', async () => {
+    const payUser: User = { ...user, money: 2, money_unite: Unit.K } as any;
+    await service.loadUserInRedis(payUser);
+    const paid = await service.pay(payUser.id, { value: 1500, unit: Unit.UNIT });
+    expect(paid).toBe(true);
+    expect(await service.getUserMoney(payUser.id)).toBeCloseTo(500);
+    expect(+await service.getUserMoneyUnit(payUser.id)).toBe(Unit.UNIT);
+    await expect(
+      service.pay(payUser.id, { value: 600, unit: Unit.UNIT }),
+    ).rejects.toBeInstanceOf(PurchaseError);
+  });
 });
 
