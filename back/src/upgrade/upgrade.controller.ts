@@ -6,6 +6,7 @@ import {
   Request,
   UseFilters,
   UseGuards,
+  Logger,
 } from "@nestjs/common";
 import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
 import { UpgradeService } from "./upgrade.service";
@@ -24,6 +25,8 @@ export class UpgradeController {
     private readonly upgradeService: UpgradeService,
     private readonly game: GameGateway,
   ) {}
+
+  private readonly logger: Logger = new Logger(UpgradeController.name);
 
   @UseGuards(JwtAuthGuard)
   @Get()
@@ -66,7 +69,7 @@ export class UpgradeController {
     );
     await this.game.emitMoney(userSocket);
     await this.game.emitUpgrade(userSocket);
-    console.log(returnData);
+    this.logger.log(`buyClick result: ${JSON.stringify(returnData)}`);
     return returnData;
   }
 }
