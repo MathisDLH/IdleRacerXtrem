@@ -1,4 +1,4 @@
-import { Provider } from "@nestjs/common";
+import { Provider, Logger } from "@nestjs/common";
 import Redis from "ioredis";
 
 export type RedisClient = Redis;
@@ -12,12 +12,10 @@ export const redisProvider: Provider = {
       reconnectOnError: () => true,
     });
     client.on("connect", () => {
-      // eslint-disable-next-line no-console
-      console.log("[Redis] connected");
+      Logger.log("[Redis] connected");
     });
     client.on("error", (err) => {
-      // eslint-disable-next-line no-console
-      console.error("[Redis] error", err);
+      Logger.error("[Redis] error", err);
     });
     return client;
   },

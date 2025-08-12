@@ -145,7 +145,7 @@ describe('RedisService', () => {
     const money = await service.getUserMoney(user.id);
     expect(money).toBe(100);
   });
-
+  
   it('increments money across threshold and updates unit', async () => {
     const richUser: User = { ...user, money: 999 } as any;
     await service.loadUserInRedis(richUser);
