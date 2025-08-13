@@ -1,0 +1,59 @@
+version: "3.9"
+services:
+  front:
+    build: ./front
+    restart: always
+    ports: ["80:80"]
+    depends_on: [back]
+
+  back:
+    build: ./back
+    restart: always
+    environment:
+      DATABASE_URL: mysql://user:password@db:3306/db
+      REDIS_HOST: redis
+    ports: ["3000:3000"]
+    depends_on: [db, redis]
+
+  db:
+    image: mysql:8
+    environment:
+      MYSQL_DATABASE: db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+    volumes:
+      - db_data:/var/lib/mysql
+
+  redis:
+    image: redis:7
+    volumes:
+      - redis_data:/data
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    ports: ["8081:8080"]
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports: ["9090:9090"]
+    depends_on: [cadvisor]
+
+  grafana:
+    image: grafana/grafana
+    ports: ["3001:3000"]
+    depends_on: [prometheus]
+    volumes:
+      - grafana_data:/var/lib/grafana
+
+volumes:
+  db_data:
+  redis_data:
+  grafana_data:
