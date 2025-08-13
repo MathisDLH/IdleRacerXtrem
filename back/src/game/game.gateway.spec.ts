@@ -157,13 +157,16 @@ describe('GameGateway', () => {
       const upd = jest.spyOn(gateway, 'updateMoney');
       const moneySpy = jest.spyOn(gateway, 'emitMoney');
       const upgradeSpy = jest.spyOn(gateway, 'emitUpgrade');
+      const persistSpy = jest.spyOn(gateway, 'pushRedisToDb');
 
       gateway.onModuleInit();
       await jest.advanceTimersByTimeAsync(1000);
+      await jest.advanceTimersByTimeAsync(10000);
 
       expect(upd).not.toHaveBeenCalled();
       expect(moneySpy).not.toHaveBeenCalled();
       expect(upgradeSpy).not.toHaveBeenCalled();
+      expect(persistSpy).not.toHaveBeenCalled();
 
       gateway.onModuleDestroy();
       jest.useRealTimers();
