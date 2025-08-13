@@ -10,7 +10,11 @@ import { UserService } from "src/user/user.service";
 import { User } from "src/user/user.entity";
 import { RedisService } from "src/redis/redis.service";
 import { Logger, OnModuleDestroy, OnModuleInit } from "@nestjs/common";
-import { IRedisData, Unit } from "../shared/shared.model";
+import {
+  IRedisData,
+  Unit,
+  UpgradeRealTime,
+} from "../shared/shared.model";
 import { UpgradeService } from "../upgrade/upgrade.service";
 
 export interface UserSocket extends Socket {
@@ -152,11 +156,14 @@ export class GameGateway
     seconds = 1,
   ): Promise<{
     moneyData: { amount: number; unit: Unit };
-    upgradesData: any[];
+    upgradesData: UpgradeRealTime[];
   }> {
     const redisInfos = await this.redisService.getUserData(user);
     if (!redisInfos?.upgrades?.length) {
-      return { moneyData: { amount: 0, unit: Unit.UNIT }, upgradesData: [] };
+      return {
+        moneyData: { amount: 0, unit: Unit.UNIT },
+        upgradesData: [],
+      };
     }
     redisInfos.upgrades.forEach((element) => {
       if (element.id > 1) {
