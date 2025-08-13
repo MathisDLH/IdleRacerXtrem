@@ -44,4 +44,34 @@ describe('TypeormExceptionFilter', () => {
       path: '/test',
     });
   });
+
+  it('formats unknown driver errors', () => {
+    const filter = new TypeormExceptionFilter();
+    const error = new QueryFailedError('query', [], { code: 'SOME_CODE' } as any);
+    const host = createArgumentsHost();
+
+    filter.catch(error, host);
+
+    expect(host.response.status).toHaveBeenCalledWith(500);
+    expect(host.response.json).toHaveBeenCalledWith({
+      message: 'Error while creating user',
+      statusCode: 500,
+      path: '/test',
+    });
+  });
+
+  it('handles non-QueryFailedError errors', () => {
+    const filter = new TypeormExceptionFilter();
+    const error = new Error('oops');
+    const host = createArgumentsHost();
+
+    filter.catch(error as any, host);
+
+    expect(host.response.status).toHaveBeenCalledWith(500);
+    expect(host.response.json).toHaveBeenCalledWith({
+      message: undefined,
+      statusCode: 500,
+      path: '/test',
+    });
+  });
 });
