@@ -10,7 +10,7 @@ import { UserService } from "src/user/user.service";
 import { User } from "src/user/user.entity";
 import { RedisService } from "src/redis/redis.service";
 import { Logger, OnModuleDestroy, OnModuleInit } from "@nestjs/common";
-import { IRedisData, Unit } from "../shared/shared.model";
+import { IRedisData, Unit, UpgradePayload } from "../shared/shared.model";
 import { UpgradeService } from "../upgrade/upgrade.service";
 
 export interface UserSocket extends Socket {
@@ -92,7 +92,7 @@ export class GameGateway
 
   public async emitUpgrade(client: UserSocket, realTimeData: any = null) {
     const userData = await this.redisService.getUserData(client.user);
-    const payload: any = { upgrades: userData.upgrades };
+    const payload: UpgradePayload = { upgrades: userData.upgrades };
     if (realTimeData) {
       payload.realTimeData = realTimeData.upgradesData;
     }
