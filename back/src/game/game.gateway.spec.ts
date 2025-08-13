@@ -72,6 +72,39 @@ describe('GameGateway', () => {
     });
   });
 
+  describe('handleConnection edge cases', () => {
+    it('disconnects when user is not found', async () => {
+      userService.findById.mockResolvedValue(null);
+      const client: UserSocket = { userId: '1', disconnect: jest.fn() } as any;
+      const warnSpy = jest
+        .spyOn(gateway['logger'], 'warn')
+        .mockImplementation();
+
+      await gateway.handleConnection(client);
+
+      expect(warnSpy).toHaveBeenCalledWith(
+        'User 1 not found. Disconnecting.',
+      );
+      expect(client.disconnect).toHaveBeenCalledWith(true);
+      expect(gateway.socketConnected.has(client)).toBe(false);
+    });
+
+    it('disconnects and logs on service error', async () => {
+      userService.findById.mockRejectedValue(new Error('boom'));
+      const client: UserSocket = { userId: '1', disconnect: jest.fn() } as any;
+      const errorSpy = jest
+        .spyOn(gateway['logger'], 'error')
+        .mockImplementation();
+
+      await gateway.handleConnection(client);
+
+      expect(errorSpy).toHaveBeenCalledWith(
+        expect.stringContaining('handleConnection error for 1'),
+      );
+      expect(client.disconnect).toHaveBeenCalledWith(true);
+    });
+  });
+
   describe('periodic ticks', () => {
     it('runs periodic update and persistence', async () => {
       jest.useFakeTimers();
@@ -94,6 +127,40 @@ describe('GameGateway', () => {
 
       await jest.advanceTimersByTimeAsync(10000);
       expect(persistSpy).toHaveBeenCalled();
+
+      gateway.onModuleDestroy();
+      jest.useRealTimers();
+    });
+
+    it('logs errors from update and persistence tasks', async () => {
+      jest.useFakeTimers();
+      const user = { id: 1 } as unknown as User;
+      const client: UserSocket = { user, emit: jest.fn() } as any;
+      gateway.socketConnected.add(client);
+
+      jest
+        .spyOn(gateway, 'updateMoney')
+        .mockRejectedValue(new Error('tick fail'));
+      jest.spyOn(gateway, 'emitMoney').mockResolvedValue(undefined);
+      jest.spyOn(gateway, 'emitUpgrade').mockResolvedValue(undefined);
+      jest
+        .spyOn(gateway, 'pushRedisToDb')
+        .mockRejectedValue(new Error('persist fail'));
+      const errorSpy = jest
+        .spyOn(gateway['logger'], 'error')
+        .mockImplementation();
+
+      gateway.onModuleInit();
+
+      await jest.advanceTimersByTimeAsync(1000);
+      await jest.advanceTimersByTimeAsync(10000);
+
+      expect(errorSpy).toHaveBeenCalledWith(
+        expect.stringContaining('tick error for user 1'),
+      );
+      expect(errorSpy).toHaveBeenCalledWith(
+        expect.stringContaining('persist error for user 1'),
+      );
 
       gateway.onModuleDestroy();
       jest.useRealTimers();
@@ -191,6 +258,19 @@ describe('GameGateway', () => {
 
       expect(redisService.updateUserData).toHaveBeenCalledWith(user, redisInfos as any);
       expect(result).toBe(expected);
+    });
+
+    it('returns default values when no upgrades present', async () => {
+      const user = { id: 1 } as unknown as User;
+      redisService.getUserData.mockResolvedValue({ upgrades: [] } as any);
+
+      const result = await gateway.updateMoney(user, 1);
+
+      expect(result).toEqual({
+        moneyData: { amount: 0, unit: Unit.UNIT },
+        upgradesData: [],
+      });
+      expect(redisService.updateUserData).not.toHaveBeenCalled();
     });
   });
 
