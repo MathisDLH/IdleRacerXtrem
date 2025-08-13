@@ -40,6 +40,7 @@ describe('GameGateway', () => {
   });
 
   afterEach(() => {
+    gateway.onModuleDestroy();
     jest.useRealTimers();
     jest.restoreAllMocks();
   });
@@ -144,9 +145,6 @@ describe('GameGateway', () => {
 
       await jest.advanceTimersByTimeAsync(10000);
       expect(persistSpy).toHaveBeenCalled();
-
-      gateway.onModuleDestroy();
-      jest.useRealTimers();
     });
 
     it('skips clients without user (continue branch)', async () => {
@@ -170,6 +168,7 @@ describe('GameGateway', () => {
 
       gateway.onModuleDestroy();
       jest.useRealTimers();
+
     });
 
     it('logs tick errors (catch branch in tick loop)', async () => {
@@ -185,8 +184,6 @@ describe('GameGateway', () => {
       await jest.advanceTimersByTimeAsync(1000);
 
       expect(loggerErrorSpy).toHaveBeenCalled(); // couvre le catch du tick
-      gateway.onModuleDestroy();
-      jest.useRealTimers();
     });
 
     it('logs persist errors (catch branch in persist loop)', async () => {
@@ -202,8 +199,6 @@ describe('GameGateway', () => {
       await jest.advanceTimersByTimeAsync(10000);
 
       expect(loggerErrorSpy).toHaveBeenCalled();
-      gateway.onModuleDestroy();
-      jest.useRealTimers();
     });
 
     it('clears intervals on onModuleDestroy', async () => {
@@ -214,7 +209,6 @@ describe('GameGateway', () => {
       gateway.onModuleDestroy();
 
       expect(clearSpy).toHaveBeenCalledTimes(2);
-      jest.useRealTimers();
     });
   });
 
@@ -350,6 +344,16 @@ describe('GameGateway', () => {
 
       expect(result).toEqual({ moneyData: { amount: 0, unit: Unit.UNIT }, upgradesData: [] });
     });
+
+    it.each([undefined, { money: 0, moneyUnit: Unit.UNIT, click: 0, clickUnit: Unit.UNIT }])(
+      'returns empty data when redisService.getUserData returns %p',
+      async (redisReturn) => {
+        const user = { id: 1 } as unknown as User;
+        redisService.getUserData.mockResolvedValue(redisReturn as any);
+        const result = await gateway.updateMoney(user, 1);
+        expect(result).toEqual({ moneyData: { amount: 0, unit: Unit.UNIT }, upgradesData: [] });
+      },
+    );
 
     it('handles missing generated upgrade gracefully', async () => {
       const user = { id: 1 } as unknown as User;

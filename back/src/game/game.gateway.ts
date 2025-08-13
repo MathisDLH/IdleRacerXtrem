@@ -51,6 +51,7 @@ export class GameGateway
         }
       }
     }, 1000);
+    this.tickHandle.unref();
 
     this.persistHandle = setInterval(async () => {
       for (const client of Array.from(this.socketConnected)) {
@@ -62,6 +63,7 @@ export class GameGateway
         }
       }
     }, 10000);
+    this.persistHandle.unref();
   }
 
   onModuleDestroy() {
@@ -144,26 +146,26 @@ export class GameGateway
     upgradesData: any[];
   }> {
     const redisInfos = await this.redisService.getUserData(user);
-    if (redisInfos.upgrades.length > 0) {
-      redisInfos.upgrades.forEach((element) => {
-        if (element.id > 1) {
-          const generatedUpgrade = redisInfos.upgrades.find(
-            (upgrade) => upgrade.id == element.generationUpgradeId,
-          );
-          if (generatedUpgrade) {
-            generatedUpgrade.amount = element.amount * element.value * seconds;
-            generatedUpgrade.amountUnit = element.amountUnit;
-          }
-        } else {
-          // Fan
-          redisInfos.money = element.amount * element.value * seconds;
-          redisInfos.moneyUnit = element.amountUnit;
-        }
-        element.amount = 0;
-      });
-      return await this.redisService.updateUserData(user, redisInfos);
+    if (!redisInfos?.upgrades?.length) {
+      return { moneyData: { amount: 0, unit: Unit.UNIT }, upgradesData: [] };
     }
-    return { moneyData: { amount: 0, unit: Unit.UNIT }, upgradesData: [] };
+    redisInfos.upgrades.forEach((element) => {
+      if (element.id > 1) {
+        const generatedUpgrade = redisInfos.upgrades.find(
+          (upgrade) => upgrade.id == element.generationUpgradeId,
+        );
+        if (generatedUpgrade) {
+          generatedUpgrade.amount = element.amount * element.value * seconds;
+          generatedUpgrade.amountUnit = element.amountUnit;
+        }
+      } else {
+        // Fan
+        redisInfos.money = element.amount * element.value * seconds;
+        redisInfos.moneyUnit = element.amountUnit;
+      }
+      element.amount = 0;
+    });
+    return await this.redisService.updateUserData(user, redisInfos);
   }
 
   async pushRedisToDb(user: User) {
