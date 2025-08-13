@@ -39,6 +39,16 @@ describe('SeedingService', () => {
     expect(mockSkinRepository.save).toHaveBeenCalledWith(skinsData);
   });
 
+  it('onModuleInit seeds upgrades and skins when repositories are empty', async () => {
+    mockUpgradeRepository.count.mockResolvedValue(0);
+    mockSkinRepository.count.mockResolvedValue(0);
+
+    await service.onModuleInit();
+
+    expect(mockUpgradeRepository.save).toHaveBeenCalledWith(upgradesData);
+    expect(mockSkinRepository.save).toHaveBeenCalledWith(skinsData);
+  });
+
   it('does not seed when repositories are already populated', async () => {
     mockUpgradeRepository.count.mockResolvedValue(1);
     mockSkinRepository.count.mockResolvedValue(1);
