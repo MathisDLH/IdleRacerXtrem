@@ -18,6 +18,13 @@ export interface UserSocket extends Socket {
   user?: User;
 }
 
+export interface MoneyPayload {
+  money: number;
+  unit: Unit;
+  moneyBySec?: number;
+  moneyBySecUnit?: Unit;
+}
+
 @WebSocketGateway({ cors: { origin: "*" } })
 export class GameGateway
   implements
@@ -79,7 +86,7 @@ export class GameGateway
 
   public async emitMoney(client: UserSocket, realTimeData: any = null) {
     const userData = await this.redisService.getUserData(client.user);
-    const payload: any = {
+    const payload: MoneyPayload = {
       money: userData.money,
       unit: userData.moneyUnit,
     };
