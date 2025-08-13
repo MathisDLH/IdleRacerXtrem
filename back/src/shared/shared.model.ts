@@ -56,3 +56,9 @@ export interface IRedisUpgrade {
   amountBought: number;
   value: number;
 }
+
+export interface UpgradeRealTime {
+  upgrade: IRedisUpgrade;
+  amountGenerated: number;
+  generatedUnit: Unit;
+}

@@ -1,6 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { RedisClient } from "./redis.provider";
-import { IRedisData, IRedisUpgrade, Unit } from "../shared/shared.model";
+import {
+  IRedisData,
+  IRedisUpgrade,
+  Unit,
+  UpgradeRealTime,
+} from "../shared/shared.model";
 import { User } from "../user/user.entity";
 import { PurchaseError } from "../exceptions/PurchaseError";
 
@@ -236,9 +241,15 @@ export class RedisService {
     return data;
   }
 
-  public async updateUserData(user: User, data: IRedisData) {
+  public async updateUserData(
+    user: User,
+    data: IRedisData,
+  ): Promise<{
+    moneyData: { amount: number; unit: Unit };
+    upgradesData: UpgradeRealTime[];
+  }> {
     const moneyData = await this.incrMoney(user.id, data.money, data.moneyUnit);
-    const upgradesData = [];
+    const upgradesData: UpgradeRealTime[] = [];
     for (const e of data.upgrades) {
       const realTimeData = await this.incrUpgrade(
         user.id,
