@@ -7,6 +7,15 @@ jest.mock('ioredis', () => {
   const mock = jest.fn().mockImplementation((options) => {
     const emitter = new EventEmitter();
     (emitter as any).options = options;
+    (emitter as any).triggerError = (err) => {
+      if (options.retryStrategy) {
+        options.retryStrategy(1);
+      }
+      if (options.reconnectOnError) {
+        options.reconnectOnError(err);
+      }
+      emitter.emit('error', err);
+    };
     return emitter;
   });
   return { __esModule: true, default: mock };
@@ -47,5 +56,26 @@ describe('redisProvider', () => {
     (client as any).emit('error', err);
 
     expect(errorSpy).toHaveBeenCalledWith('[Redis] error', err);
+  });
+
+  it('retries and reconnects on failure', () => {
+    const client = (redisProvider as any).useFactory();
+    const options = (Redis as unknown as jest.Mock).mock.calls[0][0];
+
+    const retrySpy = jest.spyOn(options, 'retryStrategy');
+    const reconnectSpy = jest.spyOn(options, 'reconnectOnError');
+
+    expect(options.retryStrategy(1)).toBe(50);
+    expect(options.retryStrategy(100)).toBe(2000);
+    expect(options.reconnectOnError(new Error('test'))).toBe(true);
+
+    retrySpy.mockClear();
+    reconnectSpy.mockClear();
+
+    const err = new Error('boom');
+    (client as any).triggerError(err);
+
+    expect(retrySpy).toHaveBeenCalledWith(1);
+    expect(reconnectSpy).toHaveBeenCalledWith(err);
   });
 });
