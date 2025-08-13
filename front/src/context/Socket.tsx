@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import io, { Socket } from 'socket.io-client'
+import io, { type Socket } from 'socket.io-client'
 import { useAuth } from './Auth.tsx'
 
 const WS_URL = import.meta.env.VITE_WS_URL
@@ -33,14 +33,13 @@ const WebSocketProvider = (props: any): JSX.Element => {
           const raw = localStorage.getItem('refresh_token')
           if (raw) {
             const refresh = raw.startsWith('"') ? JSON.parse(raw) : raw
-            const { access_token } = await import('../services/auth.service').then(m => m.refreshToken(refresh))
-            localStorage.setItem('access_token', JSON.stringify(access_token))
+            const { access_token: accessToken } = await import('../services/auth.service').then(async m => await m.refreshToken(refresh))
+            localStorage.setItem('access_token', JSON.stringify(accessToken))
             // recreate socket with new token
-            s.auth = { token: `Bearer ${access_token}` }
+            s.auth = { token: `Bearer ${accessToken}` }
             s.connect()
           }
         } catch (e) {
-          // eslint-disable-next-line no-console
           console.warn('Unable to refresh token, please login again')
         }
       }

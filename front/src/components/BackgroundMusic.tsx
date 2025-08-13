@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import bgmusic from '../assets/musics/bg-music.mp3'
 import '../assets/styles/BackgroundMusic.scss' // Assurez-vous d'importer le fichier CSS
 
-const BackgroundMusic = () => {
+const BackgroundMusic = (): JSX.Element => {
   const [volume, setVolume] = useState<number>(0.5)
   const audioRef = useRef(new Audio(bgmusic))
 
@@ -21,7 +21,7 @@ const BackgroundMusic = () => {
     }
   }, [volume])
 
-  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const newVolume = parseFloat(e.target.value)
     setVolume(newVolume)
   }
