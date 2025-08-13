@@ -9,10 +9,15 @@ export function getTypeOrmModuleOptions(
   configService: ConfigService,
 ): TypeOrmModuleOptions {
   const host = configService.get<string>("DATABASE_HOST", "localhost");
-  const port = parseInt(configService.get<string>("DATABASE_PORT", "3306"), 10);
+  const portString = configService.get<string>("DATABASE_PORT", "3306");
   const username = configService.get<string>("DATABASE_USER");
   const password = configService.get<string>("DATABASE_PASSWORD");
   const database = configService.get<string>("DATABASE_NAME");
+
+  const port = parseInt(portString, 10);
+  if (!username || !password || !database || Number.isNaN(port)) {
+    throw new Error("Invalid database configuration");
+  }
 
   return {
     type: "mysql",

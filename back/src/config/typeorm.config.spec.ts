@@ -32,9 +32,9 @@ describe('getTypeOrmModuleOptions', () => {
     });
   });
 
-  it('uses defaults when ConfigService lacks values', () => {
-    const opts: any = getTypeOrmModuleOptions(configService);
-    expect(opts.host).toBe('localhost');
-    expect(opts.port).toBe(3306);
+  it('throws when required database values are missing or invalid', () => {
+    expect(() => getTypeOrmModuleOptions(configService)).toThrow(
+      'Invalid database configuration',
+    );
   });
 });
