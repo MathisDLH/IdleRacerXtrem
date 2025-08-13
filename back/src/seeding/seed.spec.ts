@@ -13,6 +13,10 @@ const { SeedingService } = require('./seeding.service');
 const { NestFactory } = require('@nestjs/core');
 
 describe('Seed script', () => {
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
   it('inserts initial data on empty database', async () => {
     const mockUpgradeRepository = {
       count: jest.fn().mockResolvedValue(0),
@@ -43,6 +47,31 @@ describe('Seed script', () => {
     expect(mockUpgradeRepository.save).toHaveBeenCalledWith(upgradesData);
     expect(mockSkinRepository.save).toHaveBeenCalledWith(skinsData);
     expect(appMock.close).toHaveBeenCalled();
+  });
+
+  it('logs error and exits when seeding fails', async () => {
+    const testError = new Error('test');
+    (NestFactory.createApplicationContext as jest.Mock).mockRejectedValue(
+      testError,
+    );
+
+    const consoleErrorSpy = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => undefined);
+    const processExitSpy = jest
+      .spyOn(process, 'exit')
+      .mockImplementation((() => undefined) as any);
+
+    await jest.isolateModulesAsync(async () => {
+      await import('./seed');
+    });
+    await new Promise(setImmediate);
+
+    expect(consoleErrorSpy).toHaveBeenCalledWith('Seeding failed', testError);
+    expect(processExitSpy).toHaveBeenCalledWith(1);
+
+    consoleErrorSpy.mockRestore();
+    processExitSpy.mockRestore();
   });
 });
 
