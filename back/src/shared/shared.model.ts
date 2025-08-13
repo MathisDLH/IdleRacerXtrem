@@ -56,3 +56,12 @@ export interface IRedisUpgrade {
   amountBought: number;
   value: number;
 }
+
+export interface UpdateSummary {
+  moneyData: { amount: number; unit: Unit };
+  upgradesData: {
+    upgrade: IRedisUpgrade;
+    amountGenerated: number;
+    generatedUnit: Unit;
+  }[];
+}
