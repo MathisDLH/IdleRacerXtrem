@@ -185,5 +185,81 @@ describe('RedisService', () => {
       service.pay(payUser.id, { value: 600, unit: Unit.UNIT }),
     ).rejects.toBeInstanceOf(PurchaseError);
   });
+
+  it('handles expired click keys by using existing unit', async () => {
+    await client.set('1:CLICK_UNIT', Unit.UNIT);
+    const result = await service.incrClick(1, 5, Unit.K);
+    expect(result).toEqual({ amount: 5, unit: Unit.K });
+    expect(await service.getUserClick(1)).toBeCloseTo(5);
+    expect(+await service.getUserClickUnit(1)).toBe(Unit.K);
+  });
+
+  it('normalizes upgrade amounts when exceeding threshold', async () => {
+    await service.addUpgrade(1, {
+      id: 1,
+      amount: 0,
+      amountUnit: Unit.UNIT,
+      amountBought: 0,
+      value: 0,
+      generationUpgradeId: 0,
+    });
+
+    const incr = await service.incrUpgrade(1, 1, 5000, Unit.K);
+    expect(incr).toEqual({ amountGenerated: 5000, generatedUnit: Unit.K });
+    const upgrade = await service.getUpgrade(1, 1);
+    expect(upgrade.amount).toBeCloseTo(5);
+    expect(upgrade.amountUnit).toBe(Unit.MILLION);
+  });
+
+  it('updates user data with money and upgrades', async () => {
+    await service.loadUserInRedis(user);
+
+    const result = await service.updateUserData(user, {
+      userId: user.id,
+      money: 10,
+      moneyUnit: Unit.UNIT,
+      click: 0,
+      clickUnit: Unit.UNIT,
+      upgrades: [
+        {
+          id: 1,
+          amount: 5,
+          amountUnit: Unit.UNIT,
+          amountBought: 0,
+          value: 1,
+          generationUpgradeId: 0,
+        },
+      ],
+    });
+
+    expect(result.moneyData).toEqual({ amount: 10, unit: Unit.UNIT });
+    expect(result.upgradesData.length).toBe(1);
+    expect(result.upgradesData[0].upgrade.id).toBe(1);
+    expect(result.upgradesData[0].amountGenerated).toBe(5);
+  });
+
+  it('propagates redis errors during updateUserData', async () => {
+    await service.loadUserInRedis(user);
+    client.hincrbyfloat.mockRejectedValueOnce(new Error('network'));
+    await expect(
+      service.updateUserData(user, {
+        userId: user.id,
+        money: 0,
+        moneyUnit: Unit.UNIT,
+        click: 0,
+        clickUnit: Unit.UNIT,
+        upgrades: [
+          {
+            id: 1,
+            amount: 1,
+            amountUnit: Unit.UNIT,
+            amountBought: 0,
+            value: 1,
+            generationUpgradeId: 0,
+          },
+        ],
+      }),
+    ).rejects.toThrow('network');
+  });
 });
 
