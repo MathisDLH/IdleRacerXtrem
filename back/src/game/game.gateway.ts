@@ -51,6 +51,7 @@ export class GameGateway
         }
       }
     }, 1000);
+    this.tickHandle.unref();
 
     this.persistHandle = setInterval(async () => {
       for (const client of Array.from(this.socketConnected)) {
@@ -62,6 +63,7 @@ export class GameGateway
         }
       }
     }, 10000);
+    this.persistHandle.unref();
   }
 
   onModuleDestroy() {

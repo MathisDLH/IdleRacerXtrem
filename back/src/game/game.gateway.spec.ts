@@ -40,6 +40,7 @@ describe('GameGateway', () => {
   });
 
   afterEach(() => {
+    gateway.onModuleDestroy();
     jest.useRealTimers();
     jest.restoreAllMocks();
   });
@@ -144,9 +145,6 @@ describe('GameGateway', () => {
 
       await jest.advanceTimersByTimeAsync(10000);
       expect(persistSpy).toHaveBeenCalled();
-
-      gateway.onModuleDestroy();
-      jest.useRealTimers();
     });
 
     it('skips clients without user (continue branch)', async () => {
@@ -164,9 +162,6 @@ describe('GameGateway', () => {
       expect(upd).not.toHaveBeenCalled();
       expect(moneySpy).not.toHaveBeenCalled();
       expect(upgradeSpy).not.toHaveBeenCalled();
-
-      gateway.onModuleDestroy();
-      jest.useRealTimers();
     });
 
     it('logs tick errors (catch branch in tick loop)', async () => {
@@ -182,8 +177,6 @@ describe('GameGateway', () => {
       await jest.advanceTimersByTimeAsync(1000);
 
       expect(loggerErrorSpy).toHaveBeenCalled(); // couvre le catch du tick
-      gateway.onModuleDestroy();
-      jest.useRealTimers();
     });
 
     it('logs persist errors (catch branch in persist loop)', async () => {
@@ -199,8 +192,6 @@ describe('GameGateway', () => {
       await jest.advanceTimersByTimeAsync(10000);
 
       expect(loggerErrorSpy).toHaveBeenCalled();
-      gateway.onModuleDestroy();
-      jest.useRealTimers();
     });
 
     it('clears intervals on onModuleDestroy', async () => {
@@ -211,7 +202,6 @@ describe('GameGateway', () => {
       gateway.onModuleDestroy();
 
       expect(clearSpy).toHaveBeenCalledTimes(2);
-      jest.useRealTimers();
     });
   });
 
