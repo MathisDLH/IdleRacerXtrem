@@ -53,12 +53,10 @@ describe("GameGateway", () => {
       const user = { id: 1, updatedAt: new Date() } as unknown as User;
       userService.findById.mockResolvedValue(user);
       redisService.resetUserInRedis.mockResolvedValue(undefined);
-      const updateSpy = jest
-        .spyOn(gateway, "updateMoney")
-        .mockResolvedValue({
-          moneyData: { amount: 0, unit: Unit.UNIT },
-          upgradesData: [],
-        });
+      const updateSpy = jest.spyOn(gateway, "updateMoney").mockResolvedValue({
+        moneyData: { amount: 0, unit: Unit.UNIT },
+        upgradesData: [],
+      });
 
       const client: UserSocket = {
         userId: "1",
@@ -121,12 +119,10 @@ describe("GameGateway", () => {
       } as unknown as User;
       userService.findById.mockResolvedValue(user);
       redisService.resetUserInRedis.mockResolvedValue(undefined);
-      const updateSpy = jest
-        .spyOn(gateway, "updateMoney")
-        .mockResolvedValue({
-          moneyData: { amount: 0, unit: Unit.UNIT },
-          upgradesData: [],
-        });
+      const updateSpy = jest.spyOn(gateway, "updateMoney").mockResolvedValue({
+        moneyData: { amount: 0, unit: Unit.UNIT },
+        upgradesData: [],
+      });
 
       const client: UserSocket = {
         userId: "1",

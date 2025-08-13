@@ -46,7 +46,7 @@ export class RedisService {
   }
 
   async incrMoney(userId: number, amountToIncr: number, unit: Unit) {
-    let moneyUnit = +(await this.getUserMoneyUnit(userId));
+    const moneyUnit = +(await this.getUserMoneyUnit(userId));
     const unitDifference = moneyUnit - unit;
     let amountIncremented = amountToIncr;
     if (unitDifference !== 0) {
@@ -76,7 +76,7 @@ export class RedisService {
     unit: Unit,
   ): Promise<{ amount: number; unit: number }> {
     let clickUnit = +(await this.getUserClickUnit(userId));
-    let unitDifference = clickUnit - unit;
+    const unitDifference = clickUnit - unit;
     let amountIncremented = amountToIncr;
     if (unitDifference != 0) {
       amountIncremented /= Math.pow(10, unitDifference);
@@ -110,7 +110,7 @@ export class RedisService {
       `${userId}:${upgradeId}`,
       "amountUnit",
     ));
-    let unitDifference = upgradeUnit - unit;
+    const unitDifference = upgradeUnit - unit;
     let amountIncremented = amountToIncr;
     if (unitDifference !== 0) {
       amountIncremented /= Math.pow(10, unitDifference);
@@ -161,7 +161,7 @@ export class RedisService {
     let userMoney = await this.getUserMoney(userId);
     let userMoneyUnit = +(await this.getUserMoneyUnit(userId));
     if (userMoneyUnit >= amount.unit) {
-      let differenceUnite = userMoneyUnit - amount.unit;
+      const differenceUnite = userMoneyUnit - amount.unit;
       let valueToDecrement = amount.value;
       if (differenceUnite > 0) {
         valueToDecrement /= Math.pow(10, differenceUnite);
@@ -218,7 +218,7 @@ export class RedisService {
     let end = false;
     while (!end) {
       i++;
-      let userUpgrade = await this.client.hgetall(`${user.id}:${i}`);
+      const userUpgrade = await this.client.hgetall(`${user.id}:${i}`);
       if (Object.keys(userUpgrade).length === 0) {
         end = true;
       } else {
@@ -237,10 +237,10 @@ export class RedisService {
   }
 
   public async updateUserData(user: User, data: IRedisData) {
-    let moneyData = await this.incrMoney(user.id, data.money, data.moneyUnit);
+    const moneyData = await this.incrMoney(user.id, data.money, data.moneyUnit);
     const upgradesData = [];
     for (const e of data.upgrades) {
-      let realTimeData = await this.incrUpgrade(
+      const realTimeData = await this.incrUpgrade(
         user.id,
         e.id,
         e.amount,

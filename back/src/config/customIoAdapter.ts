@@ -1,61 +1,66 @@
 import { IoAdapter } from "@nestjs/platform-socket.io";
 import { INestApplicationContext, Logger } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import { Server } from "socket.io";
+import { Server, ServerOptions } from "socket.io";
 import { UserSocket } from "../game/game.gateway";
 import { ConfigService } from "@nestjs/config";
+
+type BearerToken = `Bearer ${string}`;
+
+function extractBearer(tokenLike?: unknown): string | null {
+  if (typeof tokenLike !== "string") return null;
+  const parts = tokenLike.split(" ");
+  return parts.length === 2 && parts[0] === "Bearer" ? parts[1] : null;
+}
 
 export class CustomIoAdapter extends IoAdapter {
   constructor(private app: INestApplicationContext) {
     super(app);
   }
 
-  createIOServer(port: number, options?: any): any {
-    const jwtService: JwtService = this.app.get(JwtService);
-    const jwtsecret: string = this.app.get(ConfigService).get("JWT_SECRET");
+  createIOServer(port: number, options?: Partial<ServerOptions>): Server {
+    const jwtService = this.app.get(JwtService);
+    const jwtSecret = this.app.get(ConfigService).get<string>("JWT_SECRET")!;
     const logger = new Logger(CustomIoAdapter.name);
     const server: Server = super.createIOServer(port, options);
 
     server.use((socket: UserSocket, next) => {
       try {
-        // Support either Authorization header or Socket.IO auth field
-        const authHeader = socket.handshake.headers?.authorization as
-          | string
-          | undefined;
-        const authField = (socket.handshake as any)?.auth?.token as
-          | string
+        const headerAuth = socket.handshake.headers?.authorization as
+          | BearerToken
           | undefined;
 
-        let token: string | undefined;
-        if (authHeader) {
-          const parts = authHeader.split(" ");
-          if (parts.length === 2 && parts[0] === "Bearer") {
-            token = parts[1];
-          }
-        } else if (authField) {
-          const parts = authField.split(" ");
-          if (parts.length === 2 && parts[0] === "Bearer") {
-            token = parts[1];
-          }
-        }
+        const rawAuth = (
+          socket.handshake.auth as Record<string, unknown> | undefined
+        )?.token as BearerToken | undefined;
+
+        const headerToken = extractBearer(headerAuth);
+        const fieldToken = extractBearer(rawAuth);
+        const token = headerToken ?? fieldToken;
 
         if (!token) {
           throw new Error("Missing or invalid token");
         }
+
         const payload = jwtService.verify(token, {
-          secret: jwtsecret,
+          secret: jwtSecret,
         });
         socket.userId = payload.userId;
         next();
-      } catch (e: any) {
-        logger.error(e);
-        if (e?.name === "TokenExpiredError") {
-          next(new Error("TOKEN_EXPIRED"));
-        } else {
-          next(new Error("UNAUTHORIZED"));
-        }
+      } catch (err: unknown) {
+        const message =
+          typeof err === "object" &&
+          err &&
+          "name" in err &&
+          (err as { name: string }).name === "TokenExpiredError"
+            ? "TOKEN_EXPIRED"
+            : "UNAUTHORIZED";
+
+        logger.error(err instanceof Error ? err : new Error(String(err)));
+        next(new Error(message));
       }
     });
+
     return server;
   }
 }

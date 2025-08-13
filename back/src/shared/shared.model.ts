@@ -1,5 +1,3 @@
-import { Upgrade } from "../upgrade/upgrade.entity";
-
 export enum Unit {
   UNIT = 0,
   K = 3,

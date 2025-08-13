@@ -1,9 +1,7 @@
-// seeding.service.ts
 import { Injectable, OnModuleInit } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Upgrade } from "src/upgrade/upgrade.entity";
-import { Unit } from "src/shared/shared.model";
 import { Skin } from "../skin/skin.entity";
 import { upgradesData } from "./data/upgrades";
 import { skinsData } from "./data/skins";

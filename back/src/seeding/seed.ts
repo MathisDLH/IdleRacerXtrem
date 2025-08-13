@@ -10,7 +10,6 @@ async function bootstrap() {
 }
 
 bootstrap().catch((err) => {
-  // eslint-disable-next-line no-consoles
   console.error("Seeding failed", err);
   process.exit(1);
 });

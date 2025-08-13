@@ -7,7 +7,7 @@ import {
   UsePipes,
   ValidationPipe,
 } from "@nestjs/common";
-import { AccessToken, Login, Register, Tokens } from "./auth.model";
+import { AccessToken, Tokens } from "./auth.model";
 import { LoginDto } from "src/dto/auth/login.dto";
 import { RegisterDto } from "src/dto/auth/register.dto";
 import { AuthService } from "./auth.service";

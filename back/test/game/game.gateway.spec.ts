@@ -50,12 +50,10 @@ describe("GameGateway (test folder)", () => {
       } as any;
       gateway.socketConnected.add(client);
 
-      const updateSpy = jest
-        .spyOn(gateway, "updateMoney")
-        .mockResolvedValue({
-          moneyData: { amount: 0, unit: Unit.UNIT },
-          upgradesData: [],
-        });
+      const updateSpy = jest.spyOn(gateway, "updateMoney").mockResolvedValue({
+        moneyData: { amount: 0, unit: Unit.UNIT },
+        upgradesData: [],
+      });
       const emitMoneySpy = jest
         .spyOn(gateway, "emitMoney")
         .mockResolvedValue(undefined);

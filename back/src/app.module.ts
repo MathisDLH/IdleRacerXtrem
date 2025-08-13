@@ -1,9 +1,7 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { User } from "./user/user.entity";
 import { Upgrade } from "./upgrade/upgrade.entity";
-import { UserUpgrade } from "./UserUpgrade/userUpgrade.entity";
 import { Skin } from "./skin/skin.entity";
 import { UserModule } from "./user/user.module";
 import { AuthModule } from "./auth/auth.module";
@@ -13,8 +11,6 @@ import { UpgradeModule } from "./upgrade/upgrade.module";
 import { SkinModule } from "./skin/skin.module";
 import { SeedingService } from "./seeding/seeding.service";
 import { getTypeOrmModuleOptions } from "./config/typeorm.config";
-
-const entities = [User, Upgrade, UserUpgrade, Skin];
 
 @Module({
   imports: [
@@ -29,7 +25,6 @@ const entities = [User, Upgrade, UserUpgrade, Skin];
       useFactory: (configService: ConfigService) =>
         getTypeOrmModuleOptions(configService),
     }),
-    // Required for repositories injected in SeedingService
     TypeOrmModule.forFeature([Upgrade, Skin]),
     UserModule,
     SkinModule,

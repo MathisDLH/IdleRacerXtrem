@@ -101,9 +101,11 @@ export class GameGateway
 
   @SubscribeMessage("click")
   async handleClick(client: UserSocket): Promise<void> {
-    let click = await this.redisService.getUserClick(client.user.id);
-    let clickUnit = +(await this.redisService.getUserClickUnit(client.user.id));
-    let moneyErnedByClick = await this.redisService.incrMoney(
+    const click = await this.redisService.getUserClick(client.user.id);
+    const clickUnit = +(await this.redisService.getUserClickUnit(
+      client.user.id,
+    ));
+    const moneyErnedByClick = await this.redisService.incrMoney(
       client.user.id,
       click,
       clickUnit,
