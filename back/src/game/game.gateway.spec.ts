@@ -348,6 +348,16 @@ describe('GameGateway', () => {
       expect(result).toEqual({ moneyData: { amount: 0, unit: Unit.UNIT }, upgradesData: [] });
     });
 
+    it.each([undefined, { money: 0, moneyUnit: Unit.UNIT, click: 0, clickUnit: Unit.UNIT }])(
+      'returns empty data when redisService.getUserData returns %p',
+      async (redisReturn) => {
+        const user = { id: 1 } as unknown as User;
+        redisService.getUserData.mockResolvedValue(redisReturn as any);
+        const result = await gateway.updateMoney(user, 1);
+        expect(result).toEqual({ moneyData: { amount: 0, unit: Unit.UNIT }, upgradesData: [] });
+      },
+    );
+
     it('handles missing generated upgrade gracefully', async () => {
       const user = { id: 1 } as unknown as User;
       const redisInfos = {
