@@ -1,0 +1,31 @@
+name: Deploy on master
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - run: |
+          cd front
+          npm ci
+          npm run build
+      - run: |
+          cd back
+          npm ci
+          npm run build
+      - uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.PROD_SSH_KEY }}
+      - run: |
+          rsync -avz front/dist back docker-compose.prod.yml \
+            ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }}:/srv/idle-racer
+      - run: |
+          ssh ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }} \
+          'cd /srv/idle-racer && docker compose -f docker-compose.prod.yml up -d --build'
