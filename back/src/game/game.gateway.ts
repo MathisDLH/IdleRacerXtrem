@@ -18,6 +18,13 @@ export interface UserSocket extends Socket {
   user?: User;
 }
 
+export interface MoneyPayload {
+  money: number;
+  unit: Unit;
+  moneyBySec?: number;
+  moneyBySecUnit?: Unit;
+}  
+  
 export interface UpdateSummary {
   moneyData: { amount: number; unit: Unit };
   upgradesData: {
@@ -91,12 +98,9 @@ export class GameGateway
     realTimeData: UpdateSummary | null = null,
   ) {
     const userData = await this.redisService.getUserData(client.user);
-    const payload: {
-      money: number;
-      unit: Unit;
+    const payload: MoneyPayload = {
       moneyBySec?: number;
       moneyBySecUnit?: Unit;
-    } = {
       money: userData.money,
       unit: userData.moneyUnit,
     };
@@ -189,7 +193,6 @@ export class GameGateway
           generatedUpgrade.amountUnit = element.amountUnit;
         }
       } else {
-        // Fan
         redisInfos.money = element.amount * element.value * seconds;
         redisInfos.moneyUnit = element.amountUnit;
       }
