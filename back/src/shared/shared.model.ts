@@ -57,11 +57,13 @@ export interface IRedisUpgrade {
   value: number;
 }
 
+export interface UpgradeRealTime {
+  upgrade: IRedisUpgrade;
+  amountGenerated: number;
+  generatedUnit: Unit;
+}
+
 export interface UpdateSummary {
   moneyData: { amount: number; unit: Unit };
-  upgradesData: {
-    upgrade: IRedisUpgrade;
-    amountGenerated: number;
-    generatedUnit: Unit;
-  }[];
+  upgradesData: UpgradeRealTime[];
 }
