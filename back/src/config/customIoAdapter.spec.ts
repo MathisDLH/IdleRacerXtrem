@@ -78,4 +78,29 @@ describe('CustomIoAdapter', () => {
 
     expect(next).toHaveBeenCalledWith(new Error('TOKEN_EXPIRED'));
   });
+
+  it('refuses connection when token is missing', () => {
+    adapter.createIOServer(3000);
+
+    const socket: any = { handshake: { headers: {} } };
+    const next = jest.fn();
+    middleware(socket, next);
+
+    expect(next).toHaveBeenCalledWith(new Error('UNAUTHORIZED'));
+  });
+
+  it('refuses connection when token verification fails', () => {
+    jwtService.verify.mockImplementation(() => {
+      throw new Error('invalid');
+    });
+    adapter.createIOServer(3000);
+
+    const socket: any = {
+      handshake: { headers: { authorization: 'Bearer badtoken' } },
+    };
+    const next = jest.fn();
+    middleware(socket, next);
+
+    expect(next).toHaveBeenCalledWith(new Error('UNAUTHORIZED'));
+  });
 });
