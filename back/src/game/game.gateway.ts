@@ -10,7 +10,7 @@ import { UserService } from "src/user/user.service";
 import { User } from "src/user/user.entity";
 import { RedisService } from "src/redis/redis.service";
 import { Logger, OnModuleDestroy, OnModuleInit } from "@nestjs/common";
-import { IRedisData, IRedisUpgrade, Unit } from "../shared/shared.model";
+import { IRedisData, IRedisUpgrade, Unit, UpdateSummary } from "../shared/shared.model";
 import { UpgradeService } from "../upgrade/upgrade.service";
 
 export interface UserSocket extends Socket {
@@ -170,7 +170,11 @@ export class GameGateway
     this.socketConnected.delete(client);
   }
 
-  async updateMoney(user: User, seconds = 1): Promise<UpdateSummary> {
+  async updateMoney(
+    user: User,
+    seconds = 1,
+  ): Promise<UpdateSummary> {
+
     const redisInfos = await this.redisService.getUserData(user);
     if (!redisInfos?.upgrades?.length) {
       return { moneyData: { amount: 0, unit: Unit.UNIT }, upgradesData: [] };
