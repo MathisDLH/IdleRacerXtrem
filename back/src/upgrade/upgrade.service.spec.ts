@@ -21,6 +21,7 @@ describe('UpgradeService', () => {
   } as any;
   const mockUpgradeRepository = {
     findOne: jest.fn(),
+    find: jest.fn(),
   } as any;
   const mockRedisService = {
     getUpgrade: jest.fn(),
@@ -38,6 +39,18 @@ describe('UpgradeService', () => {
       mockRedisService,
     );
     jest.clearAllMocks();
+  });
+
+  describe('findAll', () => {
+    it('returns all upgrades', async () => {
+      const upgrades = [{ id: 1 } as Upgrade];
+      mockUpgradeRepository.find.mockResolvedValue(upgrades);
+
+      const result = await service.findAll();
+
+      expect(mockUpgradeRepository.find).toHaveBeenCalled();
+      expect(result).toBe(upgrades);
+    });
   });
 
   describe('buyUpgrade', () => {
@@ -94,6 +107,27 @@ describe('UpgradeService', () => {
         1,
       );
     });
+
+    it('normalizes price above 1000 and adjusts unit', async () => {
+      const dto = { upgradeId: '1', quantity: '1' } as BuyUpgradeDto;
+      const upgrade = {
+        id: 1,
+        price: 2000,
+        price_unit: Unit.UNIT,
+        value: 5,
+        generationUpgradeId: 0,
+      } as Upgrade;
+      mockRedisService.getUpgrade.mockResolvedValue({ amountBought: 1 });
+      mockUpgradeRepository.findOne.mockResolvedValue(upgrade);
+      mockRedisService.pay.mockResolvedValue(true);
+
+      await service.buyUpgrade(dto, 1);
+
+      expect(mockRedisService.pay).toHaveBeenCalledWith(1, {
+        value: 2,
+        unit: Unit.K,
+      });
+    });
   });
 
   describe('buyClick', () => {
@@ -115,6 +149,27 @@ describe('UpgradeService', () => {
       const result = await service.buyClick(0, Unit.UNIT, 1);
       expect(result).toEqual({ amount: 0, unit: 0 });
       expect(mockRedisService.pay).not.toHaveBeenCalled();
+    });
+
+    it('converts small payments to lower units', async () => {
+      mockRedisService.pay.mockResolvedValue(true);
+      mockRedisService.incrClick.mockResolvedValue({ amount: 500, unit: -3 });
+
+      const result = await service.buyClick(50, Unit.UNIT, 1);
+
+      expect(mockRedisService.pay).toHaveBeenCalled();
+      expect(mockRedisService.incrClick).toHaveBeenCalledWith(1, 500, -3);
+      expect(result).toEqual({ amount: 500, unit: -3 });
+    });
+
+    it('returns zero when payment fails', async () => {
+      mockRedisService.pay.mockResolvedValue(false);
+
+      const result = await service.buyClick(100, Unit.UNIT, 1);
+
+      expect(mockRedisService.pay).toHaveBeenCalled();
+      expect(mockRedisService.incrClick).not.toHaveBeenCalled();
+      expect(result).toEqual({ amount: 0, unit: 0 });
     });
   });
 
