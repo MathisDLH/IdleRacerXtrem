@@ -260,6 +260,42 @@ describe('GameGateway', () => {
       expect(result).toBe(expected);
     });
 
+    it('uses default seconds when omitted', async () => {
+      const user = { id: 1 } as unknown as User;
+      const redisInfos = {
+        money: 0,
+        moneyUnit: Unit.UNIT,
+        click: 0,
+        clickUnit: Unit.UNIT,
+        upgrades: [
+          {
+            id: 2,
+            generationUpgradeId: 1,
+            amount: 2,
+            amountUnit: Unit.UNIT,
+            amountBought: 0,
+            value: 3,
+          },
+          {
+            id: 1,
+            generationUpgradeId: 0,
+            amount: 0,
+            amountUnit: Unit.UNIT,
+            amountBought: 0,
+            value: 1,
+          },
+        ],
+      };
+      redisService.getUserData.mockResolvedValue(redisInfos as any);
+      const expected = { moneyData: { amount: 6, unit: Unit.UNIT }, upgradesData: [] };
+      redisService.updateUserData.mockResolvedValue(expected as any);
+
+      const result = await gateway.updateMoney(user);
+
+      expect(redisService.updateUserData).toHaveBeenCalledWith(user, redisInfos as any);
+      expect(result).toBe(expected);
+    });
+
     it('returns default values when no upgrades present', async () => {
       const user = { id: 1 } as unknown as User;
       redisService.getUserData.mockResolvedValue({ upgrades: [] } as any);
