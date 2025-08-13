@@ -128,6 +128,55 @@ describe('UpgradeService', () => {
         unit: Unit.K,
       });
     });
+
+    it('applies multiplier when amountBought is at least 10', async () => {
+      const dto = { upgradeId: '1', quantity: '1' } as BuyUpgradeDto;
+      const upgrade = {
+        id: 1,
+        price: 10,
+        price_unit: Unit.UNIT,
+        value: 5,
+        generationUpgradeId: 0,
+      } as Upgrade;
+      const userUpgrade = { amountBought: 20 };
+      mockRedisService.getUpgrade.mockResolvedValue(userUpgrade);
+      mockUpgradeRepository.findOne.mockResolvedValue(upgrade);
+      mockRedisService.pay.mockResolvedValue(true);
+
+      await service.buyUpgrade(dto, 1);
+
+      const multiplier = Math.floor(userUpgrade.amountBought / 10) * 2;
+      let value = upgrade.price * Math.pow(10, multiplier);
+      let unit = upgrade.price_unit;
+      while (value > 1001) {
+        value /= 1000;
+        unit += 3;
+      }
+
+      expect(mockRedisService.pay).toHaveBeenCalledWith(1, { value, unit });
+    });
+
+    it('does not apply multiplier when amountBought is less than 10', async () => {
+      const dto = { upgradeId: '1', quantity: '1' } as BuyUpgradeDto;
+      const upgrade = {
+        id: 1,
+        price: 10,
+        price_unit: Unit.UNIT,
+        value: 5,
+        generationUpgradeId: 0,
+      } as Upgrade;
+      const userUpgrade = { amountBought: 5 };
+      mockRedisService.getUpgrade.mockResolvedValue(userUpgrade);
+      mockUpgradeRepository.findOne.mockResolvedValue(upgrade);
+      mockRedisService.pay.mockResolvedValue(true);
+
+      await service.buyUpgrade(dto, 1);
+
+      expect(mockRedisService.pay).toHaveBeenCalledWith(1, {
+        value: upgrade.price,
+        unit: upgrade.price_unit,
+      });
+    });
   });
 
   describe('buyClick', () => {
