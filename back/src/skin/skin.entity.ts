@@ -13,7 +13,7 @@ export class Skin extends BaseEntity {
   price: number;
 
   @ApiProperty()
-  @Column({ type: "enum", enum: Unit, default: Unit.UNIT })
+  @Column({ type: "simple-enum", enum: Unit, default: Unit.UNIT })
   priceUnit: Unit;
 
   @ApiProperty()

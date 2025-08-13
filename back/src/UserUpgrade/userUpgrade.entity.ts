@@ -19,7 +19,7 @@ export class UserUpgrade extends BaseEntity {
   amountBought: number;
 
   @ApiProperty()
-  @Column({ type: "enum", enum: Unit, default: Unit.UNIT })
+  @Column({ type: "simple-enum", enum: Unit, default: Unit.UNIT })
   amountUnit: Unit;
 
   @ManyToOne(() => User, (user) => user.userUpgrade)

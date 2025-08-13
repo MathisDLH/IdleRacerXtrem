@@ -62,8 +62,8 @@ export class User extends BaseEntity {
   @IsArray()
   ownedSkins: string[];
 
-  @ApiProperty()
-  @Column({ type: "enum", enum: Unit, default: Unit.UNIT })
+   @ApiProperty()
+   @Column({ type: "simple-enum", enum: Unit, default: Unit.UNIT })
   @IsEnum(Unit)
   money_unite: Unit;
 
@@ -71,8 +71,8 @@ export class User extends BaseEntity {
   @Column({ type: "float", default: 1 })
   click: number;
 
-  @ApiProperty()
-  @Column({ type: "enum", enum: Unit, default: Unit.UNIT })
+   @ApiProperty()
+   @Column({ type: "simple-enum", enum: Unit, default: Unit.UNIT })
   @IsEnum(Unit)
   click_unite: Unit;
 

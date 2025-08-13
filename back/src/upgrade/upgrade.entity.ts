@@ -25,7 +25,7 @@ export class Upgrade extends BaseEntity {
   price: number;
 
   @ApiProperty()
-  @Column({ type: "enum", enum: Unit, default: Unit.UNIT })
+  @Column({ type: "simple-enum", enum: Unit, default: Unit.UNIT })
   price_unit: Unit;
 
   @ApiProperty()
