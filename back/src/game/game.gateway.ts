@@ -10,7 +10,7 @@ import { UserService } from "src/user/user.service";
 import { User } from "src/user/user.entity";
 import { RedisService } from "src/redis/redis.service";
 import { Logger, OnModuleDestroy, OnModuleInit } from "@nestjs/common";
-import { IRedisData, Unit } from "../shared/shared.model";
+import { IRedisData, IRedisUpgrade, Unit, UpdateSummary } from "../shared/shared.model";
 import { UpgradeService } from "../upgrade/upgrade.service";
 
 export interface UserSocket extends Socket {
@@ -23,6 +23,15 @@ export interface MoneyPayload {
   unit: Unit;
   moneyBySec?: number;
   moneyBySecUnit?: Unit;
+}  
+  
+export interface UpdateSummary {
+  moneyData: { amount: number; unit: Unit };
+  upgradesData: {
+    upgrade: IRedisUpgrade;
+    amountGenerated: number;
+    generatedUnit: Unit;
+  }[];
 }
 
 @WebSocketGateway({ cors: { origin: "*" } })
@@ -84,9 +93,14 @@ export class GameGateway
     if (this.persistHandle) clearInterval(this.persistHandle);
   }
 
-  public async emitMoney(client: UserSocket, realTimeData: any = null) {
+  public async emitMoney(
+    client: UserSocket,
+    realTimeData: UpdateSummary | null = null,
+  ) {
     const userData = await this.redisService.getUserData(client.user);
     const payload: MoneyPayload = {
+      moneyBySec?: number;
+      moneyBySecUnit?: Unit;
       money: userData.money,
       unit: userData.moneyUnit,
     };
@@ -97,9 +111,15 @@ export class GameGateway
     client.emit("money", payload);
   }
 
-  public async emitUpgrade(client: UserSocket, realTimeData: any = null) {
+  public async emitUpgrade(
+    client: UserSocket,
+    realTimeData: UpdateSummary | null = null,
+  ) {
     const userData = await this.redisService.getUserData(client.user);
-    const payload: any = { upgrades: userData.upgrades };
+    const payload: {
+      upgrades: IRedisUpgrade[];
+      realTimeData?: UpdateSummary["upgradesData"];
+    } = { upgrades: userData.upgrades };
     if (realTimeData) {
       payload.realTimeData = realTimeData.upgradesData;
     }
@@ -157,10 +177,8 @@ export class GameGateway
   async updateMoney(
     user: User,
     seconds = 1,
-  ): Promise<{
-    moneyData: { amount: number; unit: Unit };
-    upgradesData: any[];
-  }> {
+  ): Promise<UpdateSummary> {
+
     const redisInfos = await this.redisService.getUserData(user);
     if (!redisInfos?.upgrades?.length) {
       return { moneyData: { amount: 0, unit: Unit.UNIT }, upgradesData: [] };
@@ -175,7 +193,6 @@ export class GameGateway
           generatedUpgrade.amountUnit = element.amountUnit;
         }
       } else {
-        // Fan
         redisInfos.money = element.amount * element.value * seconds;
         redisInfos.moneyUnit = element.amountUnit;
       }
