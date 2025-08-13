@@ -10,7 +10,7 @@ import { UserService } from "src/user/user.service";
 import { User } from "src/user/user.entity";
 import { RedisService } from "src/redis/redis.service";
 import { Logger, OnModuleDestroy, OnModuleInit } from "@nestjs/common";
-import { IRedisData, Unit } from "../shared/shared.model";
+import { IRedisData, Unit, UpdateSummary } from "../shared/shared.model";
 import { UpgradeService } from "../upgrade/upgrade.service";
 
 export interface UserSocket extends Socket {
@@ -77,7 +77,10 @@ export class GameGateway
     if (this.persistHandle) clearInterval(this.persistHandle);
   }
 
-  public async emitMoney(client: UserSocket, realTimeData: any = null) {
+  public async emitMoney(
+    client: UserSocket,
+    realTimeData: UpdateSummary | null = null,
+  ) {
     const userData = await this.redisService.getUserData(client.user);
     const payload: any = {
       money: userData.money,
@@ -90,7 +93,10 @@ export class GameGateway
     client.emit("money", payload);
   }
 
-  public async emitUpgrade(client: UserSocket, realTimeData: any = null) {
+  public async emitUpgrade(
+    client: UserSocket,
+    realTimeData: UpdateSummary | null = null,
+  ) {
     const userData = await this.redisService.getUserData(client.user);
     const payload: any = { upgrades: userData.upgrades };
     if (realTimeData) {
@@ -150,10 +156,7 @@ export class GameGateway
   async updateMoney(
     user: User,
     seconds = 1,
-  ): Promise<{
-    moneyData: { amount: number; unit: Unit };
-    upgradesData: any[];
-  }> {
+  ): Promise<UpdateSummary> {
     const redisInfos = await this.redisService.getUserData(user);
     if (!redisInfos?.upgrades?.length) {
       return { moneyData: { amount: 0, unit: Unit.UNIT }, upgradesData: [] };
