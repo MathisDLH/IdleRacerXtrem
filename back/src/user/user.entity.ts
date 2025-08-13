@@ -4,27 +4,15 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
-  JoinTable,
-  ManyToMany,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
 import * as bcrypt from "bcryptjs";
 import { Unit } from "../shared/shared.model";
-import {
-  IsEmail,
-  IsEnum,
-  IsNotEmpty,
-  IsString,
-  MinLength,
-  IsArray,
-} from "class-validator";
+import { IsEmail, IsEnum, IsString, MinLength, IsArray } from "class-validator";
 import { UserUpgrade } from "../UserUpgrade/userUpgrade.entity";
 import { ApiProperty } from "@nestjs/swagger";
-import { Skin } from "../skin/skin.entity";
 
 @Entity()
 export class User extends BaseEntity {

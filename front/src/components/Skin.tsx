@@ -60,10 +60,12 @@ const Skin = (props: { skin: skinInterface }): JSX.Element => {
   }
 
   return (
-		<div className={'skin prevent-select'}>
-			<img src={skin.path}/>
-            {isOwned() ? <button className={'btn-hover color-4'} onClick={click}>OWNED</button> : <button ref={btn} className={'btn-hover color-4 disabled'} onClick={click} disabled={disabled} >{skin.price} {calculateUnit(skin.priceUnit ?? 0)} </button>}
-		</div>
+    <div className={'skin prevent-select'}>
+      <img src={skin.path}/>
+      {isOwned()
+        ? <button className={'btn-hover color-4'} onClick={click}>OWNED</button>
+        : <button ref={btn} className={'btn-hover color-4 disabled'} onClick={click} disabled={disabled}>{skin.price} {calculateUnit(skin.priceUnit ?? 0)}</button>}
+    </div>
   )
 }
 

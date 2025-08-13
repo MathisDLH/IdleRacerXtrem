@@ -6,7 +6,6 @@ import { UserUpgrade } from "src/UserUpgrade/userUpgrade.entity";
 import { BuyUpgradeDto } from "./dto/buy-upgrade.dto";
 import { Unit } from "../shared/shared.model";
 import { RedisService } from "src/redis/redis.service";
-import { log } from "console";
 
 @Injectable()
 export class UpgradeService {
@@ -29,21 +28,21 @@ export class UpgradeService {
     // Log de l'appel de la fonction
     this.logger.log("CALL buyUpgrade");
     // Récupération de la mise à niveau de l'utilisateur
-    let userUpgrade = await this.redisService.getUpgrade(
+    const userUpgrade = await this.redisService.getUpgrade(
       Number(userId),
       Number(buyUpgradeDto.upgradeId),
     );
     // Si l'utilisateur n'a pas encore cette mise à niveau
     if (Object.keys(userUpgrade).length === 0) {
       // Récupération de la mise à niveau
-      let upgrade = await this.upgradeRepository.findOne({
+      const upgrade = await this.upgradeRepository.findOne({
         where: { id: Number(buyUpgradeDto.upgradeId) },
       });
       // Si l'utilisateur peut créer cette mise à niveau
       if (await this.canCreateUpgrade(userId, upgrade)) {
         // Calcul du prix
-        let value = upgrade.price * +buyUpgradeDto.quantity;
-        let unit = upgrade.price_unit;
+        const value = upgrade.price * +buyUpgradeDto.quantity;
+        const unit = upgrade.price_unit;
         // Si l'utilisateur peut payer
         if (await this.redisService.pay(userId, { value, unit })) {
           // Ajout de la mise à niveau à l'utilisateur
@@ -61,7 +60,7 @@ export class UpgradeService {
       // Si l'utilisateur a déjà cette mise à niveau
     } else {
       // Récupération de la mise à niveau
-      let upgrade = await this.upgradeRepository.findOne({
+      const upgrade = await this.upgradeRepository.findOne({
         where: { id: Number(buyUpgradeDto.upgradeId) },
       });
       let unit = upgrade.price_unit;
@@ -79,7 +78,7 @@ export class UpgradeService {
       }
 
       // Calcul du prix
-      let value = price * +buyUpgradeDto.quantity;
+      const value = price * +buyUpgradeDto.quantity;
       // Si l'utilisateur peut payer
       if (await this.redisService.pay(userId, { value, unit })) {
         // Augmentation de la quantité de la mise à niveau
@@ -136,7 +135,7 @@ export class UpgradeService {
       return true;
     }
     // Récupération de la mise à niveau précédente
-    let pastUpgrade = await this.redisService.getUpgrade(
+    const pastUpgrade = await this.redisService.getUpgrade(
       userId,
       upgrade.id - 1,
     );

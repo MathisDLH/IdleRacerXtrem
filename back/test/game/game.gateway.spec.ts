@@ -50,12 +50,10 @@ describe("GameGateway (test folder)", () => {
       } as any;
       gateway.socketConnected.add(client);
 
-      const updateSpy = jest
-        .spyOn(gateway, "updateMoney")
-        .mockResolvedValue({
-          moneyData: { amount: 0, unit: Unit.UNIT },
-          upgradesData: [],
-        });
+      const updateSpy = jest.spyOn(gateway, "updateMoney").mockResolvedValue({
+        moneyData: { amount: 0, unit: Unit.UNIT },
+        upgradesData: [],
+      });
       const emitMoneySpy = jest
         .spyOn(gateway, "emitMoney")
         .mockResolvedValue(undefined);
@@ -94,6 +92,7 @@ describe("GameGateway (test folder)", () => {
 
       await gateway.emitMoney(client, {
         moneyData: { amount: 1, unit: Unit.UNIT },
+        upgradesData: [],
       });
 
       expect(client.emit).toHaveBeenCalledWith("money", {
@@ -110,7 +109,16 @@ describe("GameGateway (test folder)", () => {
         emit: jest.fn(),
       } as any;
       redisService.getUserData.mockResolvedValue({ upgrades: [1, 2] } as any);
-      const realtime = { upgradesData: [{ id: 1 }] };
+      const realtime = {
+        moneyData: { amount: 0, unit: Unit.UNIT },
+        upgradesData: [
+          {
+            upgrade: { id: 1 } as any,
+            amountGenerated: 0,
+            generatedUnit: Unit.UNIT,
+          },
+        ],
+      };
 
       await gateway.emitUpgrade(client, realtime);
 

@@ -20,7 +20,7 @@ const ScoreTab = (): JSX.Element => {
   const { user } = useAuth()
 
   useEffect(() => {
-    fetchScores()
+    void fetchScores()
   }, [])
 
   return (

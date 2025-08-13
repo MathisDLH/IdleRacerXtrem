@@ -96,20 +96,6 @@ export const AuthProvider = (props: any): JSX.Element => {
     localStorage.removeItem('access_token')
   }
 
-  // Option: fonction de refresh à appeler si le socket remonte TOKEN_EXPIRED
-  const tryRefresh = async (): Promise<boolean> => {
-    const refresh = localStorage.getItem('refresh_token')
-    if (!refresh) return false
-    try {
-      const { access_token } = await userService.refreshToken(removeQuotes(refresh))
-      localStorage.setItem('access_token', JSON.stringify(access_token))
-      setToken(access_token)
-      return true
-    } catch {
-      signout()
-      return false
-    }
-  }
 
   const value: AuthContextInterface = {
     user,

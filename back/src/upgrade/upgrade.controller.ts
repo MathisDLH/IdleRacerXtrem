@@ -14,7 +14,6 @@ import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Upgrade } from "./upgrade.entity";
 import { BuyUpgradeDto } from "./dto/buy-upgrade.dto";
 import { EffectiveExceptionFilter } from "../filters/EffectiveException.filter";
-import { WebSocketServer } from "@nestjs/websockets";
 import { GameGateway } from "../game/game.gateway";
 
 @ApiBearerAuth()
@@ -59,7 +58,7 @@ export class UpgradeController {
     @Body() data: { amount: number; unit: number },
     @Request() req,
   ) {
-    let returnData = await this.upgradeService.buyClick(
+    const returnData = await this.upgradeService.buyClick(
       data.amount,
       data.unit,
       req.user.userId,

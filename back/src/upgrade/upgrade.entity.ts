@@ -8,7 +8,7 @@ import {
 import { User } from "../user/user.entity";
 import { Unit } from "../shared/shared.model";
 import { UserUpgrade } from "../UserUpgrade/userUpgrade.entity";
-import { ApiProperty, ApiResponse } from "@nestjs/swagger";
+import { ApiProperty } from "@nestjs/swagger";
 
 @Entity()
 export class Upgrade extends BaseEntity {

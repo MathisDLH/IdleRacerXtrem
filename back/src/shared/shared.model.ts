@@ -1,5 +1,3 @@
-import { Upgrade } from "../upgrade/upgrade.entity";
-
 export enum Unit {
   UNIT = 0,
   K = 3,
@@ -57,4 +55,15 @@ export interface IRedisUpgrade {
   amountUnit: Unit;
   amountBought: number;
   value: number;
+}
+
+export interface UpgradeRealTime {
+  upgrade: IRedisUpgrade;
+  amountGenerated: number;
+  generatedUnit: Unit;
+}
+
+export interface UpdateSummary {
+  moneyData: { amount: number; unit: Unit };
+  upgradesData: UpgradeRealTime[];
 }
