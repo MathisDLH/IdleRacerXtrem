@@ -1,18 +1,26 @@
-import { UpgradeService } from './upgrade.service';
-import { Unit } from '../shared/shared.model';
-import { Upgrade } from './upgrade.entity';
-import { BuyUpgradeDto } from './dto/buy-upgrade.dto';
+import { UpgradeService } from "./upgrade.service";
+import { Unit } from "../shared/shared.model";
+import { Upgrade } from "./upgrade.entity";
+import { BuyUpgradeDto } from "./dto/buy-upgrade.dto";
 
-jest.mock('src/UserUpgrade/userUpgrade.entity', () => {
-  class UserUpgrade {}
-  return { UserUpgrade };
-}, { virtual: true });
-jest.mock('src/redis/redis.service', () => {
-  class RedisService {}
-  return { RedisService };
-}, { virtual: true });
+jest.mock(
+  "src/UserUpgrade/userUpgrade.entity",
+  () => {
+    class UserUpgrade {}
+    return { UserUpgrade };
+  },
+  { virtual: true },
+);
+jest.mock(
+  "src/redis/redis.service",
+  () => {
+    class RedisService {}
+    return { RedisService };
+  },
+  { virtual: true },
+);
 
-describe('UpgradeService', () => {
+describe("UpgradeService", () => {
   let service: UpgradeService;
   const mockUserUpgradeRepository = {
     exist: jest.fn(),
@@ -41,8 +49,8 @@ describe('UpgradeService', () => {
     jest.clearAllMocks();
   });
 
-  describe('findAll', () => {
-    it('returns all upgrades', async () => {
+  describe("findAll", () => {
+    it("returns all upgrades", async () => {
       const upgrades = [{ id: 1 } as Upgrade];
       mockUpgradeRepository.find.mockResolvedValue(upgrades);
 
@@ -53,9 +61,9 @@ describe('UpgradeService', () => {
     });
   });
 
-  describe('buyUpgrade', () => {
-    it('adds upgrade when user does not have it', async () => {
-      const dto = { upgradeId: '1', quantity: '2' } as BuyUpgradeDto;
+  describe("buyUpgrade", () => {
+    it("adds upgrade when user does not have it", async () => {
+      const dto = { upgradeId: "1", quantity: "2" } as BuyUpgradeDto;
       const upgrade = {
         id: 1,
         price: 10,
@@ -65,7 +73,7 @@ describe('UpgradeService', () => {
       } as Upgrade;
       mockRedisService.getUpgrade.mockResolvedValue({});
       mockUpgradeRepository.findOne.mockResolvedValue(upgrade);
-      jest.spyOn(service, 'canCreateUpgrade').mockResolvedValue(true);
+      jest.spyOn(service, "canCreateUpgrade").mockResolvedValue(true);
       mockRedisService.pay.mockResolvedValue(true);
 
       await service.buyUpgrade(dto, 1);
@@ -80,8 +88,8 @@ describe('UpgradeService', () => {
       });
     });
 
-    it('increments upgrade when user already has it', async () => {
-      const dto = { upgradeId: '1', quantity: '1' } as BuyUpgradeDto;
+    it("increments upgrade when user already has it", async () => {
+      const dto = { upgradeId: "1", quantity: "1" } as BuyUpgradeDto;
       const upgrade = {
         id: 1,
         price: 10,
@@ -108,8 +116,8 @@ describe('UpgradeService', () => {
       );
     });
 
-    it('normalizes price above 1000 and adjusts unit', async () => {
-      const dto = { upgradeId: '1', quantity: '1' } as BuyUpgradeDto;
+    it("normalizes price above 1000 and adjusts unit", async () => {
+      const dto = { upgradeId: "1", quantity: "1" } as BuyUpgradeDto;
       const upgrade = {
         id: 1,
         price: 2000,
@@ -129,8 +137,8 @@ describe('UpgradeService', () => {
       });
     });
 
-    it('applies multiplier when amountBought is at least 10', async () => {
-      const dto = { upgradeId: '1', quantity: '1' } as BuyUpgradeDto;
+    it("applies multiplier when amountBought is at least 10", async () => {
+      const dto = { upgradeId: "1", quantity: "1" } as BuyUpgradeDto;
       const upgrade = {
         id: 1,
         price: 10,
@@ -156,8 +164,8 @@ describe('UpgradeService', () => {
       expect(mockRedisService.pay).toHaveBeenCalledWith(1, { value, unit });
     });
 
-    it('does not apply multiplier when amountBought is less than 10', async () => {
-      const dto = { upgradeId: '1', quantity: '1' } as BuyUpgradeDto;
+    it("does not apply multiplier when amountBought is less than 10", async () => {
+      const dto = { upgradeId: "1", quantity: "1" } as BuyUpgradeDto;
       const upgrade = {
         id: 1,
         price: 10,
@@ -179,8 +187,8 @@ describe('UpgradeService', () => {
     });
   });
 
-  describe('buyClick', () => {
-    it('pays and increments click when amount positive', async () => {
+  describe("buyClick", () => {
+    it("pays and increments click when amount positive", async () => {
       mockRedisService.pay.mockResolvedValue(true);
       mockRedisService.incrClick.mockResolvedValue({
         amount: 1,
@@ -194,13 +202,13 @@ describe('UpgradeService', () => {
       expect(result).toEqual({ amount: 1, unit: Unit.UNIT });
     });
 
-    it('returns zero when amount non-positive', async () => {
+    it("returns zero when amount non-positive", async () => {
       const result = await service.buyClick(0, Unit.UNIT, 1);
       expect(result).toEqual({ amount: 0, unit: 0 });
       expect(mockRedisService.pay).not.toHaveBeenCalled();
     });
 
-    it('converts small payments to lower units', async () => {
+    it("converts small payments to lower units", async () => {
       mockRedisService.pay.mockResolvedValue(true);
       mockRedisService.incrClick.mockResolvedValue({ amount: 500, unit: -3 });
 
@@ -211,7 +219,7 @@ describe('UpgradeService', () => {
       expect(result).toEqual({ amount: 500, unit: -3 });
     });
 
-    it('returns zero when payment fails', async () => {
+    it("returns zero when payment fails", async () => {
       mockRedisService.pay.mockResolvedValue(false);
 
       const result = await service.buyClick(100, Unit.UNIT, 1);
@@ -222,14 +230,14 @@ describe('UpgradeService', () => {
     });
   });
 
-  describe('canCreateUpgrade', () => {
-    it('returns true for first upgrade', async () => {
+  describe("canCreateUpgrade", () => {
+    it("returns true for first upgrade", async () => {
       const upgrade = { id: 1 } as Upgrade;
       const result = await service.canCreateUpgrade(1, upgrade);
       expect(result).toBe(true);
     });
 
-    it('returns true when previous upgrade exists', async () => {
+    it("returns true when previous upgrade exists", async () => {
       const upgrade = { id: 2 } as Upgrade;
       mockRedisService.getUpgrade.mockResolvedValue({ id: 1 });
       const result = await service.canCreateUpgrade(1, upgrade);
@@ -237,7 +245,7 @@ describe('UpgradeService', () => {
       expect(result).toBe(true);
     });
 
-    it('returns false when previous upgrade missing', async () => {
+    it("returns false when previous upgrade missing", async () => {
       const upgrade = { id: 2 } as Upgrade;
       mockRedisService.getUpgrade.mockResolvedValue({});
       const result = await service.canCreateUpgrade(1, upgrade);
@@ -245,8 +253,8 @@ describe('UpgradeService', () => {
     });
   });
 
-  describe('updateById', () => {
-    it('updates when upgrade exists', async () => {
+  describe("updateById", () => {
+    it("updates when upgrade exists", async () => {
       mockUserUpgradeRepository.exist.mockResolvedValue(true);
       await service.updateById(1, 2, 3, Unit.UNIT, 4);
       expect(mockUserUpgradeRepository.update).toHaveBeenCalledWith(
@@ -255,7 +263,7 @@ describe('UpgradeService', () => {
       );
     });
 
-    it('saves when upgrade does not exist', async () => {
+    it("saves when upgrade does not exist", async () => {
       mockUserUpgradeRepository.exist.mockResolvedValue(false);
       await service.updateById(1, 2, 3, Unit.K, 4);
       expect(mockUserUpgradeRepository.save).toHaveBeenCalledWith({

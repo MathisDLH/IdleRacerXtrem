@@ -1,12 +1,12 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { GameGateway, UserSocket } from '../../src/game/game.gateway';
-import { UserService } from '../../src/user/user.service';
-import { UpgradeService } from '../../src/upgrade/upgrade.service';
-import { RedisService } from '../../src/redis/redis.service';
-import { Unit } from '../../src/shared/shared.model';
-import { User } from '../../src/user/user.entity';
+import { Test, TestingModule } from "@nestjs/testing";
+import { GameGateway, UserSocket } from "../../src/game/game.gateway";
+import { UserService } from "../../src/user/user.service";
+import { UpgradeService } from "../../src/upgrade/upgrade.service";
+import { RedisService } from "../../src/redis/redis.service";
+import { Unit } from "../../src/shared/shared.model";
+import { User } from "../../src/user/user.entity";
 
-describe('GameGateway (test folder)', () => {
+describe("GameGateway (test folder)", () => {
   let gateway: GameGateway;
   let redisService: jest.Mocked<RedisService>;
   let userService: jest.Mocked<UserService>;
@@ -16,7 +16,10 @@ describe('GameGateway (test folder)', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         GameGateway,
-        { provide: UserService, useValue: { findById: jest.fn(), update: jest.fn() } },
+        {
+          provide: UserService,
+          useValue: { findById: jest.fn(), update: jest.fn() },
+        },
         { provide: UpgradeService, useValue: { updateById: jest.fn() } },
         {
           provide: RedisService,
@@ -38,18 +41,30 @@ describe('GameGateway (test folder)', () => {
     upgradeService = module.get(UpgradeService);
   });
 
-  describe('onModuleInit', () => {
-    it('ticks and persists periodically', async () => {
+  describe("onModuleInit", () => {
+    it("ticks and persists periodically", async () => {
       jest.useFakeTimers();
-      const client: UserSocket = { user: { id: 1 } as User, emit: jest.fn() } as any;
+      const client: UserSocket = {
+        user: { id: 1 } as User,
+        emit: jest.fn(),
+      } as any;
       gateway.socketConnected.add(client);
 
       const updateSpy = jest
-        .spyOn(gateway, 'updateMoney')
-        .mockResolvedValue({ moneyData: { amount: 0, unit: Unit.UNIT }, upgradesData: [] });
-      const emitMoneySpy = jest.spyOn(gateway, 'emitMoney').mockResolvedValue(undefined);
-      const emitUpgradeSpy = jest.spyOn(gateway, 'emitUpgrade').mockResolvedValue(undefined);
-      const pushSpy = jest.spyOn(gateway, 'pushRedisToDb').mockResolvedValue(undefined);
+        .spyOn(gateway, "updateMoney")
+        .mockResolvedValue({
+          moneyData: { amount: 0, unit: Unit.UNIT },
+          upgradesData: [],
+        });
+      const emitMoneySpy = jest
+        .spyOn(gateway, "emitMoney")
+        .mockResolvedValue(undefined);
+      const emitUpgradeSpy = jest
+        .spyOn(gateway, "emitUpgrade")
+        .mockResolvedValue(undefined);
+      const pushSpy = jest
+        .spyOn(gateway, "pushRedisToDb")
+        .mockResolvedValue(undefined);
 
       gateway.onModuleInit();
 
@@ -66,16 +81,22 @@ describe('GameGateway (test folder)', () => {
     });
   });
 
-  describe('emit helpers', () => {
-    it('emitMoney sends payload', async () => {
-      const client: UserSocket = { user: { id: 1 } as User, emit: jest.fn() } as any;
-      redisService.getUserData.mockResolvedValue({ money: 5, moneyUnit: Unit.UNIT } as any);
+  describe("emit helpers", () => {
+    it("emitMoney sends payload", async () => {
+      const client: UserSocket = {
+        user: { id: 1 } as User,
+        emit: jest.fn(),
+      } as any;
+      redisService.getUserData.mockResolvedValue({
+        money: 5,
+        moneyUnit: Unit.UNIT,
+      } as any);
 
       await gateway.emitMoney(client, {
         moneyData: { amount: 1, unit: Unit.UNIT },
       });
 
-      expect(client.emit).toHaveBeenCalledWith('money', {
+      expect(client.emit).toHaveBeenCalledWith("money", {
         money: 5,
         unit: Unit.UNIT,
         moneyBySec: 1,
@@ -83,22 +104,25 @@ describe('GameGateway (test folder)', () => {
       });
     });
 
-    it('emitUpgrade sends payload', async () => {
-      const client: UserSocket = { user: { id: 1 } as User, emit: jest.fn() } as any;
+    it("emitUpgrade sends payload", async () => {
+      const client: UserSocket = {
+        user: { id: 1 } as User,
+        emit: jest.fn(),
+      } as any;
       redisService.getUserData.mockResolvedValue({ upgrades: [1, 2] } as any);
       const realtime = { upgradesData: [{ id: 1 }] };
 
       await gateway.emitUpgrade(client, realtime);
 
-      expect(client.emit).toHaveBeenCalledWith('upgrades', {
+      expect(client.emit).toHaveBeenCalledWith("upgrades", {
         upgrades: [1, 2],
         realTimeData: realtime.upgradesData,
       });
     });
   });
 
-  describe('updateMoney', () => {
-    it('uses default seconds when omitted', async () => {
+  describe("updateMoney", () => {
+    it("uses default seconds when omitted", async () => {
       const user = { id: 1 } as unknown as User;
       const redisInfos = {
         money: 0,
@@ -125,14 +149,19 @@ describe('GameGateway (test folder)', () => {
         ],
       };
       redisService.getUserData.mockResolvedValue(redisInfos as any);
-      const expected = { moneyData: { amount: 6, unit: Unit.UNIT }, upgradesData: [] };
+      const expected = {
+        moneyData: { amount: 6, unit: Unit.UNIT },
+        upgradesData: [],
+      };
       redisService.updateUserData.mockResolvedValue(expected as any);
 
       const result = await gateway.updateMoney(user);
 
-      expect(redisService.updateUserData).toHaveBeenCalledWith(user, redisInfos as any);
+      expect(redisService.updateUserData).toHaveBeenCalledWith(
+        user,
+        redisInfos as any,
+      );
       expect(result).toBe(expected);
     });
   });
 });
-

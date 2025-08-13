@@ -1,7 +1,7 @@
-import { RedisService } from './redis.service';
-import { Unit } from '../shared/shared.model';
-import { User } from '../user/user.entity';
-import { PurchaseError } from '../exceptions/PurchaseError';
+import { RedisService } from "./redis.service";
+import { Unit } from "../shared/shared.model";
+import { User } from "../user/user.entity";
+import { PurchaseError } from "../exceptions/PurchaseError";
 
 const createMockRedisClient = () => {
   const store = new Map<string, any>();
@@ -12,7 +12,7 @@ const createMockRedisClient = () => {
     }),
     hset: jest.fn(async (key: string, fieldOrObj: any, value?: any) => {
       const hash = store.get(key) || {};
-      if (typeof fieldOrObj === 'object') {
+      if (typeof fieldOrObj === "object") {
         Object.assign(hash, fieldOrObj);
       } else {
         hash[fieldOrObj] = value;
@@ -26,12 +26,14 @@ const createMockRedisClient = () => {
     hgetall: jest.fn(async (key: string) => {
       return store.get(key) || {};
     }),
-    hincrbyfloat: jest.fn(async (key: string, field: string, amount: number) => {
-      const hash = store.get(key) || {};
-      hash[field] = (parseFloat(hash[field]) || 0) + amount;
-      store.set(key, hash);
-      return hash[field];
-    }),
+    hincrbyfloat: jest.fn(
+      async (key: string, field: string, amount: number) => {
+        const hash = store.get(key) || {};
+        hash[field] = (parseFloat(hash[field]) || 0) + amount;
+        store.set(key, hash);
+        return hash[field];
+      },
+    ),
     incrbyfloat: jest.fn(async (key: string, amount: number) => {
       const value = (parseFloat(store.get(key)) || 0) + amount;
       store.set(key, value);
@@ -43,7 +45,7 @@ const createMockRedisClient = () => {
       return value;
     }),
     keys: jest.fn(async (pattern: string) => {
-      const prefix = pattern.replace('*', '');
+      const prefix = pattern.replace("*", "");
       return Array.from(store.keys()).filter((k) => k.startsWith(prefix));
     }),
     del: jest.fn(async (...keys: string[]) => {
@@ -61,7 +63,7 @@ const createMockRedisClient = () => {
   } as any;
 };
 
-describe('RedisService', () => {
+describe("RedisService", () => {
   let service: RedisService;
   let client: any;
   const user: User = {
@@ -85,7 +87,7 @@ describe('RedisService', () => {
     service = new RedisService(client);
   });
 
-  it('increments money correctly', async () => {
+  it("increments money correctly", async () => {
     await service.loadUserInRedis(user);
     const result = await service.incrMoney(user.id, 50, Unit.UNIT);
     expect(result).toEqual({ amount: 50, unit: Unit.UNIT });
@@ -93,13 +95,13 @@ describe('RedisService', () => {
     expect(money).toBeCloseTo(150);
   });
 
-  it('increments click correctly', async () => {
+  it("increments click correctly", async () => {
     await service.loadUserInRedis(user);
     const result = await service.incrClick(user.id, 2, Unit.UNIT);
     expect(result).toEqual({ amount: 3, unit: Unit.UNIT });
   });
 
-  it('handles upgrade operations', async () => {
+  it("handles upgrade operations", async () => {
     await service.loadUserInRedis(user);
     await service.incrUpgradeAmountBought(user.id, 1, 2);
     let upgrade = await service.getUpgrade(user.id, 1);
@@ -110,7 +112,7 @@ describe('RedisService', () => {
     expect(upgrade.amount).toBeCloseTo(5);
   });
 
-  it('pays when enough money and throws otherwise', async () => {
+  it("pays when enough money and throws otherwise", async () => {
     await service.loadUserInRedis(user);
     await service.incrMoney(user.id, 50, Unit.UNIT);
     const paid = await service.pay(user.id, { value: 120, unit: Unit.UNIT });
@@ -120,7 +122,7 @@ describe('RedisService', () => {
     ).rejects.toBeInstanceOf(PurchaseError);
   });
 
-  it('loads, retrieves, and resets user data', async () => {
+  it("loads, retrieves, and resets user data", async () => {
     await service.loadUserInRedis(user);
     const data = await service.getUserData(user);
     expect(data).toEqual({
@@ -145,56 +147,63 @@ describe('RedisService', () => {
     const money = await service.getUserMoney(user.id);
     expect(money).toBe(100);
   });
-  
-  it('increments money across threshold and updates unit', async () => {
+
+  it("increments money across threshold and updates unit", async () => {
     const richUser: User = { ...user, money: 999 } as any;
     await service.loadUserInRedis(richUser);
     const result = await service.incrMoney(richUser.id, 5, Unit.UNIT);
     expect(result).toEqual({ amount: 5, unit: Unit.UNIT });
     expect(await service.getUserMoney(richUser.id)).toBeCloseTo(1.004);
-    expect(+await service.getUserMoneyUnit(richUser.id)).toBe(Unit.K);
+    expect(+(await service.getUserMoneyUnit(richUser.id))).toBe(Unit.K);
   });
 
-  it('converts units when incrementing money', async () => {
-    const highUnitUser: User = { ...user, money: 1, money_unite: Unit.K } as any;
+  it("converts units when incrementing money", async () => {
+    const highUnitUser: User = {
+      ...user,
+      money: 1,
+      money_unite: Unit.K,
+    } as any;
     await service.loadUserInRedis(highUnitUser);
     const result = await service.incrMoney(highUnitUser.id, 500, Unit.UNIT);
     expect(result).toEqual({ amount: 500, unit: Unit.UNIT });
     expect(await service.getUserMoney(highUnitUser.id)).toBeCloseTo(1.5);
-    expect(+await service.getUserMoneyUnit(highUnitUser.id)).toBe(Unit.K);
+    expect(+(await service.getUserMoneyUnit(highUnitUser.id))).toBe(Unit.K);
   });
 
-  it('increments click across threshold and updates unit', async () => {
+  it("increments click across threshold and updates unit", async () => {
     const clickUser: User = { ...user, click: 999 } as any;
     await service.loadUserInRedis(clickUser);
     const result = await service.incrClick(clickUser.id, 5, Unit.UNIT);
     expect(result.amount).toBeCloseTo(1.004);
     expect(result.unit).toBe(Unit.K);
     expect(await service.getUserClick(clickUser.id)).toBeCloseTo(1.004);
-    expect(+await service.getUserClickUnit(clickUser.id)).toBe(Unit.K);
+    expect(+(await service.getUserClickUnit(clickUser.id))).toBe(Unit.K);
   });
 
-  it('handles unit conversion in pay and throws PurchaseError when insufficient', async () => {
+  it("handles unit conversion in pay and throws PurchaseError when insufficient", async () => {
     const payUser: User = { ...user, money: 2, money_unite: Unit.K } as any;
     await service.loadUserInRedis(payUser);
-    const paid = await service.pay(payUser.id, { value: 1500, unit: Unit.UNIT });
+    const paid = await service.pay(payUser.id, {
+      value: 1500,
+      unit: Unit.UNIT,
+    });
     expect(paid).toBe(true);
     expect(await service.getUserMoney(payUser.id)).toBeCloseTo(500);
-    expect(+await service.getUserMoneyUnit(payUser.id)).toBe(Unit.UNIT);
+    expect(+(await service.getUserMoneyUnit(payUser.id))).toBe(Unit.UNIT);
     await expect(
       service.pay(payUser.id, { value: 600, unit: Unit.UNIT }),
     ).rejects.toBeInstanceOf(PurchaseError);
   });
 
-  it('handles expired click keys by using existing unit', async () => {
-    await client.set('1:CLICK_UNIT', Unit.UNIT);
+  it("handles expired click keys by using existing unit", async () => {
+    await client.set("1:CLICK_UNIT", Unit.UNIT);
     const result = await service.incrClick(1, 5, Unit.K);
     expect(result).toEqual({ amount: 5, unit: Unit.K });
     expect(await service.getUserClick(1)).toBeCloseTo(5);
-    expect(+await service.getUserClickUnit(1)).toBe(Unit.K);
+    expect(+(await service.getUserClickUnit(1))).toBe(Unit.K);
   });
 
-  it('normalizes upgrade amounts when exceeding threshold', async () => {
+  it("normalizes upgrade amounts when exceeding threshold", async () => {
     await service.addUpgrade(1, {
       id: 1,
       amount: 0,
@@ -211,7 +220,7 @@ describe('RedisService', () => {
     expect(upgrade.amountUnit).toBe(Unit.MILLION);
   });
 
-  it('updates user data with money and upgrades', async () => {
+  it("updates user data with money and upgrades", async () => {
     await service.loadUserInRedis(user);
 
     const result = await service.updateUserData(user, {
@@ -238,9 +247,9 @@ describe('RedisService', () => {
     expect(result.upgradesData[0].amountGenerated).toBe(5);
   });
 
-  it('propagates redis errors during updateUserData', async () => {
+  it("propagates redis errors during updateUserData", async () => {
     await service.loadUserInRedis(user);
-    client.hincrbyfloat.mockRejectedValueOnce(new Error('network'));
+    client.hincrbyfloat.mockRejectedValueOnce(new Error("network"));
     await expect(
       service.updateUserData(user, {
         userId: user.id,
@@ -259,7 +268,6 @@ describe('RedisService', () => {
           },
         ],
       }),
-    ).rejects.toThrow('network');
+    ).rejects.toThrow("network");
   });
 });
-

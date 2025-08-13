@@ -52,7 +52,10 @@ export class RedisService {
     if (unitDifference !== 0) {
       amountIncremented /= Math.pow(10, unitDifference);
     }
-    let money = +(await this.client.incrbyfloat(`${userId}:MONEY`, amountIncremented));
+    let money = +(await this.client.incrbyfloat(
+      `${userId}:MONEY`,
+      amountIncremented,
+    ));
     let unityToIncrement = 0;
     while (money > 1001) {
       money /= 1000;

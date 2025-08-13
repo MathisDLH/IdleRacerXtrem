@@ -20,7 +20,11 @@ export interface UserSocket extends Socket {
 
 @WebSocketGateway({ cors: { origin: "*" } })
 export class GameGateway
-  implements OnGatewayConnection, OnGatewayDisconnect, OnModuleInit, OnModuleDestroy
+  implements
+    OnGatewayConnection,
+    OnGatewayDisconnect,
+    OnModuleInit,
+    OnModuleDestroy
 {
   @WebSocketServer()
   server: Server;
@@ -59,7 +63,9 @@ export class GameGateway
           if (!client?.user) continue;
           await this.pushRedisToDb(client.user);
         } catch (err) {
-          this.logger.error(`persist error for user ${client?.user?.id}: ${err}`);
+          this.logger.error(
+            `persist error for user ${client?.user?.id}: ${err}`,
+          );
         }
       }
     }, 10000);
@@ -124,7 +130,8 @@ export class GameGateway
       // reset Redis state to DB snapshot on first connection to avoid stale/huge balances
       await this.redisService.resetUserInRedis(user);
       const now = new Date();
-      const secondsSinceLastUpdate = (now.getTime() - user.updatedAt.getTime()) / 1000;
+      const secondsSinceLastUpdate =
+        (now.getTime() - user.updatedAt.getTime()) / 1000;
       await this.updateMoney(user, secondsSinceLastUpdate);
     } catch (err) {
       this.logger.error(`handleConnection error for ${client.userId}: ${err}`);

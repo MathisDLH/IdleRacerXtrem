@@ -19,8 +19,12 @@ export class CustomIoAdapter extends IoAdapter {
     server.use((socket: UserSocket, next) => {
       try {
         // Support either Authorization header or Socket.IO auth field
-        const authHeader = socket.handshake.headers?.authorization as string | undefined;
-        const authField = (socket.handshake as any)?.auth?.token as string | undefined;
+        const authHeader = socket.handshake.headers?.authorization as
+          | string
+          | undefined;
+        const authField = (socket.handshake as any)?.auth?.token as
+          | string
+          | undefined;
 
         let token: string | undefined;
         if (authHeader) {
@@ -45,10 +49,10 @@ export class CustomIoAdapter extends IoAdapter {
         next();
       } catch (e: any) {
         logger.error(e);
-        if (e?.name === 'TokenExpiredError') {
-          next(new Error('TOKEN_EXPIRED'));
+        if (e?.name === "TokenExpiredError") {
+          next(new Error("TOKEN_EXPIRED"));
         } else {
-          next(new Error('UNAUTHORIZED'));
+          next(new Error("UNAUTHORIZED"));
         }
       }
     });

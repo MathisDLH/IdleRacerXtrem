@@ -1,7 +1,7 @@
-import { ConfigService } from '@nestjs/config';
-import { getTypeOrmModuleOptions } from './typeorm.config';
+import { ConfigService } from "@nestjs/config";
+import { getTypeOrmModuleOptions } from "./typeorm.config";
 
-describe('getTypeOrmModuleOptions', () => {
+describe("getTypeOrmModuleOptions", () => {
   const mockConfig = new Map<string, string>();
   const configService = {
     get: jest.fn((key: string, defaultValue?: string) =>
@@ -13,28 +13,28 @@ describe('getTypeOrmModuleOptions', () => {
     mockConfig.clear();
   });
 
-  it('creates options from ConfigService values', () => {
-    mockConfig.set('DATABASE_HOST', 'host');
-    mockConfig.set('DATABASE_PORT', '1234');
-    mockConfig.set('DATABASE_USER', 'user');
-    mockConfig.set('DATABASE_PASSWORD', 'pass');
-    mockConfig.set('DATABASE_NAME', 'db');
+  it("creates options from ConfigService values", () => {
+    mockConfig.set("DATABASE_HOST", "host");
+    mockConfig.set("DATABASE_PORT", "1234");
+    mockConfig.set("DATABASE_USER", "user");
+    mockConfig.set("DATABASE_PASSWORD", "pass");
+    mockConfig.set("DATABASE_NAME", "db");
 
     const opts: any = getTypeOrmModuleOptions(configService);
     expect(opts).toMatchObject({
-      type: 'mysql',
-      host: 'host',
+      type: "mysql",
+      host: "host",
       port: 1234,
-      username: 'user',
-      password: 'pass',
-      database: 'db',
+      username: "user",
+      password: "pass",
+      database: "db",
       synchronize: true,
     });
   });
 
-  it('throws when required database values are missing or invalid', () => {
+  it("throws when required database values are missing or invalid", () => {
     expect(() => getTypeOrmModuleOptions(configService)).toThrow(
-      'Invalid database configuration',
+      "Invalid database configuration",
     );
   });
 });

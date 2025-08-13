@@ -1,9 +1,9 @@
-import { UserService } from './user.service';
-import { User } from './user.entity';
-import { CreateUserDto } from '../dto/user/create-user.dto';
-import { Unit } from '../shared/shared.model';
+import { UserService } from "./user.service";
+import { User } from "./user.entity";
+import { CreateUserDto } from "../dto/user/create-user.dto";
+import { Unit } from "../shared/shared.model";
 
-describe('UserService', () => {
+describe("UserService", () => {
   let service: UserService;
   const mockUserRepository = {
     findOne: jest.fn(),
@@ -18,48 +18,58 @@ describe('UserService', () => {
     service = new UserService(mockUserRepository, mockUserUpgradeRepository);
   });
 
-  describe('findById', () => {
-    it('returns user when found', async () => {
+  describe("findById", () => {
+    it("returns user when found", async () => {
       const user = { id: 1 } as User;
       mockUserRepository.findOne.mockResolvedValue(user);
       const result = await service.findById(1);
       expect(result).toBe(user);
     });
 
-    it('returns null when user not found', async () => {
+    it("returns null when user not found", async () => {
       mockUserRepository.findOne.mockResolvedValue(null);
       const result = await service.findById(42);
       expect(result).toBeNull();
     });
   });
 
-  describe('findByName', () => {
-    it('returns user when found', async () => {
-      const user = { id: 1, name: 'Alice' } as unknown as User;
+  describe("findByName", () => {
+    it("returns user when found", async () => {
+      const user = { id: 1, name: "Alice" } as unknown as User;
       mockUserRepository.findOne.mockResolvedValue(user);
-      const result = await service.findByName('Alice');
-      expect(mockUserRepository.findOne).toHaveBeenCalledWith({ where: { name: 'Alice' } });
+      const result = await service.findByName("Alice");
+      expect(mockUserRepository.findOne).toHaveBeenCalledWith({
+        where: { name: "Alice" },
+      });
       expect(result).toBe(user);
     });
 
-    it('returns null when user not found', async () => {
+    it("returns null when user not found", async () => {
       mockUserRepository.findOne.mockResolvedValue(null);
-      const result = await service.findByName('Unknown');
+      const result = await service.findByName("Unknown");
       expect(result).toBeNull();
     });
   });
 
-  describe('create', () => {
+  describe("create", () => {
     const dto: CreateUserDto = {
-      email: 'test@example.com',
-      name: 'Test',
-      password: 'password',
+      email: "test@example.com",
+      name: "Test",
+      password: "password",
     };
 
-    it('creates and saves a user', async () => {
-      const savedUser = { id: 1, ...dto, ownedSkins: ['FIRST'] } as unknown as User;
+    it("creates and saves a user", async () => {
+      const savedUser = {
+        id: 1,
+        ...dto,
+        ownedSkins: ["FIRST"],
+      } as unknown as User;
       const saveMock = jest.fn().mockResolvedValue(savedUser);
-      mockUserRepository.create.mockReturnValue({ ...dto, ownedSkins: ['FIRST'], save: saveMock });
+      mockUserRepository.create.mockReturnValue({
+        ...dto,
+        ownedSkins: ["FIRST"],
+        save: saveMock,
+      });
 
       const result = await service.create(dto);
 
@@ -67,22 +77,26 @@ describe('UserService', () => {
         email: dto.email,
         name: dto.name,
         password: dto.password,
-        ownedSkins: ['FIRST'],
+        ownedSkins: ["FIRST"],
       });
       expect(saveMock).toHaveBeenCalled();
       expect(result).toBe(savedUser);
     });
 
-    it('throws when save fails', async () => {
-      const saveMock = jest.fn().mockRejectedValue(new Error('save error'));
-      mockUserRepository.create.mockReturnValue({ ...dto, ownedSkins: ['FIRST'], save: saveMock });
+    it("throws when save fails", async () => {
+      const saveMock = jest.fn().mockRejectedValue(new Error("save error"));
+      mockUserRepository.create.mockReturnValue({
+        ...dto,
+        ownedSkins: ["FIRST"],
+        save: saveMock,
+      });
 
-      await expect(service.create(dto)).rejects.toThrow('save error');
+      await expect(service.create(dto)).rejects.toThrow("save error");
     });
   });
 
-  describe('update', () => {
-    it('updates the user and sets updatedAt', async () => {
+  describe("update", () => {
+    it("updates the user and sets updatedAt", async () => {
       const user = { id: 1 } as unknown as User;
       mockUserRepository.save.mockResolvedValue(user);
 
@@ -94,16 +108,16 @@ describe('UserService', () => {
       expect(user.updatedAt.getTime()).toBeGreaterThanOrEqual(before);
     });
 
-    it('throws when save fails', async () => {
+    it("throws when save fails", async () => {
       const user = { id: 1 } as unknown as User;
-      mockUserRepository.save.mockRejectedValue(new Error('save error'));
+      mockUserRepository.save.mockRejectedValue(new Error("save error"));
 
-      await expect(service.update(user)).rejects.toThrow('save error');
+      await expect(service.update(user)).rejects.toThrow("save error");
     });
   });
 
-  describe('findUsersByScore', () => {
-    it('returns users sorted by score', async () => {
+  describe("findUsersByScore", () => {
+    it("returns users sorted by score", async () => {
       const users = [
         { id: 1, money_unite: Unit.UNIT, money: 100 } as unknown as User,
         { id: 2, money_unite: Unit.K, money: 50 } as unknown as User,
@@ -121,11 +135,11 @@ describe('UserService', () => {
       ]);
     });
 
-    it('throws when repository fails', async () => {
-      mockUserRepository.find.mockRejectedValue(new Error('db error'));
+    it("throws when repository fails", async () => {
+      mockUserRepository.find.mockRejectedValue(new Error("db error"));
 
       await expect(service.findUsersByScore()).rejects.toThrow(
-        'Erreur lors de la récupération des utilisateurs triés par score.'
+        "Erreur lors de la récupération des utilisateurs triés par score.",
       );
     });
   });

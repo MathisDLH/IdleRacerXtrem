@@ -1,10 +1,10 @@
-import { UserUpgrade } from './userUpgrade.entity';
-import { User } from '../user/user.entity';
-import { Upgrade } from '../upgrade/upgrade.entity';
-import { Unit } from '../shared/shared.model';
+import { UserUpgrade } from "./userUpgrade.entity";
+import { User } from "../user/user.entity";
+import { Upgrade } from "../upgrade/upgrade.entity";
+import { Unit } from "../shared/shared.model";
 
-describe('UserUpgrade entity', () => {
-  it('can be instantiated without optional relations', () => {
+describe("UserUpgrade entity", () => {
+  it("can be instantiated without optional relations", () => {
     const entity = new UserUpgrade();
     entity.amount = 0;
     entity.amountBought = 0;
@@ -16,7 +16,7 @@ describe('UserUpgrade entity', () => {
     expect(entity.amountUnit).toBe(Unit.UNIT);
   });
 
-  it('can be instantiated with optional user and upgrade relations', () => {
+  it("can be instantiated with optional user and upgrade relations", () => {
     const user = new User();
     user.id = 1;
     const upgrade = new Upgrade();

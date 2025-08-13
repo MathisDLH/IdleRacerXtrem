@@ -32,13 +32,13 @@ export class AccessToken {
 }
 
 export class Tokens {
-    @ApiProperty()
-    @IsNotEmpty()
-    access_token: string;
+  @ApiProperty()
+  @IsNotEmpty()
+  access_token: string;
 
-    @ApiProperty()
-    @IsNotEmpty()
-    refresh_token: string;
+  @ApiProperty()
+  @IsNotEmpty()
+  refresh_token: string;
 }
 
 export interface JWTContent {

@@ -1,16 +1,16 @@
-import { upgradesData } from './data/upgrades';
-import { skinsData } from './data/skins';
+import { upgradesData } from "./data/upgrades";
+import { skinsData } from "./data/skins";
 
-jest.mock('src/upgrade/upgrade.entity', () => ({ Upgrade: class {} }), {
+jest.mock("src/upgrade/upgrade.entity", () => ({ Upgrade: class {} }), {
   virtual: true,
 });
-jest.mock('src/shared/shared.model', () => ({ Unit: {} }), {
+jest.mock("src/shared/shared.model", () => ({ Unit: {} }), {
   virtual: true,
 });
 
-const { SeedingService } = require('./seeding.service');
+const { SeedingService } = require("./seeding.service");
 
-describe('SeedingService', () => {
+describe("SeedingService", () => {
   let service: any;
   const mockUpgradeRepository = {
     count: jest.fn(),
@@ -23,13 +23,10 @@ describe('SeedingService', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    service = new SeedingService(
-      mockUpgradeRepository,
-      mockSkinRepository,
-    );
+    service = new SeedingService(mockUpgradeRepository, mockSkinRepository);
   });
 
-  it('seeds upgrades and skins when repositories are empty', async () => {
+  it("seeds upgrades and skins when repositories are empty", async () => {
     mockUpgradeRepository.count.mockResolvedValue(0);
     mockSkinRepository.count.mockResolvedValue(0);
 
@@ -39,7 +36,7 @@ describe('SeedingService', () => {
     expect(mockSkinRepository.save).toHaveBeenCalledWith(skinsData);
   });
 
-  it('onModuleInit seeds upgrades and skins when repositories are empty', async () => {
+  it("onModuleInit seeds upgrades and skins when repositories are empty", async () => {
     mockUpgradeRepository.count.mockResolvedValue(0);
     mockSkinRepository.count.mockResolvedValue(0);
 
@@ -49,7 +46,7 @@ describe('SeedingService', () => {
     expect(mockSkinRepository.save).toHaveBeenCalledWith(skinsData);
   });
 
-  it('does not seed when repositories are already populated', async () => {
+  it("does not seed when repositories are already populated", async () => {
     mockUpgradeRepository.count.mockResolvedValue(1);
     mockSkinRepository.count.mockResolvedValue(1);
 

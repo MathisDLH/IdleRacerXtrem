@@ -1,16 +1,16 @@
-import { DataSource } from 'typeorm';
-import { Upgrade } from '../../src/upgrade/upgrade.entity';
-import { UserUpgrade } from '../../src/UserUpgrade/userUpgrade.entity';
-import { User } from '../../src/user/user.entity';
-import { Unit } from '../../src/shared/shared.model';
+import { DataSource } from "typeorm";
+import { Upgrade } from "../../src/upgrade/upgrade.entity";
+import { UserUpgrade } from "../../src/UserUpgrade/userUpgrade.entity";
+import { User } from "../../src/user/user.entity";
+import { Unit } from "../../src/shared/shared.model";
 
-describe('Upgrade and UserUpgrade integration', () => {
+describe("Upgrade and UserUpgrade integration", () => {
   let dataSource: DataSource;
 
   beforeAll(async () => {
     dataSource = new DataSource({
-      type: 'sqlite',
-      database: ':memory:',
+      type: "sqlite",
+      database: ":memory:",
       entities: [User, Upgrade, UserUpgrade],
       synchronize: true,
     });
@@ -21,23 +21,23 @@ describe('Upgrade and UserUpgrade integration', () => {
     await dataSource.destroy();
   });
 
-  it('should load related userUpgrade data when retrieving an upgrade', async () => {
+  it("should load related userUpgrade data when retrieving an upgrade", async () => {
     const user = dataSource.getRepository(User).create({
-      email: 'test@example.com',
-      name: 'tester',
-      password: 'secret',
+      email: "test@example.com",
+      name: "tester",
+      password: "secret",
       ownedSkins: [],
     });
     await dataSource.getRepository(User).save(user);
 
     const upgrade = dataSource.getRepository(Upgrade).create({
-      name: 'Speed Boost',
+      name: "Speed Boost",
       price: 100,
       price_unit: Unit.UNIT,
       ratio: 1,
       generationUpgradeId: 0,
       value: 2,
-      imagePath: 'img.png',
+      imagePath: "img.png",
     });
     await dataSource.getRepository(Upgrade).save(upgrade);
 

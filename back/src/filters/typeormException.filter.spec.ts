@@ -1,13 +1,13 @@
-import { TypeormExceptionFilter } from './typeormException.filter';
-import { QueryFailedError } from 'typeorm';
-import { Logger } from '@nestjs/common';
+import { TypeormExceptionFilter } from "./typeormException.filter";
+import { QueryFailedError } from "typeorm";
+import { Logger } from "@nestjs/common";
 
 const createArgumentsHost = () => {
   const mockResponse = {
     status: jest.fn().mockReturnThis(),
     json: jest.fn(),
   };
-  const mockRequest = { url: '/test' };
+  const mockRequest = { url: "/test" };
   return {
     switchToHttp: () => ({
       getResponse: () => mockResponse,
@@ -17,12 +17,12 @@ const createArgumentsHost = () => {
   } as any;
 };
 
-describe('TypeormExceptionFilter', () => {
+describe("TypeormExceptionFilter", () => {
   let loggerErrorSpy: jest.SpyInstance;
 
   beforeEach(() => {
     loggerErrorSpy = jest
-      .spyOn(Logger.prototype, 'error')
+      .spyOn(Logger.prototype, "error")
       .mockImplementation(() => undefined);
   });
 
@@ -30,39 +30,43 @@ describe('TypeormExceptionFilter', () => {
     loggerErrorSpy.mockRestore();
   });
 
-  it('formats ER_DUP_ENTRY errors', () => {
+  it("formats ER_DUP_ENTRY errors", () => {
     const filter = new TypeormExceptionFilter();
-    const error = new QueryFailedError('query', [], { code: 'ER_DUP_ENTRY' } as any);
+    const error = new QueryFailedError("query", [], {
+      code: "ER_DUP_ENTRY",
+    } as any);
     const host = createArgumentsHost();
 
     filter.catch(error, host);
 
     expect(host.response.status).toHaveBeenCalledWith(409);
     expect(host.response.json).toHaveBeenCalledWith({
-      message: 'User already exist',
+      message: "User already exist",
       statusCode: 409,
-      path: '/test',
+      path: "/test",
     });
   });
 
-  it('formats unknown driver errors', () => {
+  it("formats unknown driver errors", () => {
     const filter = new TypeormExceptionFilter();
-    const error = new QueryFailedError('query', [], { code: 'SOME_CODE' } as any);
+    const error = new QueryFailedError("query", [], {
+      code: "SOME_CODE",
+    } as any);
     const host = createArgumentsHost();
 
     filter.catch(error, host);
 
     expect(host.response.status).toHaveBeenCalledWith(500);
     expect(host.response.json).toHaveBeenCalledWith({
-      message: 'Error while creating user',
+      message: "Error while creating user",
       statusCode: 500,
-      path: '/test',
+      path: "/test",
     });
   });
 
-  it('handles non-QueryFailedError errors', () => {
+  it("handles non-QueryFailedError errors", () => {
     const filter = new TypeormExceptionFilter();
-    const error = new Error('oops');
+    const error = new Error("oops");
     const host = createArgumentsHost();
 
     filter.catch(error as any, host);
@@ -71,7 +75,7 @@ describe('TypeormExceptionFilter', () => {
     expect(host.response.json).toHaveBeenCalledWith({
       message: undefined,
       statusCode: 500,
-      path: '/test',
+      path: "/test",
     });
   });
 });
