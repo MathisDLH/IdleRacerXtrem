@@ -13,6 +13,9 @@ services:
       DATABASE_URL: mysql://user:password@db:3306/db
       REDIS_HOST: redis
       JWT_SECRET: secret
+      DATABASE_USER: user
+      DATABASE_PASSWORD: password
+      DATABASE_NAME: db
     ports: ["3000:3000"]
     depends_on: [db, redis]
 
