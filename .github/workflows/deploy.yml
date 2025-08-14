@@ -53,9 +53,8 @@ jobs:
         run: |
           PORT="${PROD_PORT:-22}"
           rsync -avz -e "ssh -p $PORT" \
-            front/dist \
-            back/dist \
-            back/package.json back/package-lock.json \
+            front \
+            back \
             docker-compose.prod.yml \
             "$PROD_USER@$PROD_HOST:/srv/idle-racer"
 
