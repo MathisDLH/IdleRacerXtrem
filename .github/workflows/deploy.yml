@@ -7,25 +7,60 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      PROD_HOST: ${{ secrets.PROD_HOST }}
+      PROD_USER: ${{ secrets.PROD_USER }}
+
     steps:
       - uses: actions/checkout@v3
+
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-      - run: |
+
+      - name: Build front
+        run: |
           cd front
           npm ci
           npm run build
-      - run: |
+
+      - name: Build back
+        run: |
           cd back
           npm ci
           npm run build
-      - uses: webfactory/ssh-agent@v0.7.0
+
+      - name: Start ssh-agent and add key
+        uses: webfactory/ssh-agent@v0.7.0
         with:
           ssh-private-key: ${{ secrets.PROD_SSH_KEY }}
-      - run: |
-          rsync -avz front/dist back docker-compose.prod.yml \
-            ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }}:/srv/idle-racer
-      - run: |
-          ssh ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }} \
-          'cd /srv/idle-racer && docker compose -f docker-compose.prod.yml up -d --build'
+
+      - name: Add server host key to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          # si PROD_PORT est vide, utilise 22
+          PORT="${PROD_PORT:-22}"
+          ssh-keyscan -p "$PORT" -H "$PROD_HOST" >> ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Create remote dir (idempotent)
+        run: |
+          PORT="${PROD_PORT:-22}"
+          ssh -p "$PORT" "$PROD_USER@$PROD_HOST" "mkdir -p /srv/idle-racer"
+
+      - name: Rsync build artifacts
+        run: |
+          PORT="${PROD_PORT:-22}"
+          rsync -avz -e "ssh -p $PORT" \
+            front/dist \
+            back/dist \
+            back/package.json back/package-lock.json \
+            docker-compose.prod.yml \
+            "$PROD_USER@$PROD_HOST:/srv/idle-racer"
+
+      - name: Deploy with Docker Compose
+        run: |
+          PORT="${PROD_PORT:-22}"
+          ssh -p "$PORT" "$PROD_USER@$PROD_HOST" \
+            'cd /srv/idle-racer && docker compose -f docker-compose.prod.yml up -d --build'
